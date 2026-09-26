@@ -10,8 +10,11 @@
 
 // ─── Configuration ────────────────────────────────────────────────────────────
 // Plain constant — no Vite, no build tools required.
-const API_BASE = "http://localhost:5000/api";
-
+const API_BASE =
+    window.location.hostname === "localhost" ||
+    window.location.hostname === "127.0.0.1"
+        ? "http://localhost:5000/api"
+        : "https://campus-link-x02a.onrender.com/api";
 // ─── Token management ─────────────────────────────────────────────────────────
 /**
  * Returns the stored JWT token, or null if not authenticated.
