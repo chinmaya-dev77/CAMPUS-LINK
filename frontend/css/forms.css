@@ -1,0 +1,312 @@
+/* ============================================================
+   CampusLink — forms.css
+   Form controls, labels, inputs, selects, file upload areas
+   ============================================================ */
+
+/* ─── Form group ─────────────────────────────────────────── */
+.form-group {
+    margin-bottom: var(--space-4);
+}
+
+.form-group:last-child {
+    margin-bottom: 0;
+}
+
+/* ─── Labels ─────────────────────────────────────────────── */
+.form-label {
+    display: block;
+    font-size: var(--text-sm);
+    font-weight: var(--font-medium);
+    color: var(--color-gray-700);
+    margin-bottom: var(--space-1);
+}
+
+.form-label .required {
+    color: var(--color-danger);
+    margin-left: 2px;
+}
+
+/* ─── Inputs & Selects ───────────────────────────────────── */
+.form-input,
+.form-select,
+.form-textarea {
+    display: block;
+    width: 100%;
+    padding: var(--space-2) var(--space-3);
+    font-size: var(--text-sm);
+    font-family: var(--font-sans);
+    color: var(--color-gray-900);
+    background-color: var(--color-white);
+    border: 1px solid var(--color-gray-300);
+    border-radius: var(--radius-md);
+    transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+    line-height: 1.5;
+}
+
+/* Recruiter forms use the .standard-form container and keep their existing IDs. */
+.standard-form input:not([type="checkbox"]),
+.standard-form select,
+.standard-form textarea {
+    display: block;
+    width: 100%;
+    padding: var(--space-2) var(--space-3);
+    font: inherit;
+    font-size: var(--text-sm);
+    color: var(--color-gray-900);
+    background-color: var(--color-white);
+    border: 1px solid var(--color-gray-300);
+    border-radius: var(--radius-md);
+    line-height: 1.5;
+    transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+}
+.standard-form label {
+    display: block;
+    margin-bottom: var(--space-1);
+    color: var(--color-gray-700);
+    font-size: var(--text-sm);
+    font-weight: var(--font-medium);
+}
+.standard-form input:focus,
+.standard-form select:focus,
+.standard-form textarea:focus {
+    outline: none;
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+.form-input::placeholder,
+.form-textarea::placeholder {
+    color: var(--color-gray-400);
+}
+
+.form-input:focus,
+.form-select:focus,
+.form-textarea:focus {
+    outline: none;
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+.form-input:disabled,
+.form-select:disabled,
+.form-textarea:disabled {
+    background-color: var(--color-gray-100);
+    color: var(--color-gray-400);
+    cursor: not-allowed;
+}
+
+/* Validation states */
+.form-input.is-invalid,
+.form-select.is-invalid,
+.form-textarea.is-invalid {
+    border-color: var(--color-danger);
+}
+
+.form-input.is-invalid:focus,
+.form-select.is-invalid:focus,
+.form-textarea.is-invalid:focus {
+    box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.1);
+}
+
+.form-input.is-valid,
+.form-select.is-valid,
+.form-textarea.is-valid {
+    border-color: var(--color-success);
+}
+
+/* ─── Textarea ───────────────────────────────────────────── */
+.form-textarea {
+    resize: vertical;
+    min-height: 80px;
+}
+
+/* ─── Select ─────────────────────────────────────────────── */
+.form-select {
+    cursor: pointer;
+    appearance: none;
+    background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3E%3Cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right var(--space-3) center;
+    background-size: 16px;
+    padding-right: var(--space-8);
+}
+
+.campus-form-dialog {
+    width: min(92vw, 480px);
+    max-height: 88vh;
+    border: 1px solid var(--color-gray-200);
+    border-radius: var(--radius-lg);
+    padding: var(--space-6);
+    box-shadow: var(--shadow-lg);
+}
+.campus-form-dialog::backdrop { background: rgba(15, 23, 42, 0.48); }
+.campus-form-dialog__form h2 { margin: 0 0 var(--space-5); color: var(--color-gray-900); }
+.campus-form-dialog__form .form-actions { display: flex; justify-content: flex-end; gap: var(--space-3); margin-top: var(--space-5); }
+
+/* ─── Help text & error messages ─────────────────────────── */
+.form-help {
+    font-size: var(--text-xs);
+    color: var(--color-gray-500);
+    margin-top: var(--space-1);
+}
+
+.form-error {
+    font-size: var(--text-xs);
+    color: var(--color-danger);
+    margin-top: var(--space-1);
+    display: none;
+}
+
+.form-error.visible,
+.is-invalid ~ .form-error {
+    display: block;
+}
+
+/* ─── Checkbox & Radio ───────────────────────────────────── */
+.form-check {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    margin-bottom: var(--space-2);
+}
+
+.form-check input[type="checkbox"],
+.form-check input[type="radio"] {
+    width: 16px;
+    height: 16px;
+    accent-color: var(--color-primary);
+    cursor: pointer;
+    flex-shrink: 0;
+}
+
+.form-check label {
+    font-size: var(--text-sm);
+    color: var(--color-gray-700);
+    cursor: pointer;
+}
+
+/* ─── File upload area ───────────────────────────────────── */
+.file-drop-zone {
+    border: 2px dashed var(--color-gray-300);
+    border-radius: var(--radius-lg);
+    padding: var(--space-8) var(--space-6);
+    text-align: center;
+    cursor: pointer;
+    transition: border-color var(--transition-fast), background-color var(--transition-fast);
+}
+
+.file-drop-zone:hover,
+.file-drop-zone.drag-over {
+    border-color: var(--color-primary);
+    background-color: var(--color-primary-light);
+}
+
+.file-drop-zone .drop-icon {
+    font-size: 2rem;
+    margin-bottom: var(--space-3);
+    display: block;
+}
+
+.file-drop-zone .drop-title {
+    font-size: var(--text-base);
+    font-weight: var(--font-medium);
+    color: var(--color-gray-700);
+    margin-bottom: var(--space-1);
+}
+
+.file-drop-zone .drop-sub {
+    font-size: var(--text-sm);
+    color: var(--color-gray-400);
+}
+
+.file-drop-zone input[type="file"] {
+    display: none;
+}
+
+/* ─── Form row (inline fields) ───────────────────────────── */
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-4);
+}
+
+.form-row-3 {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: var(--space-4);
+}
+
+/* ─── Form actions ───────────────────────────────────────── */
+.form-actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: var(--space-3);
+    margin-top: var(--space-6);
+    padding-top: var(--space-4);
+    border-top: 1px solid var(--border-color);
+}
+
+/* ─── Modal ──────────────────────────────────────────────── */
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.5);
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--space-4);
+}
+
+.modal {
+    background: var(--color-white);
+    border-radius: var(--radius-xl);
+    width: 100%;
+    max-width: 520px;
+    box-shadow: var(--shadow-lg);
+    max-height: 90vh;
+    overflow-y: auto;
+}
+
+.modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--space-5) var(--space-6);
+    border-bottom: 1px solid var(--border-color);
+}
+
+.modal-title {
+    font-size: var(--text-lg);
+    font-weight: var(--font-semibold);
+}
+
+.modal-close {
+    background: none;
+    border: none;
+    font-size: var(--text-xl);
+    color: var(--color-gray-400);
+    cursor: pointer;
+    line-height: 1;
+    padding: var(--space-1);
+}
+.modal-close:hover { color: var(--color-gray-700); }
+
+.modal-body {
+    padding: var(--space-6);
+}
+
+.modal-footer {
+    padding: var(--space-4) var(--space-6);
+    border-top: 1px solid var(--border-color);
+    display: flex;
+    justify-content: flex-end;
+    gap: var(--space-3);
+}
+
+/* responsive */
+@media (max-width: 480px) {
+    .form-row   { grid-template-columns: 1fr; }
+    .form-row-3 { grid-template-columns: 1fr; }
+}

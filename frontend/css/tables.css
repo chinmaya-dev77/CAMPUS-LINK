@@ -1,0 +1,231 @@
+/* ============================================================
+   CampusLink — tables.css
+   Data tables, sortable columns, pagination, empty states
+   ============================================================ */
+
+/* ─── Table wrapper ──────────────────────────────────────── */
+.table-wrapper {
+    overflow-x: auto;
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--border-color);
+    background: var(--color-white);
+}
+
+/* ─── Table ──────────────────────────────────────────────── */
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: var(--text-sm);
+}
+
+.table thead {
+    background-color: var(--color-gray-50);
+    border-bottom: 1px solid var(--border-color);
+}
+
+.table thead th {
+    padding: var(--space-3) var(--space-4);
+    text-align: left;
+    font-size: var(--text-xs);
+    font-weight: var(--font-semibold);
+    color: var(--color-gray-500);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    white-space: nowrap;
+}
+
+/* Sortable column header */
+.table thead th.sortable {
+    cursor: pointer;
+    user-select: none;
+}
+
+.table thead th.sortable:hover {
+    color: var(--color-gray-700);
+    background-color: var(--color-gray-100);
+}
+
+.table thead th.sort-asc::after  { content: " ↑"; }
+.table thead th.sort-desc::after { content: " ↓"; }
+
+/* ─── Table body ─────────────────────────────────────────── */
+.table tbody tr {
+    border-bottom: 1px solid var(--border-color);
+    transition: background-color var(--transition-fast);
+}
+
+.table tbody tr:last-child {
+    border-bottom: none;
+}
+
+.table tbody tr:hover {
+    background-color: var(--color-gray-50);
+}
+
+.table tbody td {
+    padding: var(--space-3) var(--space-4);
+    color: var(--color-gray-700);
+    vertical-align: middle;
+}
+
+/* ─── Name + sub cell ────────────────────────────────────── */
+.cell-name {
+    font-weight: var(--font-medium);
+    color: var(--color-gray-900);
+}
+
+.cell-sub {
+    font-size: var(--text-xs);
+    color: var(--color-gray-400);
+    margin-top: 2px;
+}
+
+/* ─── Score display ──────────────────────────────────────── */
+.score-pill {
+    display: inline-block;
+    padding: 2px var(--space-2);
+    border-radius: var(--radius-full);
+    font-size: var(--text-xs);
+    font-weight: var(--font-semibold);
+    min-width: 44px;
+    text-align: center;
+}
+
+.score-high   { background: var(--color-success-light); color: var(--color-success); }
+.score-medium { background: var(--color-warning-light); color: var(--color-warning); }
+.score-low    { background: var(--color-danger-light);  color: var(--color-danger); }
+.score-none   { background: var(--color-gray-100);      color: var(--color-gray-500); }
+
+/* ─── Readiness category badge ───────────────────────────── */
+.readiness-badge { font-size: var(--text-xs); font-weight: var(--font-medium); }
+.readiness-highly-employable { background: #dcfce7; color: #166534; }
+.readiness-ready             { background: #dbeafe; color: #1e40af; }
+.readiness-developing        { background: #fef9c3; color: #854d0e; }
+.readiness-not-ready         { background: #fee2e2; color: #991b1b; }
+
+/* ─── Table toolbar (search + filters) ──────────────────── */
+.table-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-3);
+    padding: var(--space-4);
+    border-bottom: 1px solid var(--border-color);
+    flex-wrap: wrap;
+}
+
+.table-search {
+    flex: 1;
+    max-width: 280px;
+    position: relative;
+}
+
+.table-search .search-icon {
+    position: absolute;
+    left: var(--space-3);
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--color-gray-400);
+    font-size: var(--text-sm);
+    pointer-events: none;
+}
+
+.table-search input {
+    width: 100%;
+    padding: var(--space-2) var(--space-3) var(--space-2) 2rem;
+    border: 1px solid var(--color-gray-300);
+    border-radius: var(--radius-md);
+    font-size: var(--text-sm);
+    background: var(--color-white);
+}
+
+.table-search input:focus {
+    outline: none;
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+/* ─── Pagination ─────────────────────────────────────────── */
+.pagination {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--space-3) var(--space-4);
+    border-top: 1px solid var(--border-color);
+    font-size: var(--text-sm);
+    color: var(--color-gray-500);
+}
+
+.pagination-info { }
+
+.pagination-controls {
+    display: flex;
+    align-items: center;
+    gap: var(--space-1);
+}
+
+.page-btn {
+    min-width: 32px;
+    height: 32px;
+    border: 1px solid var(--color-gray-300);
+    background: var(--color-white);
+    color: var(--color-gray-700);
+    border-radius: var(--radius-md);
+    font-size: var(--text-sm);
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color var(--transition-fast);
+}
+
+.page-btn:hover:not(:disabled) {
+    background-color: var(--color-gray-50);
+}
+
+.page-btn.active {
+    background-color: var(--color-primary);
+    color: var(--color-white);
+    border-color: var(--color-primary);
+}
+
+.page-btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+/* ─── Empty state ────────────────────────────────────────── */
+.empty-state {
+    text-align: center;
+    padding: var(--space-12) var(--space-6);
+    color: var(--color-gray-400);
+}
+
+.empty-state .empty-icon {
+    font-size: 3rem;
+    margin-bottom: var(--space-3);
+    display: block;
+}
+
+.empty-state h3 {
+    font-size: var(--text-base);
+    font-weight: var(--font-medium);
+    color: var(--color-gray-600);
+    margin-bottom: var(--space-2);
+}
+
+.empty-state p {
+    font-size: var(--text-sm);
+    color: var(--color-gray-400);
+}
+
+/* ─── Loading state inside table ─────────────────────────── */
+.table-loading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-3);
+    padding: var(--space-10);
+    color: var(--color-gray-500);
+    font-size: var(--text-sm);
+}

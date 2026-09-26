@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CampusLink — Login</title>
+
+    <!-- Shared styles -->
+    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="css/dashboard.css" />
+    <link rel="stylesheet" href="css/forms.css" />
+</head>
+<body>
+
+    <div class="auth-page">
+        <div class="auth-card">
+
+            <div class="auth-logo">
+                <h1>🎓 CampusLink</h1>
+                <p>AI-Powered Campus Placement Intelligence</p>
+            </div>
+
+            <div id="login-form-container">
+                <form id="login-form" class="mt-4">
+                    <div class="form-group">
+                        <label for="login-email" class="form-label">Email Address <span class="required">*</span></label>
+                        <input type="email" id="login-email" class="form-input" placeholder="name@example.com" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="login-password" class="form-label">Password <span class="required">*</span></label>
+                        <input type="password" id="login-password" class="form-input" placeholder="••••••••" required>
+                    </div>
+                    <div class="form-actions" style="justify-content: space-between;">
+                        <a href="#" id="show-register" class="text-sm">Create an account</a>
+                        <button type="submit" class="btn btn-primary" id="login-btn">Log In</button>
+                    </div>
+                </form>
+            </div>
+
+            <div id="register-form-container" class="hidden">
+                <form id="register-form" class="mt-4">
+                    <div class="form-group">
+                        <label for="register-name" class="form-label">Full Name <span class="required">*</span></label>
+                        <input type="text" id="register-name" class="form-input" placeholder="Rahul Kumar" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="register-email" class="form-label">Email Address <span class="required">*</span></label>
+                        <input type="email" id="register-email" class="form-input" placeholder="name@example.com" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="register-password" class="form-label">Password <span class="required">*</span></label>
+                        <input type="password" id="register-password" class="form-input" placeholder="At least 8 characters" required minlength="8">
+                    </div>
+                    <div class="form-group">
+                        <label for="register-role" class="form-label">I am a... <span class="required">*</span></label>
+                        <select id="register-role" class="form-select" required>
+                            <option value="" disabled selected>Select your role</option>
+                            <option value="student">Student</option>
+                            <option value="recruiter">Recruiter</option>
+                            <option value="placement">Placement Officer</option>
+                        </select>
+                    </div>
+                    <div class="form-actions" style="justify-content: space-between;">
+                        <a href="#" id="show-login" class="text-sm">Back to login</a>
+                        <button type="submit" class="btn btn-primary" id="register-btn">Register</button>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Toast container (shared across all pages) -->
+    <div id="toast-container"></div>
+
+    <!-- Shared scripts -->
+    <script src="js/utils.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/auth.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            // Check if already logged in
+            if (CampusAuth.isLoggedIn()) {
+                const role = CampusAuth.getCurrentRole();
+                if (role === 'student') window.location.href = 'student.html';
+                else if (role === 'recruiter') window.location.href = 'recruiter.html';
+                else if (role === 'placement') window.location.href = 'placement.html';
+            }
+
+            const loginContainer = document.getElementById('login-form-container');
+            const registerContainer = document.getElementById('register-form-container');
+            
+            document.getElementById('show-register').addEventListener('click', (e) => {
+                e.preventDefault();
+                loginContainer.classList.add('hidden');
+                registerContainer.classList.remove('hidden');
+            });
+            
+            document.getElementById('show-login').addEventListener('click', (e) => {
+                e.preventDefault();
+                registerContainer.classList.add('hidden');
+                loginContainer.classList.remove('hidden');
+            });
+
+            document.getElementById('login-form').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const btn = document.getElementById('login-btn');
+                const email = document.getElementById('login-email').value;
+                const password = document.getElementById('login-password').value;
+
+                try {
+                    CampusUtils.setButtonLoading(btn, true);
+                    const res = await CampusAPI.post('/auth/login', { email, password });
+                    
+                    CampusAuth.handleLoginSuccess(res.data);
+                    CampusUtils.showToast('Login successful!', 'success');
+                    
+                    setTimeout(() => {
+                        const role = res.data.user.role;
+                        if (role === 'student') window.location.href = 'student.html';
+                        else if (role === 'recruiter') window.location.href = 'recruiter.html';
+                        else if (role === 'placement') window.location.href = 'placement.html';
+                    }, 500);
+                } catch (err) {
+                    CampusUtils.showToast(err.message, 'error');
+                } finally {
+                    CampusUtils.setButtonLoading(btn, false);
+                }
+            });
+
+            document.getElementById('register-form').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const btn = document.getElementById('register-btn');
+                const name = document.getElementById('register-name').value;
+                const email = document.getElementById('register-email').value;
+                const password = document.getElementById('register-password').value;
+                const role = document.getElementById('register-role').value;
+
+                try {
+                    CampusUtils.setButtonLoading(btn, true);
+                    const res = await CampusAPI.post('/auth/register', { name, email, password, role });
+                    
+                    CampusUtils.showToast('Registration successful! Please log in.', 'success');
+                    
+                    // Switch to login form
+                    registerContainer.classList.add('hidden');
+                    loginContainer.classList.remove('hidden');
+                    
+                    // Pre-fill email
+                    document.getElementById('login-email').value = email;
+                    document.getElementById('login-password').value = '';
+                } catch (err) {
+                    CampusUtils.showToast(err.message, 'error');
+                } finally {
+                    CampusUtils.setButtonLoading(btn, false);
+                }
+            });
+        });
+    </script>
+</body>
+</html>

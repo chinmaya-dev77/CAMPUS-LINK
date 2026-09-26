@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CampusLink — Placement Cell Dashboard</title>
+
+    <!-- Shared styles -->
+    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="css/dashboard.css" />
+    <link rel="stylesheet" href="css/forms.css" />
+    <link rel="stylesheet" href="css/tables.css" />
+    <link rel="stylesheet" href="css/analytics.css" />
+    <link rel="stylesheet" href="css/assistant.css" />
+</head>
+<body>
+
+    <!-- ═══════════════════════════════════════════════════════
+         Placement Cell Command Dashboard Shell
+         Phase 8 will add: drive management, conflict detection.
+         Phase 9 adds: conflict-aware scheduling.
+         Phase 10 adds: offer tracking.
+         Phase 11 adds: analytics dashboard.
+         ═══════════════════════════════════════════════════════ -->
+
+    <div class="app-shell">
+
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-logo">
+                <div class="logo-text">🎓 CampusLink</div>
+                <div class="logo-sub">Placement Cell</div>
+            </div>
+
+            <nav class="sidebar-nav" id="sidebar-nav">
+                <div class="sidebar-section-label">Overview</div>
+                <a href="#" class="sidebar-link active" data-section="dashboard">
+                    <span class="nav-icon">📊</span> Command Center
+                </a>
+
+                <div class="sidebar-section-label">Management</div>
+                <a href="#" class="sidebar-link" data-section="students">
+                    <span class="nav-icon">🎓</span> Students
+                </a>
+                <a href="#" class="sidebar-link" data-section="recruiters">
+                    <span class="nav-icon">🏢</span> Recruiters
+                </a>
+                <a href="#" class="sidebar-link" data-section="jobs">
+                    <span class="nav-icon">💼</span> Jobs
+                </a>
+                <a href="#" class="sidebar-link" data-section="drives">
+                    <span class="nav-icon">📅</span> Drives
+                </a>
+
+                <div class="sidebar-section-label">Tracking</div>
+                <a href="#" class="sidebar-link" data-section="conflicts">
+                    <span class="nav-icon">⚠️</span> Conflicts
+                </a>
+                <a href="#" class="sidebar-link" data-section="offers">
+                    <span class="nav-icon">🏆</span> Offers
+                </a>
+
+                <div class="sidebar-section-label">Updates</div>
+                <a href="#" class="sidebar-link" data-section="notifications">
+                    <span class="nav-icon">🔔</span> Notifications
+                </a>
+            </nav>
+
+            <div class="sidebar-footer">
+                <div class="sidebar-user">
+                    <div class="user-avatar" id="user-avatar">P</div>
+                    <div class="user-info">
+                        <div class="user-name" id="user-name">Placement Officer</div>
+                        <div class="user-role">Placement Cell</div>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main content area -->
+        <div class="main-content">
+            <header class="topbar">
+                <div class="topbar-title" id="page-title">Command Center</div>
+                <div class="topbar-actions">
+                    <button class="btn btn-secondary btn-sm" id="logout-btn">Logout</button>
+                </div>
+            </header>
+
+            <main class="page-content" id="page-content">
+                <section class="analytics-view" id="placement-analytics" aria-labelledby="analytics-title">
+                    <div class="page-header analytics-heading"><div><h2 id="analytics-title">Placement Analytics</h2><p>Live metrics calculated from current CampusLink records.</p></div><button class="btn btn-primary" id="refresh-analytics">Refresh</button></div>
+                    <p class="analytics-message" id="analytics-message" aria-live="polite">Loading analytics…</p>
+                    <h3>Placement</h3><div class="stats-grid" id="placement-kpis"></div>
+                    <h3>Recruiters</h3><div class="stats-grid" id="recruiter-kpis"></div>
+                    <div class="analytics-columns">
+                        <section class="card analytics-panel"><div class="card-header"><h3>Skills</h3></div><div class="card-body"><h4>Most demanded</h4><div id="demand-chart"></div><h4>Skill gaps</h4><div id="gap-chart"></div><h4>Branch-wise skill distribution</h4><div class="table-container"><table class="data-table"><thead><tr><th>Branch</th><th>Students</th><th>Skills found</th></tr></thead><tbody id="branch-table"></tbody></table></div></div></section>
+                        <section class="card analytics-panel"><div class="card-header"><h3>Compensation</h3></div><div class="card-body"><div class="stats-grid" id="compensation-kpis"></div><h4>Role-wise CTC</h4><div class="table-container"><table class="data-table"><thead><tr><th>Role</th><th>Average CTC</th><th>Offers</th></tr></thead><tbody id="role-ctc-table"></tbody></table></div></div></section>
+                    </div>
+                    <section class="card analytics-panel drive-analytics"><div class="card-header"><h3>Drives</h3></div><div class="card-body stats-grid" id="drive-kpis"></div></section>
+                </section>
+                <section class="card" id="scheduling-conflicts" aria-labelledby="scheduling-conflicts-title">
+                    <div class="card-header">
+                        <div>
+                            <h3 id="scheduling-conflicts-title">Scheduling Conflicts</h3>
+                            <p>Review student and venue overlaps across scheduled drives.</p>
+                        </div>
+                        <button class="btn btn-primary btn-sm" id="check-drive-conflicts">Check drives</button>
+                    </div>
+                    <div id="scheduling-conflict-results" aria-live="polite">Select “Check drives” to inspect scheduled drives.</div>
+                </section>
+                <section class="card" id="placement-offers" style="display:none;">
+                    <div class="card-header"><div><h3>Offer Management</h3><p>Create offers for selected candidates and track lifecycle updates.</p></div><button class="btn btn-secondary btn-sm" id="refresh-offers">Refresh</button></div>
+                    <div class="table-container"><table class="data-table"><thead><tr><th>Student</th><th>Company</th><th>Role</th><th>Application</th><th>Action</th></tr></thead><tbody id="selected-candidates-list"><tr><td colspan="5">Select Offers to load candidates.</td></tr></tbody></table></div>
+                    <h3 class="mt-4">Existing Offers</h3>
+                    <div class="table-container"><table class="data-table"><thead><tr><th>Student</th><th>Company / Role</th><th>CTC</th><th>Status</th><th>Documents</th><th>Joining Date</th><th>Manage</th></tr></thead><tbody id="placement-offers-list"><tr><td colspan="7">Select Offers to load records.</td></tr></tbody></table></div>
+                </section>
+            </main>
+        </div>
+
+    </div>
+
+    <!-- Toast container -->
+    <div id="toast-container"></div>
+
+    <!-- Shared scripts -->
+    <script src="js/utils.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/assistant.js"></script>
+    <script src="js/placement.js"></script>
+    <script src="js/analytics.js"></script>
+</body>
+</html>

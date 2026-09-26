@@ -1,0 +1,339 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CampusLink — Recruiter Dashboard</title>
+
+    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="css/dashboard.css" />
+    <link rel="stylesheet" href="css/forms.css" />
+    <link rel="stylesheet" href="css/tables.css" />
+    <link rel="stylesheet" href="css/assistant.css" />
+</head>
+<body>
+
+    <div class="app-shell">
+
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-logo">
+                <div class="logo-text">🎓 CampusLink</div>
+                <div class="logo-sub">Recruiter Portal</div>
+            </div>
+
+            <nav class="sidebar-nav" id="sidebar-nav">
+                <div class="sidebar-section-label">Menu</div>
+                <a href="#" class="sidebar-link active" data-section="dashboard">
+                    <span class="nav-icon">📊</span> Dashboard
+                </a>
+                <a href="#" class="sidebar-link" data-section="profile">
+                    <span class="nav-icon">🏢</span> Company Profile
+                </a>
+                <a href="#" class="sidebar-link" data-section="jobs">
+                    <span class="nav-icon">💼</span> My Jobs
+                </a>
+                <a href="#" class="sidebar-link" data-section="create-job">
+                    <span class="nav-icon">➕</span> Create Job
+                </a>
+                <a href="#" class="sidebar-link" data-section="drives">
+                    <span class="nav-icon">📅</span> Drives
+                </a>
+                <a href="#" class="sidebar-link" data-section="offers">
+                    <span class="nav-icon">🏆</span> Offers
+                </a>
+            </nav>
+
+            <div class="sidebar-footer">
+                <div class="sidebar-user">
+                    <div class="user-avatar" id="user-avatar">R</div>
+                    <div class="user-info">
+                        <div class="user-name" id="user-name">Recruiter</div>
+                        <div class="user-role">Recruiter</div>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <div class="main-content">
+            <header class="topbar">
+                <div class="topbar-title" id="page-title">Dashboard</div>
+                <div class="topbar-actions">
+                    <button class="btn btn-secondary btn-sm" id="logout-btn">Logout</button>
+                </div>
+            </header>
+
+            <main class="page-content" id="page-content">
+                
+                <section id="section-dashboard" class="content-section active">
+                    <div class="page-header">
+                        <h2>Dashboard</h2>
+                        <p>Welcome to the Recruiter Portal.</p>
+                    </div>
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-label">Active Jobs</div>
+                            <div class="stat-value" id="stat-active-jobs">—</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-label">Total Jobs</div>
+                            <div class="stat-value" id="stat-total-jobs">—</div>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="section-profile" class="content-section" style="display: none;">
+                    <div class="page-header">
+                        <h2>Company Profile</h2>
+                        <p>Manage your recruiter and company information.</p>
+                    </div>
+                    <form id="recruiter-profile-form" class="standard-form">
+                        <div class="form-group">
+                            <label>Company Name</label>
+                            <input type="text" id="prof-companyName" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Recruiter Name</label>
+                            <input type="text" id="prof-recruiterName" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Industry</label>
+                            <input type="text" id="prof-industry">
+                        </div>
+                        <div class="form-group">
+                            <label>Phone</label>
+                            <input type="text" id="prof-phone">
+                        </div>
+                        <div class="form-group">
+                            <label>Website</label>
+                            <input type="text" id="prof-website">
+                        </div>
+                        <div class="form-group">
+                            <label>Company Description</label>
+                            <textarea id="prof-companyDescription" rows="3"></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Save Profile</button>
+                    </form>
+                </section>
+
+                <section id="section-jobs" class="content-section" style="display: none;">
+                    <div class="page-header">
+                        <h2>My Jobs</h2>
+                        <p>Manage the job postings you have created.</p>
+                    </div>
+                    <div class="table-container">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Title</th>
+                                    <th>Status</th>
+                                    <th>Created Date</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="jobs-list">
+                                <!-- Populated via JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <section id="section-candidates" class="content-section" style="display: none;">
+                    <div class="page-header">
+                        <button class="btn btn-secondary" onclick="closeCandidates()">← Back to Jobs</button>
+                    </div>
+                    <div class="card mt-4">
+                        <div class="card-body">
+                            <h2 id="candidates-job-title">—</h2>
+                            <div class="table-container mt-4">
+                                <table class="data-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Rank</th>
+                                            <th>Name</th>
+                                            <th>Score</th>
+                                            <th>Category</th>
+                                            <th>Eligible</th>
+                                            <th>Match details</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="candidates-list">
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="section-create-job" class="content-section" style="display: none;">
+                    <div class="page-header">
+                        <h2>Create Job</h2>
+                        <p>Manually create a new job posting.</p>
+                    </div>
+                    <form id="create-job-form" class="standard-form">
+                        <div class="form-group">
+                            <label>Job Title</label>
+                            <input type="text" id="job-title" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Description</label>
+                            <textarea id="job-description" rows="4" required></textarea>
+                        </div>
+                        
+                        <div class="form-section-title">Requirements</div>
+                        
+                        <div class="form-group">
+                            <label>Required Skills (comma separated)</label>
+                            <input type="text" id="job-req-skills">
+                        </div>
+                        <div class="form-group">
+                            <label>Preferred Skills (comma separated)</label>
+                            <input type="text" id="job-pref-skills">
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Minimum CGPA</label>
+                                <input type="number" step="0.1" id="job-cgpa">
+                            </div>
+                            <div class="form-group">
+                                <label>Maximum Backlogs</label>
+                                <input type="number" id="job-backlogs">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Eligible Branches (comma separated)</label>
+                            <input type="text" id="job-branches">
+                        </div>
+                        <div class="form-group">
+                            <label>Experience Required</label>
+                            <input type="text" id="job-experience">
+                        </div>
+                        
+                        <button type="submit" class="btn btn-primary">Create Job</button>
+                    </form>
+                </section>
+
+                <!-- Applications per Job section -->
+                <section id="section-applications" class="content-section" style="display: none;">
+                    <div class="page-header">
+                        <button class="btn btn-secondary" onclick="closeApplications()">&#8592; Back to Jobs</button>
+                    </div>
+                    <div class="card mt-4">
+                        <div class="card-body">
+                            <h2 id="applications-job-title">Applications</h2>
+                            <div class="table-container mt-4">
+                                <table class="data-table">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Student Name</th>
+                                            <th>Branch</th>
+                                            <th>CGPA</th>
+                                            <th>Match Score</th>
+                                            <th>Applied</th>
+                                            <th>Status</th>
+                                            <th>Resume</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="applications-list">
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Drives section -->
+                <section id="section-drives" class="content-section" style="display: none;">
+                    <div class="page-header">
+                        <h2>Placement Drives</h2>
+                        <p>Create and manage your placement drives.</p>
+                    </div>
+
+                    <!-- Create Drive Form -->
+                    <div class="card mb-4">
+                        <div class="card-body">
+                            <h3>Create New Drive</h3>
+                            <form id="create-drive-form" class="standard-form mt-4">
+                                <div class="form-group">
+                                    <label>Linked Job</label>
+                                    <select id="drive-job-id" required>
+                                        <option value="">Select a job...</option>
+                                    </select>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label>Drive Date</label>
+                                        <input type="date" id="drive-date" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Mode</label>
+                                        <select id="drive-mode" required>
+                                            <option value="offline">Offline</option>
+                                            <option value="online">Online</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label>Start Time (HH:MM)</label>
+                                        <input type="time" id="drive-start" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>End Time (HH:MM)</label>
+                                        <input type="time" id="drive-end" required>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label>Venue</label>
+                                    <input type="text" id="drive-venue" placeholder="Seminar Hall / Online Link">
+                                </div>
+                                <button type="submit" class="btn btn-primary">Create Drive</button>
+                            </form>
+                        </div>
+                    </div>
+
+                    <!-- Drives List -->
+                    <div class="card">
+                        <div class="card-body">
+                            <h3>My Drives</h3>
+                            <div class="table-container mt-4">
+                                <table class="data-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Job</th>
+                                            <th>Date</th>
+                                            <th>Time</th>
+                                            <th>Mode</th>
+                                            <th>Status</th>
+                                            <th>Shortlisted</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="drives-list">
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="section-offers" class="content-section" style="display: none;">
+                    <div class="page-header"><h2>Offer Management</h2><p>Create offers for selected candidates and track offer progress.</p><button class="btn btn-secondary" id="recruiter-refresh-offers">Refresh</button></div>
+                    <h3>Selected Candidates</h3><div class="table-container"><table class="data-table"><thead><tr><th>Student</th><th>Role</th><th>Status</th><th>Action</th></tr></thead><tbody id="recruiter-selected-list"></tbody></table></div>
+                    <h3 class="mt-4">Offers</h3><div class="table-container"><table class="data-table"><thead><tr><th>Student</th><th>Company / Role</th><th>CTC</th><th>Status</th><th>Documents</th><th>Joining</th><th>Manage</th></tr></thead><tbody id="recruiter-offers-list"></tbody></table></div>
+                </section>
+
+            </main>
+        </div>
+    </div>
+
+    <div id="toast-container"></div>
+
+    <script src="js/utils.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/assistant.js"></script>
+    <script src="js/recruiter.js"></script>
+</body>
+</html>
+

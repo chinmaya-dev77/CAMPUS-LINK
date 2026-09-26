@@ -1,0 +1,933 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CampusLink &mdash; Student Dashboard</title>
+
+    <!-- Shared styles -->
+    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="css/dashboard.css" />
+    <link rel="stylesheet" href="css/forms.css" />
+    <link rel="stylesheet" href="css/tables.css" />
+    <link rel="stylesheet" href="css/assistant.css" />
+</head>
+
+<body>
+
+    <div class="app-shell">
+
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+
+            <div class="sidebar-logo">
+                <div class="logo-text">&#127891; CampusLink</div>
+                <div class="logo-sub">Student Portal</div>
+            </div>
+
+            <nav class="sidebar-nav" id="sidebar-nav">
+
+                <div class="sidebar-section-label">Menu</div>
+
+                <a href="#" class="sidebar-link active" data-section="dashboard">
+                    <span class="nav-icon">&#127968;</span> Dashboard
+                </a>
+
+                <a href="#" class="sidebar-link" data-section="profile">
+                    <span class="nav-icon">&#128100;</span> My Profile
+                </a>
+
+                <a href="#" class="sidebar-link" data-section="resume">
+                    <span class="nav-icon">&#128196;</span> Resume
+                </a>
+
+                <a href="#" class="sidebar-link" data-section="readiness">
+                    <span class="nav-icon">&#128202;</span> Readiness
+                </a>
+
+                <a href="#" class="sidebar-link" data-section="jobs">
+                    <span class="nav-icon">&#128188;</span> Jobs
+                </a>
+
+                <a href="#" class="sidebar-link" data-section="applications">
+                    <span class="nav-icon">&#128203;</span> Applications
+                </a>
+
+                <a href="#" class="sidebar-link" data-section="offers">
+                    <span class="nav-icon">&#127873;</span> Offers
+                </a>
+
+                <a href="#" class="sidebar-link" data-section="notifications">
+                    <span class="nav-icon">&#128276;</span> Notifications
+                </a>
+
+            </nav>
+
+            <div class="sidebar-footer">
+
+                <div class="sidebar-user">
+
+                    <div class="user-avatar" id="user-avatar" aria-label="Student profile avatar">S</div>
+
+                    <div class="user-info">
+                        <div class="user-name" id="user-name">Student</div>
+                        <div class="user-role">Student</div>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </aside>
+
+
+        <!-- Main content -->
+        <div class="main-content">
+
+            <header class="topbar">
+
+                <div class="topbar-title" id="page-title">
+                    Dashboard
+                </div>
+
+                <div class="topbar-actions">
+                    <button
+                        class="btn btn-secondary btn-sm"
+                        id="logout-btn">
+                        Logout
+                    </button>
+                </div>
+
+            </header>
+
+
+            <main class="page-content" id="page-content">
+
+
+                <!-- ========================= -->
+                <!-- DASHBOARD VIEW -->
+                <!-- ========================= -->
+
+                <div id="dashboard-view" class="view-section">
+
+                    <div class="page-header">
+                        <h2>Student Dashboard</h2>
+                        <p>
+                            Welcome back! Make sure your profile is up to date.
+                        </p>
+                    </div>
+
+                    <section class="card profile-completion-card" aria-labelledby="profile-completion-heading">
+                        <div class="card-body">
+                            <div class="completion-heading"><div><h3 id="profile-completion-heading">Profile completion</h3><p id="profile-completion-missing" class="form-help">Loading your profile checklist…</p></div><strong id="profile-completion-value">0%</strong></div>
+                            <div class="completion-track" role="progressbar" aria-label="Profile completion" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><span id="profile-completion-bar"></span></div>
+                        </div>
+                    </section>
+
+
+                    <div class="stats-grid">
+
+                        <div class="stat-card">
+
+                            <div class="stat-label">
+                                Readiness Score
+                            </div>
+
+                            <div
+                                class="stat-value"
+                                id="readiness-score">
+                                Loading…
+                            </div>
+
+                            <div class="stat-sub">
+                                Readiness out of 100
+                            </div>
+
+                        </div>
+
+
+                        <div class="stat-card">
+
+                            <div class="stat-label">
+                                Applications
+                            </div>
+
+                            <div
+                                class="stat-value"
+                                id="applications-count">
+                                Loading…
+                            </div>
+
+                            <div class="stat-sub">
+                                Submitted applications
+                            </div>
+
+                        </div>
+
+
+                        <div class="stat-card">
+
+                            <div class="stat-label">
+                                Matched Jobs
+                            </div>
+
+                            <div
+                                class="stat-value"
+                                id="matched-jobs">
+                                Loading…
+                            </div>
+
+                            <div class="stat-sub">
+                                Eligible active jobs
+                            </div>
+
+                        </div>
+
+
+                        <div class="stat-card">
+
+                            <div class="stat-label">
+                                Offers
+                            </div>
+
+                            <div
+                                class="stat-value"
+                                id="offers-count">
+                                Loading…
+                            </div>
+
+                            <div class="stat-sub">
+                                Offers received
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- ========================= -->
+                <!-- PROFILE VIEW -->
+                <!-- ========================= -->
+
+                <div
+                    id="profile-view"
+                    class="view-section hidden">
+
+                    <div class="page-header">
+
+                        <h2>My Profile</h2>
+
+                        <p>
+                            Update your personal and academic details.
+                        </p>
+
+                    </div>
+
+
+                    <!-- Resume -->
+                    <div class="card mb-4">
+
+                        <div class="card-body">
+
+                            <h3>
+                                Resume Parsing & Extraction
+                            </h3>
+
+                            <p class="form-help">
+                                Upload your resume (PDF only, max 5MB).
+                                AI will automatically extract your skills,
+                                projects, certifications, experience,
+                                and education to build your profile.
+                            </p>
+
+
+                            <form
+                                id="resume-upload-form"
+                                class="mt-4">
+
+                                <div class="form-group">
+
+                                    <input
+                                        type="file"
+                                        id="resume-file"
+                                        accept="application/pdf"
+                                        class="form-input"
+                                        required>
+
+                                </div>
+
+
+                                <div class="form-actions mt-3">
+
+                                    <button
+                                        type="submit"
+                                        class="btn btn-primary"
+                                        id="upload-resume-btn">
+
+                                        Upload & Parse Resume
+
+                                    </button>
+
+                                </div>
+
+
+                                <div
+                                    id="resume-upload-status"
+                                    class="mt-3 hidden"
+                                    style="
+                                        font-size: 0.9em;
+                                        padding: 10px;
+                                        border-radius: 4px;
+                                        background: #f8f9fa;
+                                    ">
+
+                                    <span id="resume-upload-message">
+                                        Processing...
+                                        This may take a few seconds.
+                                    </span>
+
+                                </div>
+
+
+                                <div
+                                    id="resume-current-file"
+                                    class="mt-3 hidden"
+                                    style="
+                                        font-size: 0.9em;
+                                        color: #2e7d32;
+                                    ">
+
+                                    <strong>
+                                        Current Resume:
+                                    </strong>
+
+                                <span
+                                        id="resume-filename-display">
+                                    </span>
+                                    <button type="button" class="btn btn-secondary btn-sm" id="resume-view-btn">View</button>
+                                    <button type="button" class="btn btn-secondary btn-sm" id="resume-download-btn">Download</button>
+
+                                </div>
+
+                            </form>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- Profile form -->
+                    <div class="card">
+
+                        <div class="card-body">
+
+                            <form id="student-profile-form">
+
+                                <section class="profile-picture-editor" aria-label="Profile picture">
+                                    <div id="profile-picture-preview" class="profile-picture-preview">S</div>
+                                    <div class="profile-picture-controls"><strong>Profile picture</strong><p class="form-help">JPG, PNG, or WebP; up to 2 MB.</p><input id="profile-picture-file" type="file" accept="image/jpeg,image/png,image/webp" class="form-input"><div class="project-actions"><button type="button" id="profile-picture-upload" class="btn btn-secondary">Upload photo</button><button type="button" id="profile-picture-remove" class="btn btn-secondary hidden">Remove photo</button></div></div>
+                                </section>
+
+                                <h3>
+                                    Personal Information
+                                </h3>
+
+
+                                <div class="form-row mt-4">
+
+                                    <div class="form-group">
+
+                                        <label class="form-label">
+                                            Name
+                                            <span class="required">*</span>
+                                        </label>
+
+                                        <input
+                                            type="text"
+                                            id="profile-name"
+                                            class="form-input"
+                                            required>
+
+                                    </div>
+
+
+                                    <div class="form-group">
+
+                                        <label class="form-label">
+                                            Email (Read-Only)
+                                        </label>
+
+                                        <input
+                                            type="email"
+                                            id="profile-email"
+                                            class="form-input"
+                                            disabled>
+
+                                    </div>
+
+                                </div>
+
+
+                                <div class="form-row">
+
+                                    <div class="form-group">
+
+                                        <label class="form-label">
+                                            Phone
+                                        </label>
+
+                                        <input
+                                            type="text"
+                                            id="profile-phone"
+                                            class="form-input"
+                                            placeholder="+91 9876543210">
+
+                                    </div>
+
+
+                                    <div class="form-group">
+
+                                        <label class="form-label">
+                                            Branch
+                                        </label>
+
+                                        <select
+                                            id="profile-branch"
+                                            class="form-select">
+
+                                            <option value="">
+                                                Select Branch
+                                            </option>
+
+                                        <option value="computer science">
+                                                Computer Science
+                                            </option>
+
+                                            <option value="information technology">
+                                                Information Technology
+                                            </option>
+
+                                            <option value="ECE">
+                                                Electronics
+                                            </option>
+
+                                            <option value="MECH">
+                                                Mechanical
+                                            </option>
+
+                                            <option value="CIVIL">
+                                                Civil
+                                            </option>
+
+                                        </select>
+
+                                    </div>
+
+                                </div>
+
+
+                                <h3 class="mt-4">
+                                    Academic Information
+                                </h3>
+
+
+                                <div class="form-row mt-4">
+
+                                    <div class="form-group">
+
+                                        <label class="form-label">
+                                            Graduation Year
+                                        </label>
+
+                                        <input
+                                            type="number"
+                                            id="profile-graduationYear"
+                                            class="form-input"
+                                            min="2020"
+                                            max="2030">
+
+                                    </div>
+
+
+                                    <div class="form-group">
+
+                                        <label class="form-label">
+                                            CGPA (out of 10)
+                                        </label>
+
+                                        <input
+                                            type="number"
+                                            id="profile-cgpa"
+                                            class="form-input"
+                                            step="0.01"
+                                            min="0"
+                                            max="10">
+
+                                    </div>
+
+                                </div>
+
+
+                                <div class="form-row">
+
+                                    <div class="form-group">
+
+                                        <label class="form-label">
+                                            Active Backlogs
+                                        </label>
+
+                                        <input
+                                            type="number"
+                                            id="profile-backlogs"
+                                            class="form-input"
+                                            min="0">
+
+                                    </div>
+
+                                </div>
+
+
+                                <h3 class="mt-4">
+                                    Top Skills
+                                </h3>
+
+
+                                <div class="form-group mt-4">
+
+                                    <label class="form-label">
+                                        Enter comma-separated skills
+                                        (e.g. Java, React, Python)
+                                    </label>
+
+                                    <input
+                                        type="text"
+                                        id="profile-skills"
+                                        class="form-input"
+                                        placeholder="Java, Python, System Design">
+
+                                    <p class="form-help">
+                                        Enter skills here or add them through resume analysis.
+                                    </p>
+
+                                </div>
+
+                                <section class="student-projects-editor" aria-labelledby="projects-heading">
+                                    <div class="section-heading-row"><div><h3 id="projects-heading">Projects</h3><p class="form-help">Projects help recruiters understand your experience and improve matching.</p></div></div>
+                                    <div id="profile-project-list" class="project-list" aria-live="polite"></div>
+                                    <div class="project-editor-grid">
+                                        <input id="project-id" type="hidden">
+                                        <input id="project-title" class="form-input" placeholder="Project title" aria-label="Project title">
+                                        <input id="project-role" class="form-input" placeholder="Your role" aria-label="Project role">
+                                        <input id="project-technologies" class="form-input" placeholder="Technologies, comma separated" aria-label="Project technologies">
+                                        <input id="project-github" class="form-input" type="url" placeholder="GitHub URL (optional)" aria-label="GitHub URL">
+                                        <input id="project-demo" class="form-input" type="url" placeholder="Demo URL (optional)" aria-label="Demo URL">
+                                        <textarea id="project-description" class="form-input" rows="3" placeholder="What did you build?" aria-label="Project description"></textarea>
+                                    </div>
+                                    <div class="project-actions"><button type="button" id="project-save-btn" class="btn btn-secondary">Add project</button><button type="button" id="project-cancel-btn" class="btn btn-secondary hidden">Cancel edit</button></div>
+                                </section>
+
+
+                                <div class="form-actions mt-4">
+
+                                    <button
+                                        type="submit"
+                                        class="btn btn-primary"
+                                        id="save-profile-btn">
+
+                                        Save Profile
+
+                                    </button>
+
+                                </div>
+
+                            </form>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- ========================= -->
+                <!-- READINESS VIEW -->
+                <!-- ========================= -->
+
+                <div
+                    id="readiness-view"
+                    class="view-section hidden">
+
+                    <div class="page-header">
+
+                        <h2>
+                            My Readiness Profile
+                        </h2>
+
+                        <p>
+                            Analyze your employability based on
+                            skills, projects, and academic history.
+                        </p>
+
+                    </div>
+
+
+                    <div class="card mb-4">
+
+                        <div class="card-body">
+
+                            <div
+                                style="
+                                    display: flex;
+                                    justify-content: space-between;
+                                    align-items: center;
+                                    margin-bottom: 20px;
+                                ">
+
+                                <h3>
+                                    Readiness Assessment
+                                </h3>
+
+                                <button
+                                    class="btn btn-primary"
+                                    id="analyze-readiness-btn">
+
+                                    Analyze Readiness
+
+                                </button>
+
+                            </div>
+
+
+                            <div
+                                id="readiness-results"
+                                class="hidden">
+
+                                <div class="stats-grid">
+
+
+                                    <div class="stat-card">
+
+                                        <div class="stat-label">
+                                            Total Score
+                                        </div>
+
+                                        <div
+                                            class="stat-value"
+                                            id="r-total-score">
+                                            &mdash;
+                                        </div>
+
+                                        <div
+                                            class="stat-sub"
+                                            id="r-category">
+                                        </div>
+
+                                    </div>
+
+
+                                    <div class="stat-card">
+
+                                        <div class="stat-label">
+                                            Technical Skills
+                                        </div>
+
+                                        <div
+                                            class="stat-value"
+                                            id="r-tech-score">
+                                            &mdash;
+                                        </div>
+
+                                        <div class="stat-sub">
+                                            Weight: 30%
+                                        </div>
+
+                                    </div>
+
+
+                                    <div class="stat-card">
+
+                                        <div class="stat-label">
+                                            Projects
+                                        </div>
+
+                                        <div
+                                            class="stat-value"
+                                            id="r-proj-score">
+                                            &mdash;
+                                        </div>
+
+                                        <div class="stat-sub">
+                                            Weight: 20%
+                                        </div>
+
+                                    </div>
+
+
+                                    <div class="stat-card">
+
+                                        <div class="stat-label">
+                                            Academic
+                                        </div>
+
+                                        <div
+                                            class="stat-value"
+                                            id="r-acad-score">
+                                            &mdash;
+                                        </div>
+
+                                        <div class="stat-sub">
+                                            Weight: 20%
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+
+                                <div
+                                    class="mt-4"
+                                    style="
+                                        background: #f8f9fa;
+                                        padding: 15px;
+                                        border-radius: 8px;
+                                    ">
+
+                                    <strong>
+                                        Evidence Coverage:
+                                    </strong>
+
+                                    <span id="r-evidence-coverage">
+                                        &mdash;
+                                    </span>%
+
+                                    <p
+                                        class="form-help mt-1"
+                                        id="r-missing-evidence">
+                                    </p>
+
+                                </div>
+
+
+                                <h3 class="mt-4">
+                                    Skill Gaps & Recommendations
+                                </h3>
+
+                                <ul
+                                    id="r-recommendations"
+                                    class="mt-2"
+                                    style="padding-left: 20px;">
+                                </ul>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- ========================= -->
+                <!-- JOBS VIEW -->
+                <!-- ========================= -->
+
+                <div
+                    id="jobs-view"
+                    class="view-section hidden">
+
+                    <div class="page-header">
+
+                        <h2>
+                            Job Opportunities
+                        </h2>
+
+                        <p>
+                            Explore active job opportunities
+                            posted by recruiters.
+                        </p>
+
+                    </div>
+
+
+                    <div id="jobs-container">
+
+                        <p>
+                            Loading jobs...
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <!-- ========================= -->
+                <!-- JOB DETAILS VIEW -->
+                <!-- ========================= -->
+
+                <div
+                    id="job-details-view"
+                    class="view-section hidden">
+
+                    <div class="page-header">
+
+                        <button
+                            class="btn btn-secondary"
+                            onclick="closeJobDetails()">
+
+                            &#8592; Back to Jobs
+
+                        </button>
+
+                    </div>
+
+
+                    <div class="card">
+
+                        <div class="card-body">
+
+                            <h2 id="job-title">
+                                &mdash;
+                            </h2>
+
+
+                            <p class="mt-2">
+
+                                <strong>
+                                    Company:
+                                </strong>
+
+                                <span id="job-company">
+                                    &mdash;
+                                </span>
+
+                            </p>
+
+
+                            <hr class="mt-4">
+
+
+                            <h3 class="mt-4">
+                                Job Description
+                            </h3>
+
+                            <p id="job-description">
+                                &mdash;
+                            </p>
+
+
+                            <h3 class="mt-4">
+                                Required Skills
+                            </h3>
+
+                            <p id="job-required-skills">
+                                &mdash;
+                            </p>
+
+
+                            <h3 class="mt-4">
+                                Preferred Skills
+                            </h3>
+
+                            <p id="job-preferred-skills">
+                                &mdash;
+                            </p>
+
+
+                            <h3 class="mt-4">
+                                Eligibility
+                            </h3>
+
+
+                            <p>
+
+                                <strong>
+                                    Minimum CGPA:
+                                </strong>
+
+                                <span id="job-cgpa">
+                                    &mdash;
+                                </span>
+
+                            </p>
+
+
+                            <p>
+    <strong>Eligible Branches:</strong>
+    <span id="job-branches">&mdash;</span>
+</p>
+
+<div class="form-actions mt-4">
+    <button class="btn btn-primary" id="check-match-btn">
+        &#128269; Check Match
+    </button>
+    <button class="btn btn-success" id="apply-job-btn" style="margin-left: 10px; display: none;">Apply Now</button>
+</div>
+
+<div id="match-result" class="mt-4 hidden"></div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+            <!-- ========================= -->
+<!-- APPLICATIONS VIEW -->
+<!-- ========================= -->
+<div id="applications-view" class="view-section hidden">
+    <div class="page-header">
+        <h2>My Applications</h2>
+        <p>Track your job applications and statuses.</p>
+    </div>
+    <div class="card mt-4">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Job Title</th>
+                            <th>Company</th>
+                            <th>Status</th>
+                            <th>Match Score</th>
+                            <th>Applied On</th>
+                        </tr>
+                    </thead>
+                    <tbody id="applications-list">
+                        <tr><td colspan="5" class="text-center">Loading applications...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="offers-view" class="view-section hidden">
+    <div class="page-header"><h2>My Offers</h2><p>Track offer decisions, documents, and joining.</p></div>
+    <div class="table-container"><table class="data-table">
+        <thead><tr><th>Company</th><th>Role</th><th>CTC</th><th>Offer Status</th><th>Joining Date</th><th>Documents</th></tr></thead>
+        <tbody id="offers-list"><tr><td colspan="6" class="text-center">Loading offers...</td></tr></tbody>
+    </table></div>
+</div>
+            </main>
+
+        </div>
+
+    </div>
+
+
+    <!-- Toast container -->
+    <div id="toast-container"></div>
+
+
+    <!-- Shared scripts -->
+    <script src="js/utils.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/assistant.js"></script>
+    <script src="js/student.js"></script>
+
+</body>
+</html>
