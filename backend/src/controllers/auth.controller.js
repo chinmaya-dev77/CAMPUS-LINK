@@ -1,4 +1,12 @@
 const authService = require('../services/auth.service');
+const otpService = require('../services/auth.otp.service');
+
+const startPasswordReset = async (req, res, next) => {
+    try {
+        const result = await otpService.startPasswordReset(req.body, req.ip);
+        res.status(200).json({ success: true, data: result, message: 'Verification code sent.' });
+    } catch (error) { next(error); }
+};
 
 const register = async (req, res, next) => {
     try {
@@ -69,6 +77,7 @@ const getMe = async (req, res, next) => {
 };
 
 module.exports = {
+    startPasswordReset,
     register,
     login,
     getMe
