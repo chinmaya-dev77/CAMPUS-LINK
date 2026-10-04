@@ -1,13 +1,25 @@
 const express = require('express');
-const { register, login, getMe, startPasswordReset } = require('../controllers/auth.controller');
+const {
+    login,
+    getMe,
+    startRegistration,
+    verifyOtp,
+    resendOtp,
+    startPasswordReset,
+    finishPasswordReset
+} = require('../controllers/auth.controller');
 const { protect } = require('../middleware/auth.middleware');
 
 const router = express.Router();
 
-const { authorize } = require('../middleware/auth.middleware');
-
-router.post('/register', register);
+// Public registration always requires email verification; Placement accounts are provisioned internally.
+router.post('/register', startRegistration);
+router.post('/register/send-otp', startRegistration);
+router.post('/register/verify-otp', verifyOtp);
+router.post('/otp/verify', verifyOtp);
+router.post('/otp/resend', resendOtp);
 router.post('/password/forgot', startPasswordReset);
+router.post('/password/reset', finishPasswordReset);
 router.post('/login', login);
 router.get('/me', protect, getMe);
 

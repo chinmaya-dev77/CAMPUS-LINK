@@ -2,6 +2,11 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 
+const hashPassword = async (password) => {
+    const salt = await bcrypt.genSalt(10);
+    return bcrypt.hash(password, salt);
+};
+
 /**
  * Register a new user
  */
@@ -18,8 +23,7 @@ const registerUser = async (userData) => {
     }
 
     // Hash password
-    const salt = await bcrypt.genSalt(10);
-    const passwordHash = await bcrypt.hash(password, salt);
+    const passwordHash = await hashPassword(password);
 
     // Create user
     const newUser = await User.create({
@@ -87,6 +91,7 @@ const loginUser = async (credentials) => {
 };
 
 module.exports = {
+    hashPassword,
     registerUser,
     loginUser
 };

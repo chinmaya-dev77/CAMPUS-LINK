@@ -23,12 +23,13 @@ function sanitizeProviderText(value, recipient) {
 
 function logResendFailure(error, recipient) {
     const detail = error?.message || error?.error?.message || error?.response?.data?.message;
-    const status = error?.statusCode || error?.status || error?.response?.status || error?.error?.statusCode || null;
+    const status = error?.statusCode ?? error?.status ?? error?.response?.status ?? error?.error?.statusCode ?? null;
+    const numericStatus = status === null || status === '' ? null : Number(status);
     console.error('[RESEND OTP DIAGNOSTIC]', JSON.stringify({
         provider: 'Resend',
         providerErrorType: sanitizeProviderText(error?.name || error?.type || error?.error?.name || 'ProviderError', recipient),
         providerMessage: sanitizeProviderText(detail, recipient),
-        httpStatus: Number.isFinite(Number(status)) ? Number(status) : null
+        httpStatus: Number.isFinite(numericStatus) ? numericStatus : null
     }));
 }
 

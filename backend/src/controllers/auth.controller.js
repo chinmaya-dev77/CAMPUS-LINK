@@ -1,6 +1,27 @@
 const authService = require('../services/auth.service');
 const otpService = require('../services/auth.otp.service');
 
+const startRegistration = async (req, res, next) => {
+    try {
+        const result = await otpService.startRegistration(req.body, req.ip);
+        res.status(200).json({ success: true, data: result, message: 'Verification code sent.' });
+    } catch (error) { next(error); }
+};
+
+const verifyOtp = async (req, res, next) => {
+    try {
+        const result = await otpService.verifyOtp(req.body, req.ip);
+        res.status(200).json({ success: true, data: result, message: result.purpose === 'registration' ? 'Email verified and account created.' : 'Email verified.' });
+    } catch (error) { next(error); }
+};
+
+const resendOtp = async (req, res, next) => {
+    try {
+        const result = await otpService.resendOtp(req.body, req.ip);
+        res.status(200).json({ success: true, data: result, message: 'A new verification code has been sent.' });
+    } catch (error) { next(error); }
+};
+
 const startPasswordReset = async (req, res, next) => {
     try {
         const result = await otpService.startPasswordReset(req.body, req.ip);
@@ -8,37 +29,11 @@ const startPasswordReset = async (req, res, next) => {
     } catch (error) { next(error); }
 };
 
-const register = async (req, res, next) => {
+const finishPasswordReset = async (req, res, next) => {
     try {
-        const { name, email, password, role } = req.body;
-        
-        // Basic validation
-        if (!name || !email || !password || !role) {
-            const err = new Error('Please provide name, email, password and role');
-            err.status = 400;
-            err.code = 'VALIDATION_ERROR';
-            return next(err);
-        }
-        if (typeof name !== 'string' || !name.trim()
-            || typeof email !== 'string' || !/^\S+@\S+\.\S+$/.test(email.trim())
-            || typeof password !== 'string' || password.length < 8
-            || !['student', 'recruiter', 'placement'].includes(role)) {
-            const err = new Error('Provide a name, valid email, password of at least 8 characters, and a supported role');
-            err.status = 400;
-            err.code = 'VALIDATION_ERROR';
-            return next(err);
-        }
-
-        const user = await authService.registerUser({ name, email, password, role });
-        
-        res.status(201).json({
-            success: true,
-            data: { user },
-            message: 'Registration successful'
-        });
-    } catch (err) {
-        next(err);
-    }
+        await otpService.finishPasswordReset(req.body);
+        res.status(200).json({ success: true, message: 'Password updated.' });
+    } catch (error) { next(error); }
 };
 
 const login = async (req, res, next) => {
@@ -77,8 +72,11 @@ const getMe = async (req, res, next) => {
 };
 
 module.exports = {
+    startRegistration,
+    verifyOtp,
+    resendOtp,
     startPasswordReset,
-    register,
+    finishPasswordReset,
     login,
     getMe
 };

@@ -75,7 +75,7 @@ async function sendChallenge(challenge) {
     await AuthOtpChallenge.findOneAndUpdate(
         { email: challenge.email, purpose: challenge.purpose },
         { $set: document },
-        { upsert: true, new: true, runValidators: true, setDefaultsOnInsert: true }
+        { upsert: true, returnDocument: 'after', runValidators: true, setDefaultsOnInsert: true }
     );
     try {
         await emailService.sendOtpEmail(challenge.email, otp, challenge.purpose);
@@ -137,11 +137,17 @@ async function verifyOtp(input, ip) {
     if (!challenge || challenge.verifiedAt || challenge.otpExpiresAt <= new Date() || challenge.expiresAt <= new Date()) {
         fail('This code has expired. Request a new code to continue.', 400, 'OTP_EXPIRED');
     }
-    if (challenge.attempts >= MAX_ATTEMPTS) fail('Too many incorrect attempts. Request a new code to continue.', 429, 'OTP_ATTEMPTS_EXCEEDED');
+    if (challenge.attempts >= MAX_ATTEMPTS) {
+        await AuthOtpChallenge.deleteOne({ _id: challenge._id });
+        fail('Too many incorrect attempts. Request a new code to continue.', 429, 'OTP_ATTEMPTS_EXCEEDED');
+    }
     if (!secureMatch(challenge.otpHash, hashOtp(otp))) {
         challenge.attempts += 1;
+        if (challenge.attempts >= MAX_ATTEMPTS) {
+            await AuthOtpChallenge.deleteOne({ _id: challenge._id });
+            fail('Too many incorrect attempts. Request a new code to continue.', 429, 'OTP_ATTEMPTS_EXCEEDED');
+        }
         await challenge.save();
-        if (challenge.attempts >= MAX_ATTEMPTS) fail('Too many incorrect attempts. Request a new code to continue.', 429, 'OTP_ATTEMPTS_EXCEEDED');
         fail('That code is not correct. Check the email and try again.', 400, 'OTP_INVALID');
     }
 
