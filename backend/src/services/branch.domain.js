@@ -4,8 +4,12 @@ const ALIASES = new Map([
     ['cse', 'computer science'], ['cs', 'computer science'],
     ['computer science', 'computer science'], ['computer science engineering', 'computer science'],
     ['computer science & engineering', 'computer science'], ['computer science and engineering', 'computer science'],
+    ['computer science & engineering / cse', 'computer science'], ['computer science and engineering / cse', 'computer science'],
+    ['computer engineering', 'computer science'],
     ['b tech cse', 'computer science'], ['btech cse', 'computer science'],
+    ['b tech in cse', 'computer science'], ['btech in cse', 'computer science'],
     ['b tech computer science', 'computer science'], ['btech computer science', 'computer science'],
+    ['b tech computer engineering', 'computer science'], ['btech computer engineering', 'computer science'],
     ['it', 'information technology'], ['information technology', 'information technology'],
     ['information technology engineering', 'information technology'], ['b tech it', 'information technology'],
     ['btech it', 'information technology']

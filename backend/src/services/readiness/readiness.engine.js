@@ -46,8 +46,10 @@ function calculateReadiness(student) {
     const projScore = calculateProjectsScore(student.projects);
     const acadScore = calculateAcademicScore(student);
     
-    const assessmentScore = null;
-    const interviewScore = null;
+    const assessmentScore = Number.isFinite(student?.readiness?.assessmentScore)
+        ? Math.max(0, Math.min(100, student.readiness.assessmentScore)) : null;
+    const interviewScore = Number.isFinite(student?.readiness?.interviewScore)
+        ? Math.max(0, Math.min(100, student.readiness.interviewScore)) : null;
 
     let totalWeight = 0;
     let accumulatedScore = 0;
@@ -98,9 +100,10 @@ function calculateReadiness(student) {
     if (student.cgpa) evidenceCount++;
     else missingEvidence.push('Academic');
 
-    // Missing by schema design right now
-    missingEvidence.push('Assessment');
-    missingEvidence.push('Interview');
+    if (assessmentScore !== null) evidenceCount++;
+    else missingEvidence.push('Assessment');
+    if (interviewScore !== null) evidenceCount++;
+    else missingEvidence.push('Interview');
 
     const evidenceCoverage = Math.round((evidenceCount / totalEvidence) * 100);
 

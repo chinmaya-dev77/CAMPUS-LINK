@@ -73,6 +73,7 @@ function getCurrentRole() {
 function handleLoginSuccess(authData) {
     saveToken(authData.token);
     saveUser(authData.user);
+    window.dispatchEvent(new Event("campuslink:account-changed"));
 }
 
 /**
@@ -81,6 +82,7 @@ function handleLoginSuccess(authData) {
 function logout() {
     removeToken();
     removeUser();
+    window.dispatchEvent(new Event("campuslink:account-changed"));
     window.location.href = "/index.html";
 }
 

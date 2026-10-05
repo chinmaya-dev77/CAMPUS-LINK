@@ -8,8 +8,9 @@ const Application = require('../../models/Application');
 const Drive = require('../../models/Drive');
 const Offer = require('../../models/Offer');
 const { normalizeSkill } = require('../readiness/skill.domain');
+const { ensureReadiness } = require('../readiness/readiness.service');
 const { normalizeBranch } = require('../branch.domain');
-const { checkDriveConflicts } = require('../scheduling/scheduling.service');
+const { checkDriveConflicts, checkDriveTimeConflicts } = require('../scheduling/scheduling.service');
 
 const countBy = (items, keyOf) => {
     const counts = new Map();
@@ -20,22 +21,38 @@ const numeric = (value) => typeof value === 'number' && Number.isFinite(value) &
 
 async function getPlacementAnalytics(now = new Date()) {
     const [students, recruiters, activeUsers, jobs, applications, offers, drives] = await Promise.all([
-        Student.find().select('userId branch skills readiness').lean(),
+        // Select readiness leaf paths explicitly. Selecting the parent `readiness`
+        // and force-including its hidden `sourceHash` child causes a Mongo path collision.
+        Student.find().select('userId name branch skills projects cgpa backlogs readiness.score readiness.calculatedAt +readiness.sourceHash').lean(),
         Recruiter.find().select('userId').lean(),
         User.find({ role: 'recruiter', isActive: true }).select('_id').lean(),
         Job.find().select('title status requirements').lean(),
         Application.find().select('studentId status').lean(),
-        Offer.find().select('studentId jobId role ctc offerStatus').lean(),
+        Offer.find().select('studentId applicationId jobId companyName role ctc offerStatus joiningDate createdAt updatedAt').lean(),
         Drive.find().select('jobId recruiterId companyName role date startTime endTime venue mode status shortlistedCandidates eligibleCandidates selectedCandidates conflicts').lean()
     ]);
     const studentByUserId = new Map(students.map((student) => [String(student.userId), student]));
     const studentRecords = [...studentByUserId.values()];
+    const readinessByUserId = new Map(await Promise.all(studentRecords.map(async (student) => [String(student.userId), await ensureReadiness(student)])));
     const uniqueStudents = new Set(studentByUserId.keys());
-    const selectedApps = applications.filter((a) => a.status === 'Selected');
+    const offerApplications = new Set(offers.filter((offer) => ['Declined', 'Joining Confirmed'].includes(offer.offerStatus)).map((offer) => String(offer.applicationId)));
+    const selectedApps = applications.filter((a) => ['Selected', 'Offer', 'Hired'].includes(a.status) || offerApplications.has(String(a._id)));
     const shortlistedApps = applications.filter((a) => a.status === 'Shortlisted');
     // Final placement is recorded only once an offer reaches Joining Confirmed; count distinct students.
     const placedStudents = new Set(offers.filter((o) => o.offerStatus === 'Joining Confirmed' && uniqueStudents.has(String(o.studentId))).map((o) => String(o.studentId)));
-    const eligibleStudents = studentRecords.filter((s) => Number.isFinite(s.readiness?.score) && s.readiness.score >= 70).length;
+    const studentById = new Map(studentRecords.map((student) => [String(student.userId), student]));
+    const recentlyPlaced = offers.filter((offer) => offer.offerStatus === 'Joining Confirmed' && uniqueStudents.has(String(offer.studentId)))
+        .sort((a, b) => new Date(b.updatedAt || b.createdAt || b.joiningDate || 0) - new Date(a.updatedAt || a.createdAt || a.joiningDate || 0))
+        .slice(0, 6)
+        .map((offer) => {
+            const student = studentById.get(String(offer.studentId));
+            return {
+                studentId: String(offer.studentId), name: student?.name || 'Student', branch: student?.branch || null,
+                companyName: offer.companyName || null, role: offer.role || null, ctc: numeric(offer.ctc) ? offer.ctc : null,
+                joiningDate: offer.joiningDate || null, placedAt: offer.updatedAt || offer.createdAt || offer.joiningDate || null
+            };
+        });
+    const eligibleStudents = studentRecords.filter((s) => Number.isFinite(readinessByUserId.get(String(s.userId))?.score) && readinessByUserId.get(String(s.userId)).score >= 70).length;
     const placementRate = uniqueStudents.size ? (placedStudents.size / uniqueStudents.size) * 100 : 0;
     const recruiterProfileIds = new Set(recruiters.map((r) => String(r.userId)));
     const activeRecruiters = activeUsers.filter((u) => recruiterProfileIds.has(String(u._id))).length;
@@ -51,7 +68,7 @@ async function getPlacementAnalytics(now = new Date()) {
     const gaps = [];
     studentRecords.forEach((student, index) => {
         const existing = studentSkillSets[index];
-        const readinessGaps = (student.readiness?.improvementAreas || []).map(normalizeSkill).filter(Boolean);
+        const readinessGaps = (readinessByUserId.get(String(student.userId))?.skillGaps || []).map(normalizeSkill).filter(Boolean);
         const derived = demandBySkill.filter((item) => !existing.has(item.name)).map((item) => item.name);
         [...new Set([...readinessGaps, ...derived])].forEach((skill) => gaps.push(skill));
     });
@@ -84,7 +101,10 @@ async function getPlacementAnalytics(now = new Date()) {
     const completedDrives = drives.filter((d) => d.status === 'Completed').length;
     const conflictableDrives = drives.filter((d) => d.status !== 'Cancelled' && (d.status === 'Ongoing' || d.status === 'Scheduled'));
     // Let scheduling failures reach the API error handler; an internal error must not look like zero conflicts.
-    const conflictSets = await Promise.all(conflictableDrives.map((drive) => checkDriveConflicts(drive)));
+    const conflictSets = await Promise.all(conflictableDrives.map(async (drive) => [
+        ...await checkDriveConflicts(drive),
+        ...await checkDriveTimeConflicts(drive)
+    ]));
     const conflictKeys = new Set();
     conflictSets.flat().forEach((conflict) => {
         const pair = [conflict.currentDrive.id, conflict.conflictingDrive.id].sort().join(':');
@@ -93,7 +113,7 @@ async function getPlacementAnalytics(now = new Date()) {
 
     return {
         generatedAt: now.toISOString(),
-        placement: { totalStudents: uniqueStudents.size, eligibleStudents, applications: applications.length, shortlisted: shortlistedApps.length, selected: selectedApps.length, placed: placedStudents.size, placementRate, placementRateDenominator: 'total registered students' },
+        placement: { totalStudents: uniqueStudents.size, eligibleStudents, applications: applications.length, shortlisted: shortlistedApps.length, selected: selectedApps.length, placed: placedStudents.size, placementRate, placementRateDenominator: 'total registered students', recentlyPlaced },
         recruiters: { activeRecruiters, openJobs: jobs.filter((j) => j.status === 'active').length, candidatesShortlisted: new Set(shortlistedApps.map((a) => String(a.studentId))).size, selectionRate, offers: offers.length, selectionRateDefinition: 'distinct students with a Selected application / distinct students with any application' },
         skills: { mostDemanded: demandBySkill.slice(0, 10), gaps: countBy(gaps, (skill) => skill).slice(0, 10), branchDistribution: branches, branchSkills: [...branchSkills].sort(([a], [b]) => a.localeCompare(b)).map(([branch, skills]) => ({ branch, skills: [...skills].sort() })) },
         compensation: { averageCtc: ctcValues.length ? mean(ctcValues) : null, medianCtc: median, highestCtc: ctcValues.length ? ctcValues[ctcValues.length - 1] : null, validOffers: ctcValues.length, roleWise: roleCtc },

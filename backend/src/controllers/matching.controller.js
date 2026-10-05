@@ -68,10 +68,11 @@ const getCandidatesForJob = async (req, res, next) => {
         }
 
         const includeIneligible = req.query.includeIneligible === 'true';
+        const applicantsOnly = req.query.applicantsOnly === 'true';
         const job = await Job.findById(req.params.id).select('recruiterId');
         if (!job) return res.status(404).json({ success: false, error: { code: 'NOT_FOUND', message: 'Job not found' }});
         if (job.recruiterId.toString() !== req.user.id.toString()) return res.status(403).json({ success: false, error: { code: 'FORBIDDEN', message: 'Not authorized to view candidates for this job' }});
-        const candidates = await getMatchedCandidatesForJob(req.params.id, { includeIneligible });
+        const candidates = await getMatchedCandidatesForJob(req.params.id, { includeIneligible, applicantsOnly });
 
         res.status(200).json({
             success: true,

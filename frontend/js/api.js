@@ -82,6 +82,7 @@ async function apiRequest(endpoint, options = {}) {
             );
             err.code   = data?.error?.code   || "API_ERROR";
             err.status = response.status;
+            err.conflicts = data?.error?.conflicts || [];
             throw err;
         }
 
@@ -133,6 +134,36 @@ async function apiUpload(endpoint, formData) {
     });
 }
 
+/** Multipart upload with native upload progress events; response/error shape matches apiRequest. */
+function apiUploadWithProgress(endpoint, formData, onProgress = () => {}) {
+    return new Promise((resolve, reject) => {
+        const xhr = new XMLHttpRequest();
+        xhr.open('POST', `${API_BASE}${endpoint}`);
+        const token = getToken();
+        if (token) xhr.setRequestHeader('Authorization', `Bearer ${token}`);
+        xhr.upload.addEventListener('progress', (event) => {
+            if (event.lengthComputable) onProgress(Math.max(0, Math.min(100, Math.round((event.loaded / event.total) * 100))));
+        });
+        xhr.addEventListener('load', () => {
+            let data = {};
+            try { data = JSON.parse(xhr.responseText || '{}'); } catch (_) {}
+            if (xhr.status < 200 || xhr.status >= 300) {
+                const error = new Error(data?.error?.message || `HTTP ${xhr.status}`);
+                error.status = xhr.status;
+                error.code = data?.error?.code || 'API_ERROR';
+                error.conflicts = data?.error?.conflicts || [];
+                reject(error);
+                return;
+            }
+            onProgress(100);
+            resolve(data);
+        });
+        xhr.addEventListener('error', () => reject(Object.assign(new Error('Cannot reach the CampusLink server. Is it running?'), { code: 'NETWORK_ERROR' })));
+        xhr.addEventListener('abort', () => reject(Object.assign(new Error('Upload was cancelled.'), { code: 'UPLOAD_ABORTED' })));
+        xhr.send(formData);
+    });
+}
+
 // ─── Health check ─────────────────────────────────────────────────────────────
 /** Returns true if the backend is reachable. */
 async function checkHealth() {
@@ -156,5 +187,6 @@ window.CampusAPI = {
     delete:  apiDelete,
     blob:    apiBlob,
     upload:  apiUpload,
+    uploadWithProgress: apiUploadWithProgress,
     health:  checkHealth,
 };

@@ -20,9 +20,10 @@ const applicationSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Drive'
     },
+    interviewScheduledAt: { type: Date },
     status: {
         type: String,
-        enum: ['Applied', 'Eligible', 'Ineligible', 'Shortlisted', 'Rejected', 'Interview', 'Selected', 'Offer', 'Withdrawn'],
+        enum: ['Applied', 'Eligible', 'Ineligible', 'Shortlisted', 'Rejected', 'Interview', 'Selected', 'Offer', 'Withdrawn', 'Hired'],
         default: 'Applied'
     },
     eligibility: {
@@ -45,7 +46,8 @@ const applicationSchema = new mongoose.Schema({
         default: Date.now
     }
 }, {
-    timestamps: true
+    timestamps: true,
+    optimisticConcurrency: true
 });
 
 // A student may submit at most one application for a given job. The service

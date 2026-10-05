@@ -6,17 +6,23 @@ const assert = require('node:assert/strict');
 const http = require('node:http');
 
 const base = { hostname: 'localhost', port: API_PORT };
-function request(path, method = 'GET', token, body) {
+function request(path, method = 'GET', token, body, extraHeaders = {}) {
     return new Promise((resolve, reject) => {
-        const req = http.request({ ...base, path, method, headers: { 'Content-Type': 'application/json', ...(token ? { Authorization: `Bearer ${token}` } : {}) } }, (res) => {
+        const req = http.request({ ...base, path, method, headers: { ...(!Buffer.isBuffer(body) ? { 'Content-Type': 'application/json' } : {}), ...(token ? { Authorization: `Bearer ${token}` } : {}), ...extraHeaders } }, (res) => {
             let raw = '';
             res.on('data', (chunk) => { raw += chunk; });
             res.on('end', () => { try { resolve({ status: res.statusCode, data: JSON.parse(raw) }); } catch { resolve({ status: res.statusCode, data: raw }); } });
         });
         req.on('error', reject);
-        if (body) req.write(JSON.stringify(body));
+        if (body) req.write(Buffer.isBuffer(body) ? body : JSON.stringify(body));
         req.end();
     });
+}
+
+function upload(path, token) {
+    const boundary = `phase11_${Date.now()}`;
+    const body = Buffer.concat([Buffer.from(`--${boundary}\r\nContent-Disposition: form-data; name="document"; filename="id.pdf"\r\nContent-Type: application/pdf\r\n\r\n`), Buffer.from('%PDF-test\n%%EOF'), Buffer.from(`\r\n--${boundary}--\r\n`)]);
+    return request(path, 'POST', token, body, { 'Content-Type': `multipart/form-data; boundary=${boundary}`, 'Content-Length': body.length });
 }
 
 async function main() {
@@ -108,37 +114,53 @@ async function main() {
     const driveA = await createDrive(jobA, '10:00', '12:00');
     const driveB = await createDrive(jobB, '11:00', '13:00');
     const driveC = await createDrive(jobC, '12:00', '13:00');
-    for (const [drive, student, recruiter] of [[driveA, students[0], recruiterA], [driveB, students[0], recruiterA], [driveC, students[1], recruiterB]]) {
-        const shortlisted = await request(`/api/drives/${drive._id}/shortlist`, 'POST', recruiter.token, { studentIds: [student.id] });
-        assert.equal(shortlisted.status, 200, JSON.stringify(shortlisted.data));
-    }
-    const conflict = await request(`/api/drives/${driveA._id}/check-conflicts`, 'POST', recruiterA.token, {});
+    const firstDriveShortlist = await request(`/api/drives/${driveA._id}/shortlist`, 'POST', recruiterA.token, { studentIds: [students[0].id] });
+    assert.equal(firstDriveShortlist.status, 200, JSON.stringify(firstDriveShortlist.data));
+    const conflictPreflight = await request(`/api/drives/${driveB._id}/check-conflicts`, 'POST', recruiterA.token, { studentIds: [students[0].id] });
+    assert.equal(conflictPreflight.status, 200);
+    assert.equal(conflictPreflight.data.data.conflictCount, 1);
+    const blockedShortlist = await request(`/api/drives/${driveB._id}/shortlist`, 'POST', recruiterA.token, { studentIds: [students[0].id] });
+    assert.equal(blockedShortlist.status, 409);
+    const thirdDriveShortlist = await request(`/api/drives/${driveC._id}/shortlist`, 'POST', recruiterB.token, { studentIds: [students[1].id] });
+    assert.equal(thirdDriveShortlist.status, 200, JSON.stringify(thirdDriveShortlist.data));
+    const removedFromOtherDrive = await request(`/api/drives/${driveC._id}/candidates/${students[1].id}`, 'DELETE', recruiterB.token);
+    assert.equal(removedFromOtherDrive.status, 200, JSON.stringify(removedFromOtherDrive.data));
+    const conflict = await request(`/api/drives/${driveB._id}/check-conflicts`, 'POST', recruiterA.token, { studentIds: [students[0].id] });
     assert.equal(conflict.status, 200);
     assert.equal(conflict.data.data.conflictCount, 1);
 
     const selectedApps = [applications.get(`${students[0].id}:${jobA._id}`), applications.get(`${students[1].id}:${jobB._id}`), applications.get(`${students[3].id}:${jobC._id}`)];
     for (const [index, appId] of selectedApps.entries()) {
         const recruiter = index === 2 ? recruiterB : recruiterA;
-        const changed = await request(`/api/applications/${appId}/status`, 'PATCH', recruiter.token, { status: 'Selected' });
-        assert.equal(changed.status, 200, JSON.stringify(changed.data));
+        const interviewDrive = [driveA, driveB, driveC][index];
+        const statuses = index === 0 ? ['Interview', 'Selected'] : ['Shortlisted', 'Interview', 'Selected'];
+        for (const status of statuses) {
+            const changed = await request(`/api/applications/${appId}/status`, 'PATCH', recruiter.token, { status, ...(status === 'Interview' ? { driveId: interviewDrive._id } : {}) });
+            assert.equal(changed.status, 200, JSON.stringify(changed.data));
+        }
     }
-    async function createOffer(appId, ctc, recruiter) {
-        const response = await request('/api/offers', 'POST', recruiter.token, { applicationId: appId, ctc });
+    async function createOffer(appId, ctc, recruiter, documents = [{ name: 'Identity Proof' }]) {
+        const response = await request('/api/offers', 'POST', recruiter.token, { applicationId: appId, ctc, documents });
         assert.equal(response.status, 201, JSON.stringify(response.data));
         return response.data.data;
     }
-    const offerPlaced = await createOffer(selectedApps[0], 900000, recruiterA);
+    const offerPlaced = await createOffer(selectedApps[0], 900000, recruiterA, [{ name: 'Identity Proof' }]);
     const offerAccepted = await createOffer(selectedApps[1], 1200000, recruiterA);
     const offerDocs = await createOffer(selectedApps[2], 800000, recruiterB);
-    for (const status of ['Offer Generated', 'Offer Sent', 'Accepted', 'Documentation Pending']) {
+    for (const status of ['Offer Generated', 'Offer Sent']) {
         assert.equal((await request(`/api/offers/${offerPlaced._id}/status`, 'PATCH', recruiterA.token, { status })).status, 200);
     }
-    assert.equal((await request(`/api/offers/${offerPlaced._id}/documents`, 'PATCH', recruiterA.token, { documents: [{ name: 'Identity Proof', status: 'Verified' }] })).status, 200);
-    assert.equal((await request(`/api/offers/${offerPlaced._id}/status`, 'PATCH', recruiterA.token, { status: 'Documents Verified' })).status, 200);
+    const accepted = await request(`/api/offers/${offerPlaced._id}/status`, 'PATCH', students[0].token, { status: 'Accepted' });
+    assert.equal(accepted.status, 200);
+    assert.equal(accepted.data.data.offerStatus, 'Documentation Pending');
+    assert.equal((await upload(`/api/offers/${offerPlaced._id}/documents/0/upload`, students[0].token)).status, 200);
+    assert.equal((await request(`/api/offers/${offerPlaced._id}/documents/0/status`, 'PATCH', recruiterA.token, { status: 'Verified' })).data.data.offerStatus, 'Documents Verified');
     assert.equal((await request(`/api/offers/${offerPlaced._id}/joining-date`, 'PATCH', recruiterA.token, { joiningDate: '2027-06-01' })).status, 200);
     assert.equal((await request(`/api/offers/${offerPlaced._id}/status`, 'PATCH', recruiterA.token, { status: 'Joining Confirmed' })).status, 200);
-    for (const status of ['Offer Generated', 'Offer Sent', 'Accepted']) assert.equal((await request(`/api/offers/${offerAccepted._id}/status`, 'PATCH', recruiterA.token, { status })).status, 200);
-    for (const status of ['Offer Generated', 'Offer Sent', 'Accepted', 'Documentation Pending']) assert.equal((await request(`/api/offers/${offerDocs._id}/status`, 'PATCH', recruiterB.token, { status })).status, 200);
+    for (const status of ['Offer Generated', 'Offer Sent']) assert.equal((await request(`/api/offers/${offerAccepted._id}/status`, 'PATCH', recruiterA.token, { status })).status, 200);
+    assert.equal((await request(`/api/offers/${offerAccepted._id}/status`, 'PATCH', students[1].token, { status: 'Accepted' })).status, 200);
+    for (const status of ['Offer Generated', 'Offer Sent']) assert.equal((await request(`/api/offers/${offerDocs._id}/status`, 'PATCH', recruiterB.token, { status })).status, 200);
+    assert.equal((await request(`/api/offers/${offerDocs._id}/status`, 'PATCH', students[3].token, { status: 'Accepted' })).status, 200);
 
     const analytics = await request('/api/analytics/placement', 'GET', placement.token);
     assert.equal(analytics.status, 200, JSON.stringify(analytics.data));
@@ -154,7 +176,7 @@ async function main() {
     assert.equal(c.medianCtc, 900000);
     assert.equal(c.highestCtc, 1200000);
     assert.equal(d.upcoming, 3);
-    assert.equal(d.conflicts, 1);
+    assert.equal(d.conflicts, 0);
     assert(skills.mostDemanded.some((item) => item.name === 'machine learning'));
     const numericValues = [p.placementRate, r.selectionRate, c.averageCtc, c.medianCtc, c.highestCtc].filter((value) => value != null);
     assert(numericValues.every(Number.isFinite));

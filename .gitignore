@@ -46,3 +46,9 @@ backend/uploads/*
 
 # Data (we track the seed JSON files, but ignore temporary data dumps)
 data/tmp/
+backend/.demo-seed-state.json
+backend/.demo-seed-state.json.tmp
+backend/.demo-student-seed-state.json
+backend/.demo-student-seed-state.json.tmp
+backend/campuslink-50-student-credentials.csv
+backend/campuslink-50-student-credentials.csv.tmp

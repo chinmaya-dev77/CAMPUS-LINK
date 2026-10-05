@@ -308,6 +308,48 @@ Initial categories:
 
 These thresholds are prototype methodology and should be documented rather than presented as universally validated employability standards.
 
+### Detailed Readiness Methodology
+
+CampusLink calculates a deterministic readiness score between 0 and 100.
+
+The final score is composed of:
+
+| Component | Weight |
+|---|---:|
+| Technical Skills | 30% |
+| Projects | 20% |
+| Academic | 20% |
+| Assessment | 15% |
+| Interview | 15% |
+| **Total** | **100%** |
+
+Readiness categories:
+
+| Score | Category |
+|---:|---|
+| 0–49 | Not Ready |
+| 50–69 | Developing |
+| 70–84 | Ready |
+| 85–100 | Highly Employable |
+
+### Technical Skills
+
+Technical Skills use the controlled skill-domain taxonomy described in the AI Rules.
+
+The system evaluates:
+
+- Skill coverage.
+- Skill level.
+- Applicable skill domains.
+- Missing and weak skills.
+
+Domain scoring:
+
+```text
+Domain Score =
+    Coverage × 0.70
+  + Skill Level × 0.30
+
 ## 7.4 Skill Gap
 
 The system compares student capabilities with requirements for a selected target role.

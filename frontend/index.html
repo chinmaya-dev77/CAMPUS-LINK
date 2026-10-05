@@ -9,11 +9,42 @@
     <link rel="stylesheet" href="css/style.css" />
     <link rel="stylesheet" href="css/dashboard.css" />
     <link rel="stylesheet" href="css/forms.css" />
+    <link rel="stylesheet" href="css/campuslink.css" />
+    <link rel="stylesheet" href="css/auth.css" />
+    <link rel="stylesheet" href="css/campuslink-product-system.css?v=20261004-scroll-matches" />
+    <link rel="stylesheet" href="css/auth-banner.css?v=20261005-ambient-surface" />
+    <link rel="stylesheet" href="css/auth-flow.css?v=20261004-otp-flow" />
+    <link rel="stylesheet" href="css/dashboard-layout.css?v=20261004-spacing" />
+    <script src="js/theme.js?v=20261004-scroll-matches" defer></script>
 </head>
 <body>
 
     <div class="auth-page">
-        <div class="auth-card">
+        <div class="auth-layout">
+            <section class="auth-story" aria-label="CampusLink placement platform">
+                <div class="auth-story-brand">
+                    <span class="auth-story-mark" aria-hidden="true">C</span>
+                    <span>CampusLink<small>PLACEMENT INTELLIGENCE</small></span>
+                </div>
+
+                <div class="auth-story-copy">
+                    <p class="auth-eyebrow"><span class="auth-eyebrow-signal" aria-hidden="true"></span> CAMPUS PLACEMENTS, IN ONE WORKSPACE</p>
+                    <h2>From your profile<br>to your next role.</h2>
+                    <p>Keep your profile, job applications, and placement progress together in one place.</p>
+                </div>
+
+                <div class="auth-journey" aria-label="CampusLink placement steps: complete your profile, explore jobs, and follow your applications">
+                    <div class="auth-journey-heading"><span>THE PLACEMENT CYCLE</span><span class="auth-journey-mark">CAMPUSLINK</span></div>
+                    <div class="auth-journey-line" aria-hidden="true"><span></span><span></span><span></span></div>
+                    <div class="auth-journey-steps"><span><b>01</b> Complete your profile</span><span><b>02</b> Explore open roles</span><span><b>03</b> Follow applications</span></div>
+                    <div class="auth-journey-divider"></div>
+                    <div class="auth-opportunity-preview"><span class="auth-opportunity-icon" aria-hidden="true">CL</span><span><small>BUILT FOR CAMPUS HIRING</small><strong>Students · Recruiters · Placement teams</strong><em>Each portal keeps the next step visible.</em></span></div>
+                </div>
+
+                <p class="auth-story-footer">CampusLink · Placement workspace</p>
+            </section>
+
+            <main class="auth-card">
 
             <div class="auth-logo">
                 <h1>🎓 CampusLink</h1>
@@ -31,7 +62,7 @@
                         <input type="password" id="login-password" class="form-input" placeholder="••••••••" required>
                     </div>
                     <div class="form-actions" style="justify-content: space-between;">
-                        <div style="display:flex;gap:1rem;flex-wrap:wrap"><a href="#" id="show-register" class="text-sm">Create an account</a><a href="#" id="show-forgot" class="text-sm">Forgot password?</a></div>
+                        <div class="auth-form-links"><a href="#" id="show-register" class="text-sm">Create an account</a><a href="#" id="show-forgot" class="text-sm">Forgot password?</a></div>
                         <button type="submit" class="btn btn-primary" id="login-btn">Log In</button>
                     </div>
                 </form>
@@ -70,44 +101,42 @@
                 </form>
             </div>
 
-            <section id="forgot-form-container" class="hidden" aria-labelledby="forgot-heading">
-                <h2 id="forgot-heading">Reset your password</h2>
-                <p>We’ll email a verification code to your registered address.</p>
+            <section id="forgot-form-container" class="auth-step hidden" aria-labelledby="forgot-heading">
+                <div class="auth-step-heading"><span class="auth-step-kicker">ACCOUNT RECOVERY</span><h2 id="forgot-heading">Reset your password</h2><p>We’ll email a verification code to your registered address.</p></div>
                 <form id="forgot-form" class="mt-4">
                     <div class="form-group"><label for="forgot-email" class="form-label">Email Address <span class="required">*</span></label><input type="email" id="forgot-email" class="form-input" placeholder="name@example.com" required autocomplete="email"></div>
-                    <div class="form-actions" style="justify-content:space-between"><a href="#" id="forgot-back-login" class="text-sm">Back to login</a><button type="submit" class="btn btn-primary" id="forgot-btn">Send code</button></div>
+                    <div class="form-actions"><a href="#" id="forgot-back-login" class="text-sm">Back to login</a><button type="submit" class="btn btn-primary" id="forgot-btn">Send code</button></div>
                 </form>
             </section>
 
-            <section id="otp-form-container" class="hidden" aria-labelledby="otp-heading">
-                <h2 id="otp-heading">Check your inbox</h2>
-                <p>Enter the six-digit code sent to <strong id="otp-email-label"></strong>.</p>
+            <section id="otp-form-container" class="auth-step hidden" aria-labelledby="otp-heading">
+                <div class="auth-step-heading"><span class="auth-step-kicker" id="otp-kicker">EMAIL VERIFICATION</span><h2 id="otp-heading">Check your inbox</h2><p id="otp-description">Enter the six-digit code we sent to <strong id="otp-email-label"></strong>.</p></div>
                 <form id="otp-form" class="mt-4">
-                    <div id="otp-inputs" class="form-group" style="display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:.5rem">
-                        <input class="form-input" inputmode="numeric" autocomplete="one-time-code" maxlength="1" aria-label="Digit 1" required>
-                        <input class="form-input" inputmode="numeric" maxlength="1" aria-label="Digit 2" required>
-                        <input class="form-input" inputmode="numeric" maxlength="1" aria-label="Digit 3" required>
-                        <input class="form-input" inputmode="numeric" maxlength="1" aria-label="Digit 4" required>
-                        <input class="form-input" inputmode="numeric" maxlength="1" aria-label="Digit 5" required>
-                        <input class="form-input" inputmode="numeric" maxlength="1" aria-label="Digit 6" required>
+                    <div class="otp-inputs" role="group" aria-label="6-digit verification code">
+                        <input inputmode="numeric" autocomplete="one-time-code" maxlength="1" aria-label="Digit 1" required>
+                        <input inputmode="numeric" maxlength="1" aria-label="Digit 2" required>
+                        <input inputmode="numeric" maxlength="1" aria-label="Digit 3" required>
+                        <input inputmode="numeric" maxlength="1" aria-label="Digit 4" required>
+                        <input inputmode="numeric" maxlength="1" aria-label="Digit 5" required>
+                        <input inputmode="numeric" maxlength="1" aria-label="Digit 6" required>
                     </div>
-                    <p id="auth-status" class="text-sm" role="status" aria-live="polite"></p>
-                    <div class="form-actions" style="justify-content:space-between"><span id="otp-resend-countdown" class="text-sm">Resend code in 60s</span><button type="button" class="btn btn-secondary" id="resend-otp-btn" disabled>Resend code</button></div>
-                    <div class="form-actions" style="justify-content:space-between"><a href="#" id="otp-cancel" class="text-sm">Back</a><button type="submit" class="btn btn-primary" id="verify-otp-btn">Verify code</button></div>
+                    <p id="auth-status" class="auth-status" role="status" aria-live="polite"></p>
+                    <div class="auth-resend-row"><span id="otp-resend-countdown">Resend code in 60s</span><button type="button" class="auth-text-button" id="resend-otp-btn" disabled>Resend code</button></div>
+                    <div class="form-actions"><a href="#" id="otp-cancel" class="text-sm">Back</a><button type="submit" class="btn btn-primary" id="verify-otp-btn">Verify email</button></div>
                 </form>
             </section>
 
-            <section id="reset-form-container" class="hidden" aria-labelledby="reset-heading">
-                <h2 id="reset-heading">Choose a new password</h2>
-                <p>Your new password must be at least 8 characters.</p>
+            <section id="reset-form-container" class="auth-step hidden" aria-labelledby="reset-heading">
+                <div class="auth-step-heading"><span class="auth-step-kicker">EMAIL VERIFIED</span><h2 id="reset-heading">Choose a new password</h2><p>Your new password must be at least 8 characters.</p></div>
                 <form id="reset-form" class="mt-4">
                     <div class="form-group"><label for="reset-password" class="form-label">New Password <span class="required">*</span></label><input type="password" id="reset-password" class="form-input" required minlength="8" autocomplete="new-password"></div>
                     <div class="form-group"><label for="reset-confirm-password" class="form-label">Confirm New Password <span class="required">*</span></label><input type="password" id="reset-confirm-password" class="form-input" required minlength="8" autocomplete="new-password"></div>
-                    <p id="reset-status" class="text-sm" role="status" aria-live="polite"></p>
-                    <div class="form-actions" style="justify-content:space-between"><button type="button" class="btn btn-secondary" id="reset-cancel">Cancel</button><button type="submit" class="btn btn-primary" id="reset-btn">Update password</button></div>
+                    <p id="reset-status" class="auth-status" role="status" aria-live="polite"></p>
+                    <div class="form-actions"><button type="button" class="btn btn-secondary" id="reset-cancel">Cancel</button><button type="submit" class="btn btn-primary" id="reset-btn">Update password</button></div>
                 </form>
             </section>
 
+            </main>
         </div>
     </div>
 
@@ -116,32 +145,45 @@
 
     <!-- Shared scripts -->
     <script src="js/utils.js"></script>
-    <script src="js/api.js"></script>
+    <script src="js/api.js?v=20261004-auth-otp"></script>
     <script src="js/auth.js"></script>
     <script>
         document.addEventListener("DOMContentLoaded", () => {
-            // Check if already logged in
             if (CampusAuth.isLoggedIn()) {
-                const role = CampusAuth.getCurrentRole();
-                if (role === 'student') window.location.href = 'student.html';
-                else if (role === 'recruiter') window.location.href = 'recruiter.html';
-                else if (role === 'placement') window.location.href = 'placement.html';
+                const dashboards = { student: 'student.html', recruiter: 'recruiter.html', placement: 'placement.html' };
+                const target = dashboards[CampusAuth.getCurrentRole()];
+                if (target) window.location.href = target;
             }
 
-            const panelIds = ['login-form-container', 'register-form-container', 'forgot-form-container', 'otp-form-container', 'reset-form-container'];
-            const otpInputs = [...document.querySelectorAll('#otp-inputs input')];
+            const panels = ['login-form-container', 'register-form-container', 'forgot-form-container', 'otp-form-container', 'reset-form-container'].map((id) => document.getElementById(id));
+            const otpInputs = [...document.querySelectorAll('.otp-inputs input')];
+            const status = document.getElementById('auth-status');
             let currentEmail = '';
             let currentPurpose = 'registration';
             let returnPanel = 'register-form-container';
             let resendTimer = null;
-            const showPanel = (id) => panelIds.forEach((panelId) => document.getElementById(panelId).classList.toggle('hidden', panelId !== id));
-            const friendlyError = (error) => {
-                const messages = { USER_EXISTS: 'An account with this email already exists. Please log in.', ACCOUNT_NOT_FOUND: 'No CampusLink account is registered with this email.', OTP_INVALID: 'That code is not correct. Check the email and try again.', OTP_EXPIRED: 'This code has expired. Request a new code to continue.', OTP_ATTEMPTS_EXCEEDED: 'Too many incorrect attempts. Request a new code to continue.', OTP_COOLDOWN: error.message, RATE_LIMITED: 'Too many requests. Please wait a while and try again.', EMAIL_DELIVERY_FAILED: 'We could not send the email. Please try again later.', EMAIL_NOT_CONFIGURED: 'Email verification is temporarily unavailable. Please try again later.' };
-                return messages[error.code] || error.message || 'Please try again.';
+
+            const showPanel = (id) => {
+                panels.forEach((panel) => { panel.classList.toggle('hidden', panel.id !== id); panel.classList.remove('auth-step-enter'); });
+                const panel = document.getElementById(id);
+                panel.classList.remove('hidden');
+                requestAnimationFrame(() => panel.classList.add('auth-step-enter'));
+                if (id === 'otp-form-container') otpInputs[0].focus();
             };
-            const runButton = async (button, action) => {
+            const setStatus = (message, tone = '') => { status.textContent = message; status.dataset.tone = tone; };
+            const friendlyError = (error) => {
+                const messages = {
+                    USER_EXISTS: 'An account with this email already exists. Please log in.', ACCOUNT_NOT_FOUND: 'Account not found. No CampusLink account is registered with this email.',
+                    OTP_INVALID: 'That code is not correct. Check the email and try again.', OTP_EXPIRED: 'This code has expired. Request a new code to continue.',
+                    OTP_ATTEMPTS_EXCEEDED: 'Too many incorrect attempts. Request a new code to continue.', OTP_COOLDOWN: error.message,
+                    RATE_LIMITED: 'Too many requests. Please wait a while and try again.', EMAIL_DELIVERY_FAILED: 'We could not send the email. Please try again later.',
+                    EMAIL_NOT_CONFIGURED: 'Email verification is temporarily unavailable. Please try again later.', NETWORK_ERROR: 'Cannot reach CampusLink right now. Check your connection and try again.'
+                };
+                return messages[error.code] || (error.status >= 500 ? 'Something went wrong. Please try again later.' : error.message || 'Please check your details and try again.');
+            };
+            const runButton = async (button, work) => {
                 CampusUtils.setButtonLoading(button, true);
-                try { return await action(); }
+                try { return await work(); }
                 catch (error) { CampusUtils.showToast(friendlyError(error), 'error'); throw error; }
                 finally { CampusUtils.setButtonLoading(button, false); }
             };
@@ -154,22 +196,25 @@
                 label.textContent = `Resend code in ${remaining}s`;
                 resendTimer = setInterval(() => {
                     remaining -= 1;
-                    if (remaining <= 0) { clearInterval(resendTimer); button.disabled = false; label.textContent = "Didn't receive the code?"; }
-                    else label.textContent = `Resend code in ${remaining}s`;
+                    if (remaining <= 0) {
+                        clearInterval(resendTimer);
+                        button.disabled = false;
+                        label.textContent = "Didn't receive the code?";
+                    } else label.textContent = `Resend code in ${remaining}s`;
                 }, 1000);
             };
-            const openOtp = (email, purpose, fromPanel, seconds = 60) => {
+            const openOtp = ({ email, purpose, fromPanel }) => {
                 currentEmail = email.trim().toLowerCase();
                 currentPurpose = purpose;
                 returnPanel = fromPanel;
                 document.getElementById('otp-email-label').textContent = currentEmail;
                 document.getElementById('otp-heading').textContent = purpose === 'registration' ? 'Verify your email' : 'Check your inbox';
+                document.getElementById('otp-kicker').textContent = purpose === 'registration' ? 'CREATE YOUR ACCOUNT' : 'ACCOUNT RECOVERY';
                 document.getElementById('verify-otp-btn').textContent = purpose === 'registration' ? 'Verify email' : 'Verify code';
-                otpInputs.forEach((input) => { input.value = ''; });
-                document.getElementById('auth-status').textContent = '';
+                otpInputs.forEach((input) => { input.value = ''; input.classList.remove('is-invalid'); });
+                setStatus('');
                 showPanel('otp-form-container');
-                otpInputs[0].focus();
-                startResendTimer(seconds);
+                startResendTimer(60);
             };
 
             document.getElementById('show-register').addEventListener('click', (event) => { event.preventDefault(); showPanel('register-form-container'); });
@@ -177,46 +222,34 @@
             document.getElementById('show-forgot').addEventListener('click', (event) => { event.preventDefault(); showPanel('forgot-form-container'); });
             document.getElementById('forgot-back-login').addEventListener('click', (event) => { event.preventDefault(); showPanel('login-form-container'); });
             document.getElementById('otp-cancel').addEventListener('click', (event) => { event.preventDefault(); clearInterval(resendTimer); showPanel(returnPanel); });
-            document.getElementById('reset-cancel').addEventListener('click', () => showPanel('login-form-container'));
+            document.getElementById('reset-cancel').addEventListener('click', () => { showPanel('login-form-container'); });
 
-            document.getElementById('login-form').addEventListener('submit', async (e) => {
-                e.preventDefault();
+            document.getElementById('login-form').addEventListener('submit', async (event) => {
+                event.preventDefault();
                 const btn = document.getElementById('login-btn');
-                const email = document.getElementById('login-email').value.trim();
-                const password = document.getElementById('login-password').value;
-
-                CampusUtils.setButtonLoading(btn, true);
                 try {
-                    const res = await CampusAPI.post('/auth/login', { email, password });
-                    
+                    const res = await runButton(btn, () => CampusAPI.post('/auth/login', { email: document.getElementById('login-email').value.trim(), password: document.getElementById('login-password').value }));
                     CampusAuth.handleLoginSuccess(res.data);
                     CampusUtils.showToast('Login successful!', 'success');
-                    
-                    setTimeout(() => {
-                        const role = res.data.user.role;
-                        if (role === 'student') window.location.href = 'student.html';
-                        else if (role === 'recruiter') window.location.href = 'recruiter.html';
-                        else if (role === 'placement') window.location.href = 'placement.html';
-                    }, 500);
-                } catch (err) {
-                    CampusUtils.showToast(friendlyError(err), 'error');
-                } finally {
-                    CampusUtils.setButtonLoading(btn, false);
-                }
+                    const dashboard = { student: 'student.html', recruiter: 'recruiter.html', placement: 'placement.html' }[res.data.user.role];
+                    if (dashboard) setTimeout(() => { window.location.href = dashboard; }, 350);
+                } catch (_) {}
             });
 
-            document.getElementById('register-form').addEventListener('submit', async (e) => {
-                e.preventDefault();
-                const btn = document.getElementById('register-btn');
-                const name = document.getElementById('register-name').value.trim();
-                const email = document.getElementById('register-email').value.trim();
+            document.getElementById('register-form').addEventListener('submit', async (event) => {
+                event.preventDefault();
                 const password = document.getElementById('register-password').value;
-                const role = document.getElementById('register-role').value;
                 if (password !== document.getElementById('register-confirm-password').value) return CampusUtils.showToast('Passwords do not match.', 'error');
+                const email = document.getElementById('register-email').value.trim();
+                const btn = document.getElementById('register-btn');
                 try {
-                    const result = await runButton(btn, () => CampusAPI.post('/auth/register/send-otp', { name, email, password, role }));
+                    const response = await runButton(btn, () => CampusAPI.post('/auth/register/send-otp', {
+                        name: document.getElementById('register-name').value.trim(), email, password,
+                        role: document.getElementById('register-role').value
+                    }));
                     CampusUtils.showToast('Verification code sent.', 'success');
-                    openOtp(email, 'registration', 'register-form-container', result.data?.resendAfterSeconds || 60);
+                    openOtp({ email, purpose: 'registration', fromPanel: 'register-form-container' });
+                    startResendTimer(response.data?.resendAfterSeconds || 60);
                 } catch (_) {}
             });
 
@@ -224,41 +257,68 @@
                 event.preventDefault();
                 const email = document.getElementById('forgot-email').value.trim();
                 try {
-                    const result = await runButton(document.getElementById('forgot-btn'), () => CampusAPI.post('/auth/password/forgot', { email }));
+                    const response = await runButton(document.getElementById('forgot-btn'), () => CampusAPI.post('/auth/password/forgot', { email }));
                     CampusUtils.showToast('Verification code sent.', 'success');
-                    openOtp(email, 'password_reset', 'forgot-form-container', result.data?.resendAfterSeconds || 60);
+                    openOtp({ email, purpose: 'password_reset', fromPanel: 'forgot-form-container' });
+                    startResendTimer(response.data?.resendAfterSeconds || 60);
                 } catch (_) {}
             });
 
-            otpInputs.forEach((input, index) => input.addEventListener('input', () => {
-                input.value = input.value.replace(/\D/g, '').slice(-1);
-                if (input.value && index < otpInputs.length - 1) otpInputs[index + 1].focus();
-            }));
+            otpInputs.forEach((input, index) => {
+                input.addEventListener('input', () => {
+                    input.value = input.value.replace(/\D/g, '').slice(-1);
+                    input.classList.remove('is-invalid');
+                    if (input.value && index < otpInputs.length - 1) otpInputs[index + 1].focus();
+                    if (otpInputs.every((digit) => digit.value)) document.getElementById('verify-otp-btn').focus();
+                });
+                input.addEventListener('keydown', (event) => {
+                    if (event.key === 'Backspace' && !input.value && index > 0) otpInputs[index - 1].focus();
+                    if (event.key === 'ArrowLeft' && index > 0) otpInputs[index - 1].focus();
+                    if (event.key === 'ArrowRight' && index < otpInputs.length - 1) otpInputs[index + 1].focus();
+                });
+                input.addEventListener('paste', (event) => {
+                    const code = (event.clipboardData?.getData('text') || '').replace(/\D/g, '').slice(0, 6);
+                    if (!code) return;
+                    event.preventDefault();
+                    code.split('').forEach((digit, digitIndex) => { otpInputs[digitIndex].value = digit; });
+                    otpInputs[Math.min(code.length, 5)].focus();
+                });
+            });
 
             document.getElementById('otp-form').addEventListener('submit', async (event) => {
                 event.preventDefault();
                 const otp = otpInputs.map((input) => input.value).join('');
-                if (!/^\d{6}$/.test(otp)) return CampusUtils.showToast('Enter all six digits in the code.', 'error');
+                if (!/^\d{6}$/.test(otp)) return setStatus('Enter all six digits in the code.', 'error');
                 try {
+                    setStatus('Verifying your code…', 'loading');
                     await runButton(document.getElementById('verify-otp-btn'), () => CampusAPI.post('/auth/otp/verify', { email: currentEmail, purpose: currentPurpose, otp }));
                     clearInterval(resendTimer);
                     if (currentPurpose === 'registration') {
+                        setStatus('Email verified. Your CampusLink account is ready.', 'success');
+                        CampusUtils.showToast('Account created. You can log in now.', 'success');
                         document.getElementById('login-email').value = currentEmail;
                         document.getElementById('login-password').value = '';
-                        CampusUtils.showToast('Email verified. Your account is ready; log in to continue.', 'success');
-                        showPanel('login-form-container');
-                    } else showPanel('reset-form-container');
-                } catch (error) { document.getElementById('auth-status').textContent = friendlyError(error); }
+                        setTimeout(() => showPanel('login-form-container'), 900);
+                    } else {
+                        setStatus('Email verified. Choose a new password.', 'success');
+                        showPanel('reset-form-container');
+                    }
+                } catch (error) {
+                    setStatus(friendlyError(error), 'error');
+                    otpInputs.forEach((input) => input.classList.add('is-invalid'));
+                    otpInputs[0].focus();
+                }
             });
 
             document.getElementById('resend-otp-btn').addEventListener('click', async () => {
                 try {
-                    const result = await runButton(document.getElementById('resend-otp-btn'), () => CampusAPI.post('/auth/otp/resend', { email: currentEmail, purpose: currentPurpose }));
-                    otpInputs.forEach((input) => { input.value = ''; });
-                    document.getElementById('auth-status').textContent = 'A new code was sent. The previous code no longer works.';
-                    startResendTimer(result.data?.resendAfterSeconds || 60);
+                    const response = await runButton(document.getElementById('resend-otp-btn'), () => CampusAPI.post('/auth/otp/resend', { email: currentEmail, purpose: currentPurpose }));
+                    otpInputs.forEach((input) => { input.value = ''; input.classList.remove('is-invalid'); });
+                    setStatus('A new code has been sent. The previous code no longer works.', 'success');
+                    otpInputs[0].focus();
+                    startResendTimer(response.data?.resendAfterSeconds || 60);
                 } catch (error) {
-                    document.getElementById('auth-status').textContent = friendlyError(error);
+                    setStatus(friendlyError(error), 'error');
                     if (error.code === 'OTP_COOLDOWN') startResendTimer(Number((error.message.match(/\d+/) || [60])[0]));
                 }
             });
@@ -273,7 +333,10 @@
                     document.getElementById('login-password').value = '';
                     CampusUtils.showToast('Password updated. Log in with your new password.', 'success');
                     showPanel('login-form-container');
-                } catch (error) { document.getElementById('reset-status').textContent = friendlyError(error); }
+                } catch (error) {
+                    document.getElementById('reset-status').textContent = friendlyError(error);
+                    document.getElementById('reset-status').dataset.tone = 'error';
+                }
             });
         });
     </script>

@@ -1,0 +1,17 @@
+/* Keep the recruiter's original compact dashboard card treatment. */
+html:not([data-theme="dark"]) #section-dashboard .stats-grid .stat-card {
+    border-radius: 8px;
+    box-shadow: 0 2px 7px rgba(31, 41, 55, .05);
+}
+
+html:not([data-theme="dark"]) #section-dashboard .recruiter-dashboard-grid .dashboard-insight-card {
+    border: 1px solid #e4e7ef;
+    border-radius: 10px;
+    background: #fff;
+    box-shadow: 0 3px 12px rgba(37, 41, 55, .045);
+}
+
+html:not([data-theme="dark"]) #section-dashboard .dashboard-insight-card:hover {
+    border-color: #d8dbe5;
+    box-shadow: 0 3px 12px rgba(37, 41, 55, .045);
+}

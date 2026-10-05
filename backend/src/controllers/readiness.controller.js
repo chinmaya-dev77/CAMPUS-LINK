@@ -1,5 +1,6 @@
 const Student = require('../models/Student');
-const { calculateReadiness, detectSkillGaps } = require('../services/readiness/readiness.engine');
+const { detectSkillGaps } = require('../services/readiness/readiness.engine');
+const { calculateAndPersistReadiness } = require('../services/readiness/readiness.service');
 const aiService = require('../services/ai.service'); // for explanations
 
 exports.analyzeReadiness = async (req, res, next) => {
@@ -18,8 +19,8 @@ exports.analyzeReadiness = async (req, res, next) => {
             throw err;
         }
 
-        // 1. Deterministic Calculation
-        const readinessData = calculateReadiness(student);
+        // Use the same frozen readiness engine and persisted source used by all workspaces.
+        const readinessData = await calculateAndPersistReadiness(student);
         const skillGaps = detectSkillGaps(student.skills);
 
         // 2. Deterministic recommendations from current calculated evidence + skill gaps.
@@ -42,25 +43,12 @@ exports.analyzeReadiness = async (req, res, next) => {
         if (readinessData.missingEvidence.includes('Projects')) {
             recommendations.push('Add at least one project to improve your projects score.');
         }
-        // Assessment and Interview are always missing (schema not yet implemented) — no recommendation to avoid noise.
+        if (readinessData.missingEvidence.includes('Assessment')) recommendations.push('Take the placement assessment to add a measured technical and aptitude signal.');
+        if (readinessData.missingEvidence.includes('Interview')) recommendations.push('Complete a mock interview to add an interview-practice signal.');
 
         if (recommendations.length === 0) {
             recommendations.push('Great profile coverage! Keep building projects and sharpening your skills.');
         }
-
-        // Save to DB
-        student.readiness = {
-            score: readinessData.score,
-            category: readinessData.category,
-            technicalSkillsScore: readinessData.technicalSkillsScore,
-            projectsScore: readinessData.projectsScore,
-            academicScore: readinessData.academicScore,
-            assessmentScore: readinessData.assessmentScore,
-            interviewScore: readinessData.interviewScore,
-            improvementAreas: skillGaps.map(g => g.skill),
-            calculatedAt: readinessData.calculatedAt
-        };
-        await student.save();
 
         res.status(200).json({
             success: true,
@@ -69,13 +57,7 @@ exports.analyzeReadiness = async (req, res, next) => {
                 category: readinessData.category,
                 evidenceCoverage: readinessData.evidenceCoverage,
                 missingEvidence: readinessData.missingEvidence,
-                breakdown: {
-                    technicalSkills: readinessData.technicalSkillsScore,
-                    projects: readinessData.projectsScore,
-                    academic: readinessData.academicScore,
-                    assessment: readinessData.assessmentScore,
-                    interview: readinessData.interviewScore
-                },
+                breakdown: readinessData.breakdown,
                 skillGaps: skillGaps.map(g => g.skill),
                 recommendations
             }
@@ -102,17 +84,10 @@ exports.getReadiness = async (req, res, next) => {
             throw err;
         }
 
-        if (!student.readiness || student.readiness.score == null) {
-            // Not calculated yet
-            return res.status(200).json({
-                success: true,
-                data: null
-            });
-        }
-
+        const readinessData = await calculateAndPersistReadiness(student);
         res.status(200).json({
             success: true,
-            data: student.readiness
+            data: readinessData
         });
     } catch (err) {
         next(err);

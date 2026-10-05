@@ -12,7 +12,7 @@ const { protect } = require('../middleware/auth.middleware');
 
 const router = express.Router();
 
-// Public registration always requires email verification; Placement accounts are provisioned internally.
+// Registration starts with email verification; public registration never creates an account directly.
 router.post('/register', startRegistration);
 router.post('/register/send-otp', startRegistration);
 router.post('/register/verify-otp', verifyOtp);

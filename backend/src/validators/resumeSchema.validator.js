@@ -16,7 +16,7 @@
  * - Invalid data throws — never silently corrupts.
  */
 
-const ALLOWED_TOP_LEVEL = ['name', 'phone', 'skills', 'projects', 'certifications', 'experience', 'education', 'cgpa'];
+const ALLOWED_TOP_LEVEL = ['name', 'phone', 'branch', 'graduationYear', 'skills', 'projects', 'certifications', 'experience', 'education', 'cgpa'];
 const ALLOWED_SKILL_LEVELS = ['beginner', 'intermediate', 'advanced'];
 const MAX_ARRAY_LENGTH = 50;
 const MAX_STRING_LENGTH = 2000;
@@ -39,7 +39,7 @@ function safeArray(val) {
 }
 
 function safeYear(val) {
-    const n = parseInt(val);
+    const n = typeof val === 'number' ? val : /^\d{4}$/.test(String(val || '').trim()) ? Number(val) : NaN;
     if (isNaN(n) || n < 1900 || n > 2100) return null;
     return n;
 }
@@ -61,11 +61,57 @@ function normalizeSkillLevel(level) {
 
 // ─── Nested item validators ───────────────────────────────────────────────────
 
-function validateSkill(item) {
-    if (!isPlainObject(item)) return null;
-    const name = safeString(item.name, SHORT_STRING_LENGTH);
-    if (!name) return null; // skills without a name are dropped
-    return { name, level: normalizeSkillLevel(item.level) };
+function splitSkillList(value) {
+    return String(value || '').split(/[,;|\n•·]+/).map((part) => part.replace(/^\s*[-*]\s*/, '').trim()).filter(Boolean);
+}
+
+function collectSkillValues(value, output, depth = 0) {
+    if (depth > 3 || output.length >= MAX_ARRAY_LENGTH) return;
+    if (typeof value === 'string') {
+        splitSkillList(value).forEach((name) => { if (output.length < MAX_ARRAY_LENGTH) output.push({ name, level: 'intermediate' }); });
+        return;
+    }
+    if (Array.isArray(value)) {
+        value.slice(0, MAX_ARRAY_LENGTH).forEach((item) => collectSkillValues(item, output, depth + 1));
+        return;
+    }
+    if (!isPlainObject(value)) return;
+    const name = safeString(value.name || value.skill || value.skillName || value.technology || value.tool, SHORT_STRING_LENGTH);
+    if (name) {
+        output.push({ name, level: normalizeSkillLevel(value.level || value.proficiency) });
+        return;
+    }
+    // Some model responses group technical skills by category. Ignore clearly
+    // non-technical categories instead of persisting soft skills as technologies.
+    for (const [category, items] of Object.entries(value)) {
+        if (/soft|interpersonal|communication|leadership|strength/i.test(category)) continue;
+        collectSkillValues(items, output, depth + 1);
+    }
+}
+
+function extractTechnicalSkillsFromResumeText(text) {
+    const lines = String(text || '').replace(/\r/g, '').split('\n');
+    const sectionHeading = /^\s*(?:technical\s+skills?|skills?|programming\s+languages?|technologies|tools\s*(?:and|&)\s*technologies|technical\s+stack|tech\s+stack)\s*(?:[:\-–—|]\s*)?(.*)$/i;
+    const nextSection = /^\s*(?:education|academic(?:s| background)?|projects?|experience|work experience|internships?|certifications?|achievements?|publications?|interests?|references?)\s*[:\-–—|]?\s*/i;
+    const extracted = [];
+    let collecting = false;
+    for (const line of lines) {
+        const heading = line.match(sectionHeading);
+        if (heading) {
+            collecting = true;
+            if (heading[1]) extracted.push(...splitSkillList(heading[1]));
+            continue;
+        }
+        if (!collecting) continue;
+        if (nextSection.test(line)) break;
+        extracted.push(...splitSkillList(line));
+    }
+    const seen = new Set();
+    return extracted.map((name) => safeString(name, SHORT_STRING_LENGTH))
+        .filter((name) => name && !/^(technical\s+skills?|skills?|programming\s+languages?|technologies|tools?)\s*:?$/i.test(name))
+        .filter((name) => { const key = name.toLowerCase(); if (seen.has(key)) return false; seen.add(key); return true; })
+        .slice(0, MAX_ARRAY_LENGTH)
+        .map((name) => ({ name, level: 'intermediate' }));
 }
 
 function validateProject(item) {
@@ -161,19 +207,32 @@ function validateResumeOutput(rawLlmOutput) {
     ALLOWED_TOP_LEVEL.forEach(key => {
         if (key in parsed) safe[key] = parsed[key];
     });
+    // Accept common structured-output aliases but normalize them into the
+    // existing Student.skills schema. Other unexpected fields remain stripped.
+    const skillSources = [safe.skills, parsed.technicalSkills, parsed.technical_skills, parsed.programmingLanguages, parsed.programming_languages, parsed.technical];
 
     // Step 5: validate and normalize each allowed field
     const result = {};
 
     result.name  = safeString(safe.name, SHORT_STRING_LENGTH);
     result.phone = safeString(safe.phone, 30);
+    const branch = safeString(safe.branch, SHORT_STRING_LENGTH);
+    if (branch) result.branch = branch;
+    const graduationYear = safeYear(safe.graduationYear);
+    if (graduationYear != null) result.graduationYear = graduationYear;
     if (typeof safe.cgpa === 'number' && safe.cgpa >= 0 && safe.cgpa <= 10) {
         result.cgpa = safe.cgpa;
     }
 
-    result.skills = safeArray(safe.skills)
-        .map(validateSkill)
-        .filter(Boolean);
+    const normalizedSkills = [];
+    skillSources.forEach((source) => collectSkillValues(source, normalizedSkills));
+    const seenSkills = new Set();
+    result.skills = normalizedSkills.filter((skill) => {
+        const key = skill.name.toLowerCase();
+        if (seenSkills.has(key)) return false;
+        seenSkills.add(key);
+        return true;
+    }).slice(0, MAX_ARRAY_LENGTH);
 
     result.projects = safeArray(safe.projects)
         .map(validateProject)
@@ -194,4 +253,26 @@ function validateResumeOutput(rawLlmOutput) {
     return result;
 }
 
-module.exports = { validateResumeOutput };
+// Only accept a year when the resume explicitly ties it to graduation or to
+// the end of a degree's stated study range. This is a conservative fallback
+// for models that omit a semantically clear year from otherwise usable text.
+function extractGraduationYear(text) {
+    const value = String(text || '');
+    const contextual = [
+        /\bexpected\s+(?:year\s+of\s+)?graduation\s*[:\-]?\s*(20\d{2})\b/i,
+        /\bexpected\s+(20\d{2})\b/i,
+        /\bexpected\s+to\s+graduate\s+(?:in\s+)?(20\d{2})\b/i,
+        /\bgraduat(?:e|ing|ion)\s*(?:in|by|:|-)\s*(?:[A-Za-z]+\s+)?(20\d{2})\b/i,
+        /\bgraduating\s+(?:[A-Za-z]+\s+)?(20\d{2})\b/i,
+        /\bfinal[- ]year\b[^\n]{0,60}\bgraduat(?:e|ing)\s+(?:in\s+)?(20\d{2})\b/i,
+        /\b(?:b\.?\s?tech|bachelor|b\.?e\.?|degree)[^\n]{0,100}\b(20\d{2})\s*[–—-]\s*(20\d{2})\b/i
+    ];
+    for (const pattern of contextual) {
+        const match = value.match(pattern);
+        const year = Number(match?.[pattern === contextual[6] ? 2 : 1]);
+        if (year >= 1900 && year <= 2100) return year;
+    }
+    return null;
+}
+
+module.exports = { validateResumeOutput, extractGraduationYear, extractTechnicalSkillsFromResumeText };

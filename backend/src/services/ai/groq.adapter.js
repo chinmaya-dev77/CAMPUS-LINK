@@ -43,7 +43,7 @@ async function callGroq(messages, model) {
                 model,
                 messages,
                 temperature:    0,       // deterministic output for data extraction
-                max_tokens:     2048,
+                max_tokens:     model === 'qwen/qwen3.8-27b' ? 8192 : 2048,
                 response_format: { type: 'json_object' }
             }),
             signal: AbortSignal.timeout(timeoutMs)
@@ -60,8 +60,15 @@ async function callGroq(messages, model) {
         // Report status only; provider response bodies can contain submitted content.
         console.error(`[Groq] API error ${response.status}`);
         const err = new Error(`AI provider returned error ${response.status}. Check your API key and model name.`);
-        err.status = 502;
-        err.code   = 'AI_PROVIDER_ERROR';
+        err.status = response.status === 429 ? 429 : 502;
+        err.code   = response.status === 429 ? 'AI_RATE_LIMITED' : 'AI_PROVIDER_ERROR';
+        const retryAfter = response.headers?.get?.('retry-after');
+        if (retryAfter) {
+            const seconds = Number(retryAfter);
+            const retryAt = Date.parse(retryAfter);
+            if (Number.isFinite(seconds)) err.retryAfterMs = Math.max(0, seconds * 1000);
+            else if (Number.isFinite(retryAt)) err.retryAfterMs = Math.max(0, retryAt - Date.now());
+        }
         throw err;
     }
 

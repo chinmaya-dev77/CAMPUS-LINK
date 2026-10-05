@@ -3,7 +3,8 @@
  * 
  * All scores are deterministic. Backend calculates everything.
  * LLM does NOT score, rank, or decide eligibility.
- * Semantic similarity deferred (no embeddings in Phase 7).
+ * Semantic similarity is reported as unavailable until an embedding provider
+ * and model are configured. It never participates in deterministic scoring.
  * 
  * ─── SCORING FORMULA ─────────────────────────────────────────────────────
  *
@@ -44,8 +45,7 @@
  *  FAIL if student.backlogs > job.maximumBacklogs (when maximumBacklogs set)
  *  FAIL if student.branch not in eligibleBranches (when branches set and non-empty)
  *
- *  Missing student data (e.g. no branch) is treated as UNKNOWN (not a failure)
- *  for eligibility, but noted in the result.
+ *  Missing data required by a job's hard requirements fails eligibility.
  *
  * ─────────────────────────────────────────────────────────────────────────
  */
@@ -62,8 +62,8 @@ function checkEligibility(student, jobRequirements) {
 
     // CGPA check
     if (minimumCGPA != null && minimumCGPA > 0) {
-        if (student.cgpa == null) {
-            warnings.push(`Minimum CGPA of ${minimumCGPA} required, but student has not set their CGPA.`);
+        if (student.cgpa == null || student.cgpa === '') {
+            issues.push(`Minimum CGPA of ${minimumCGPA} required, but student has not set their CGPA.`);
         } else if (student.cgpa < minimumCGPA) {
             issues.push(`Student CGPA ${student.cgpa} is below the required minimum of ${minimumCGPA}.`);
         }
@@ -80,7 +80,7 @@ function checkEligibility(student, jobRequirements) {
     // Branch check
     if (eligibleBranches && eligibleBranches.length > 0) {
         if (!student.branch) {
-            warnings.push(`Job is open to branches: ${eligibleBranches.join(', ')}. Student branch is not set.`);
+            issues.push(`Job is open to branches: ${eligibleBranches.join(', ')}. Student branch is not set.`);
         } else {
             const studentBranchNorm = normalizeBranch(student.branch);
             const matched = eligibleBranches.some(b => normalizeBranch(b) === studentBranchNorm);
@@ -232,6 +232,29 @@ function computeEvidenceCoverage(student) {
     return { score, present, absent };
 }
 
+function explainMatch(student, requirements, eligibility, skillDetail, projectDetail, evidenceDetail) {
+    const facts = [];
+    const required = [...skillDetail.matchedRequired, ...skillDetail.missingRequired];
+    const preferred = [...skillDetail.matchedPreferred, ...skillDetail.missingPreferred];
+    if (required.length) facts.push({ text: `${skillDetail.matchedRequired.length}/${required.length} required skills matched.`, passed: skillDetail.missingRequired.length === 0 });
+    else facts.push({ text: 'No required skills were specified for this job.', passed: null });
+    if (requirements.minimumCGPA != null && requirements.minimumCGPA > 0) {
+        if (student.cgpa != null) facts.push({ text: `CGPA ${student.cgpa}; minimum required is ${requirements.minimumCGPA}.`, passed: student.cgpa >= requirements.minimumCGPA });
+    } else facts.push({ text: 'No minimum CGPA requirement was specified.', passed: null });
+    if (requirements.maximumBacklogs != null) facts.push({ text: `${student.backlogs ?? 0} backlog(s); maximum allowed is ${requirements.maximumBacklogs}.`, passed: (student.backlogs ?? 0) <= requirements.maximumBacklogs });
+    if (requirements.eligibleBranches?.length) facts.push(student.branch
+        ? { text: `Branch ${student.branch}; eligible branches: ${requirements.eligibleBranches.join(', ')}.`, passed: !eligibility.issues.some((issue) => issue.toLowerCase().includes('branch')) }
+        : { text: `Branch is not set; eligible branches are ${requirements.eligibleBranches.join(', ')}.`, passed: false });
+    if (preferred.length) facts.push({ text: `${skillDetail.matchedPreferred.length}/${preferred.length} preferred skills matched.`, passed: null });
+    facts.push(!required.length
+        ? { text: 'No required skills were specified; project relevance uses the existing neutral baseline.', passed: null }
+        : projectDetail.matchedInProjects?.length
+            ? { text: `Project evidence includes ${projectDetail.matchedInProjects.join(', ')}.`, passed: true }
+            : { text: (student.projects || []).length ? 'No required skills were found in project technologies.' : 'No project evidence is available.', passed: false });
+    facts.push({ text: `Evidence coverage is ${evidenceDetail.score}%${evidenceDetail.present.length ? ` (${evidenceDetail.present.join(', ')} present)` : ''}.`, passed: null });
+    return { facts, missingRequiredSkills: skillDetail.missingRequired, weakPreferredSkills: skillDetail.missingPreferred, eligibilityReasons: eligibility.issues };
+}
+
 // ─── Final Match ─────────────────────────────────────────────────────────────
 function matchStudentToJob(student, job) {
     const requirements = job.requirements || {};
@@ -241,6 +264,18 @@ function matchStudentToJob(student, job) {
     const projectRelevance = computeProjectRelevance(student.projects, requirements);
     const academicFit = computeAcademicFit(student, requirements);
     const evidenceCoverage = computeEvidenceCoverage(student);
+    const skillDetail = {
+        matchedRequired: skillMatch.matchedRequired,
+        missingRequired: skillMatch.missingRequired,
+        matchedPreferred: skillMatch.matchedPreferred,
+        missingPreferred: skillMatch.missingPreferred
+    };
+    const projectDetail = {
+        matchedInProjects: projectRelevance.matchedInProjects,
+        totalProjectTechs: projectRelevance.totalProjectTechs,
+        note: projectRelevance.note
+    };
+    const evidenceDetail = { present: evidenceCoverage.present, absent: evidenceCoverage.absent };
 
     const matchScore =
         (skillMatch.score      * 0.50) +
@@ -258,33 +293,25 @@ function matchStudentToJob(student, job) {
         eligibilityWarnings: eligibility.warnings,
         matchScore: Math.round(matchScore),
         matchCategory,
+        semanticSimilarity: null,
+        semanticAvailability: { available: false, reason: 'No supported embedding adapter is available.' },
         breakdown: {
             skillMatch: skillMatch.score,
             projectRelevance: projectRelevance.score,
             academicFit: academicFit.score,
-            evidenceCoverage: evidenceCoverage.score
+            evidenceCoverage: evidenceCoverage.score,
+            semanticSimilarity: null
         },
-        skillDetail: {
-            matchedRequired:  skillMatch.matchedRequired,
-            missingRequired:  skillMatch.missingRequired,
-            matchedPreferred: skillMatch.matchedPreferred,
-            missingPreferred: skillMatch.missingPreferred
-        },
-        projectDetail: {
-            matchedInProjects: projectRelevance.matchedInProjects,
-            totalProjectTechs: projectRelevance.totalProjectTechs,
-            note: projectRelevance.note
-        },
+        skillDetail,
+        projectDetail,
         academicDetail: {
             cgpaScore:   academicFit.cgpaScore,
             backlogScore: academicFit.backlogScore,
             cgpaNote:    academicFit.cgpaNote,
             backlogNote: academicFit.backlogNote
         },
-        evidenceDetail: {
-            present: evidenceCoverage.present,
-            absent:  evidenceCoverage.absent
-        }
+        evidenceDetail,
+        explanation: explainMatch(student, requirements, eligibility, skillDetail, projectDetail, evidenceDetail)
     };
 }
 

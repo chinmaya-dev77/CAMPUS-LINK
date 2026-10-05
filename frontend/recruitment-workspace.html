@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Recruitment Workspace — Hireflow</title>
+<meta name="description" content="Manage candidates, interview stages, and job offers in one recruitment workspace.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --radius:.45rem;
+  --background:oklch(0.985 0.003 286);
+  --foreground:oklch(0.225 0.02 286);
+  --card:oklch(1 0 0);
+  --primary:oklch(0.56 0.25 296);
+  --primary-foreground:oklch(1 0 0);
+  --muted:oklch(0.965 0.006 286);
+  --muted-foreground:oklch(0.55 0.025 286);
+  --accent:oklch(0.94 0.03 296);
+  --destructive:oklch(0.577 0.245 27.325);
+  --border:oklch(0.9 0.009 286);
+  --ring:oklch(0.62 0.2 296);
+  --canvas:oklch(0.94 0.012 286);
+  --success:oklch(0.56 0.15 154);
+  --success-soft:oklch(0.95 0.05 154);
+  --warning:oklch(0.68 0.17 68);
+  --warning-soft:oklch(0.97 0.05 82);
+  --danger-soft:oklch(0.96 0.045 22);
+  --stage-application:oklch(0.96 0.055 75);
+  --stage-shortlist:oklch(0.92 0.08 308);
+  --stage-interview:oklch(0.92 0.055 250);
+  --info:oklch(0.62 0.19 250);
+}
+*{box-sizing:border-box;border-color:var(--border)}
+body{margin:0;min-width:320px;background:var(--background);color:var(--foreground);font-family:"DM Sans",sans-serif}
+button,input{font:inherit}
+button{cursor:pointer;background:none;border:none;color:inherit}
+svg{display:block}
+
+/* layout */
+.page{display:flex;min-height:100vh;background:var(--canvas);padding:0}
+.shell{margin:auto;display:flex;width:100%;max-width:1440px;min-height:calc(100vh - 5rem);overflow:hidden;border:1px solid var(--border);background:var(--background);box-shadow:0 20px 25px -5px rgb(0 0 0/.1)}
+@media(min-width:640px){.page{padding:1.5rem}.shell{border-radius:.75rem}}
+@media(min-width:1024px){.page{padding:2.5rem}}
+.main{min-width:0;flex:1;overflow:hidden;display:flex;flex-direction:column}
+.scroll{flex:1;overflow:auto}
+
+/* sidebar */
+.sidebar{display:flex;width:3.5rem;flex-shrink:0;flex-direction:column;align-items:center;border-right:1px solid var(--border);background:var(--card);padding:.75rem 0}
+.logo{margin-bottom:1rem;display:grid;width:2rem;height:2rem;place-items:center;border-radius:.375rem;border:1px solid var(--border);color:var(--success);font-weight:700;box-shadow:0 1px 2px rgb(0 0 0/.05)}
+.nav{display:flex;flex:1;flex-direction:column;align-items:center;gap:.25rem}
+.icon-btn{position:relative;display:grid;width:2rem;height:2rem;place-items:center;border-radius:.375rem;color:var(--foreground)}
+.icon-btn:hover{background:var(--muted)}
+.icon-btn.active{background:var(--accent);color:var(--primary)}
+
+/* topbar */
+.topbar{display:grid;height:3.5rem;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:.75rem;border-bottom:1px solid var(--border);padding:0 1rem}
+.topbar-title{display:flex;min-width:0;align-items:center;gap:.5rem;font-weight:600}
+.topbar-title span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.topbar-actions{display:flex;align-items:center;gap:.5rem}
+.upgrade{display:none;align-items:center;gap:.35rem;height:2rem;padding:0 .75rem;border-radius:.375rem;border:1px solid var(--warning);background:var(--warning-soft);font-size:.875rem;font-weight:500}
+@media(min-width:640px){.upgrade{display:inline-flex}}
+.upgrade svg{color:var(--warning)}
+.avatar{display:grid;width:2rem;height:2rem;place-items:center;border-radius:9999px;background:var(--primary);color:var(--primary-foreground);font-size:.75rem;font-weight:700}
+.notif-dot{position:absolute;right:.25rem;top:.25rem;width:.375rem;height:.375rem;border-radius:9999px;background:var(--destructive)}
+.topbar .search{display:none}
+@media(min-width:768px){.topbar .search{display:flex;width:16rem}}
+
+/* search */
+.search{display:flex;align-items:center;gap:.5rem;height:2rem;width:100%;border-radius:.375rem;border:1px solid var(--border);background:var(--card);padding:0 .75rem;box-shadow:0 1px 2px rgb(0 0 0/.05)}
+.search:focus-within{box-shadow:0 0 0 2px color-mix(in oklch,var(--ring) 25%,transparent)}
+.search svg{flex-shrink:0;color:var(--muted-foreground)}
+.search input{min-width:0;flex:1;background:transparent;border:none;outline:none;font-size:.875rem;color:var(--foreground)}
+.search input::placeholder{color:var(--muted-foreground)}
+@media(min-width:640px){.search{width:13rem}}
+.search.lg{height:2.5rem}
+@media(min-width:640px){.search.lg{width:15rem}}
+
+/* buttons */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:.4rem;height:2rem;padding:0 .75rem;border-radius:.375rem;font-size:.875rem;font-weight:500;white-space:nowrap;transition:background .15s}
+.btn:hover{background:var(--muted)}
+.btn-primary{background:var(--primary);color:var(--primary-foreground)}
+.btn-primary:hover{background:color-mix(in oklch,var(--primary) 90%,black)}
+.btn-icon{width:2rem;padding:0}
+.btn-danger{border:1px solid var(--border);color:var(--destructive)}
+.btn-danger:hover{background:var(--danger-soft)}
+
+/* offers toolbar */
+.offers{padding:1rem}
+.toolbar{display:grid;grid-template-columns:auto minmax(0,1fr);gap:.75rem}
+@media(min-width:1024px){.toolbar{display:flex;align-items:center}}
+.seg{display:flex;border-radius:.375rem;border:1px solid var(--border);background:var(--card);padding:.125rem;box-shadow:0 1px 2px rgb(0 0 0/.05)}
+.pills{display:flex;min-width:0;overflow-x:auto;border-radius:.375rem;background:var(--muted);padding:.25rem}
+.pill{display:inline-flex;align-items:center;gap:.25rem;height:1.75rem;padding:0 .75rem;border-radius:.3rem;font-size:.75rem;color:var(--muted-foreground);white-space:nowrap}
+.pill.active{background:var(--card);color:var(--foreground);font-weight:600;box-shadow:0 1px 2px rgb(0 0 0/.05)}
+.pill .count{margin-left:.25rem;border-radius:.25rem;padding:0 .25rem;background:var(--border);font-size:.7rem}
+.pill .count.all{background:var(--warning);color:var(--primary-foreground)}
+.toolbar-right{grid-column:span 2;display:flex;width:100%;flex-wrap:wrap;align-items:center;justify-content:flex-end;gap:.5rem;margin-left:auto}
+@media(min-width:1024px){.toolbar-right{grid-column:auto;width:auto;flex-wrap:nowrap}}
+
+/* offer cards */
+.cards-grid{margin-top:1rem;display:grid;gap:.75rem}
+.cards-grid.grid-mode{grid-template-columns:1fr}
+@media(min-width:640px){.cards-grid.grid-mode{grid-template-columns:repeat(2,1fr)}}
+@media(min-width:1280px){.cards-grid.grid-mode{grid-template-columns:repeat(4,1fr)}}
+.card{min-width:0;border-radius:.375rem;border:1px solid var(--border);background:var(--card);padding:.75rem;box-shadow:0 1px 2px rgb(0 0 0/.05);transition:box-shadow .15s}
+.card:hover{box-shadow:0 1px 3px rgb(0 0 0/.1)}
+.card-head{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:.5rem}
+.card-id{display:flex;min-width:0;align-items:center;gap:.5rem}
+.chip{display:grid;width:1.25rem;height:1.25rem;flex-shrink:0;place-items:center;border-radius:9999px;color:var(--primary-foreground);font-size:.625rem;font-weight:700}
+.card h3{margin:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:.75rem;font-weight:600}
+.card h3 .gender{color:var(--info);font-weight:500}
+.card-actions{display:flex;align-items:center;gap:.5rem;color:var(--foreground)}
+.card dl{margin:.75rem 0 0;display:grid;grid-template-columns:76px minmax(0,1fr);row-gap:.5rem;font-size:.625rem}
+.card dt{color:var(--muted-foreground)}
+.card dd{margin:0;font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.status{display:inline-flex;align-items:center;gap:.25rem;border-radius:.25rem;padding:.125rem .375rem;font-size:.625rem;font-weight:600}
+.status .dot{width:.375rem;height:.375rem;border-radius:9999px;background:currentColor}
+.status.Accepted{background:var(--success-soft);color:var(--success)}
+.status.Rejected{background:var(--danger-soft);color:var(--destructive)}
+.status.Pending{background:var(--warning-soft);color:var(--warning)}
+
+/* candidates */
+.tabs{display:flex;gap:1.75rem;overflow-x:auto;border-bottom:1px solid var(--border);padding:.25rem 1.25rem 0}
+.tab{display:inline-flex;align-items:center;gap:.4rem;height:3rem;border-bottom:2px solid transparent;font-size:.875rem;font-weight:500;color:var(--muted-foreground)}
+.tab.active{border-color:var(--primary);color:var(--foreground)}
+.tab .badge{border-radius:.25rem;background:var(--muted);padding:0 .375rem;font-size:.75rem;color:var(--muted-foreground)}
+.cand-body{padding:1.25rem}
+.cand-toolbar{display:flex;flex-wrap:wrap;align-items:center;gap:.75rem}
+.divider{height:1.75rem;width:1px;background:var(--border)}
+.board{margin-top:1.5rem;display:grid;min-width:900px;grid-template-columns:repeat(3,1fr);gap:2rem}
+.board-wrap{overflow-x:auto}
+.col-head{margin-bottom:1rem;display:flex;height:2rem;align-items:center;justify-content:space-between;border-left:4px solid;padding:0 .75rem;font-size:.875rem;font-weight:600}
+.col-head .count{border-radius:.25rem;background:var(--card);padding:.125rem .5rem;box-shadow:0 1px 2px rgb(0 0 0/.05)}
+.col.Application .col-head{background:var(--stage-application);border-color:var(--warning)}
+.col.Shortlist .col-head{background:var(--stage-shortlist);border-color:var(--primary)}
+.col.Interview .col-head{background:var(--stage-interview);border-color:var(--info)}
+.col-cards{display:flex;flex-direction:column;gap:1rem}
+.cand-card{border-radius:.375rem;border:1px solid var(--border);background:var(--card);padding:1rem;box-shadow:0 1px 2px rgb(0 0 0/.05)}
+.cand-card .chip{width:1.5rem;height:1.5rem;font-size:.75rem}
+.cand-card h3{font-size:.875rem}
+.cand-card dl{margin:1rem 0 0;display:grid;grid-template-columns:105px minmax(0,1fr);row-gap:.625rem;font-size:.75rem}
+.cand-card dt{color:var(--muted-foreground)}
+.cand-card dd{margin:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.cand-actions{margin-top:1rem;display:flex;gap:.5rem;border-top:1px solid var(--border);padding-top:1rem}
+.cand-actions .grow{flex:1}
+.cand-actions .shortlisted{color:var(--success)}
+.list-grid{margin-top:1.5rem;display:grid;gap:.75rem}
+@media(min-width:640px){.list-grid{grid-template-columns:repeat(2,1fr)}}
+@media(min-width:1024px){.list-grid{grid-template-columns:repeat(3,1fr)}}
+.empty{display:grid;min-height:16rem;place-items:center;font-size:.875rem;color:var(--muted-foreground)}
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="shell">
+    <aside class="sidebar">
+      <div class="logo">◒</div>
+      <nav class="nav" id="nav" aria-label="Main navigation"></nav>
+      <button class="icon-btn" title="Messages" aria-label="Messages" id="msgBtn"></button>
+    </aside>
+    <section class="main">
+      <header class="topbar">
+        <div class="topbar-title" id="topbarTitle"></div>
+        <div class="topbar-actions">
+          <label class="search"><span id="topSearchIcon"></span><input aria-label="Search" placeholder="Search..."></label>
+          <button class="upgrade" id="upgradeBtn">Upgrade</button>
+          <button class="icon-btn" title="Notifications" aria-label="Notifications" id="bellBtn"><span class="notif-dot"></span></button>
+          <div class="avatar">V</div>
+          <span id="chevTop"></span>
+        </div>
+      </header>
+      <div class="scroll" id="content"></div>
+    </section>
+  </div>
+</div>
+
+<script>
+/* ---------- inline SVG icons (lucide-style) ---------- */
+const I = (paths, size=16) => `<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${paths}</svg>`;
+const icons = {
+  home: I('<path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/>'),
+  calendar: I('<path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/>'),
+  clipboard: I('<rect width="8" height="4" x="8" y="2" rx="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="M9 12h6"/><path d="M9 16h6"/>'),
+  briefcase: I('<path d="M16 20V4a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/><rect width="20" height="14" x="2" y="6" rx="2"/>'),
+  contact: I('<path d="M16 2v2"/><path d="M7 22v-2a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v2"/><circle cx="11" cy="9" r="4"/><path d="M17 4h4v4"/>'),
+  file: I('<path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/>'),
+  gift: I('<rect x="3" y="8" width="18" height="4" rx="1"/><path d="M12 8v13"/><path d="M19 12v7a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2v-7"/><path d="M7.5 8a2.5 2.5 0 0 1 0-5A4.8 8 0 0 1 12 8a4.8 8 0 0 1 4.5-5 2.5 2.5 0 0 1 0 5"/>'),
+  users: I('<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>'),
+  user: I('<path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>'),
+  settings: I('<circle cx="12" cy="12" r="3"/><path d="M12 1v4m0 14v4M4.2 4.2l2.8 2.8m10 10 2.8 2.8M1 12h4m14 0h4M4.2 19.8l2.8-2.8m10-10 2.8-2.8"/>'),
+  message: I('<path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/>'),
+  bell: I('<path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/>'),
+  search: I('<circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/>'),
+  sparkles: I('<path d="M9.9 15.5 12 3l2.1 12.5L22 18l-7.9 2.5L12 33l-2.1-12.5L2 18z" transform="scale(.75) translate(2 2)"/><path d="M12 3v4m0 10v4M3 12h4m10 0h4"/>'),
+  chevron: I('<path d="m6 9 6 6 6-6"/>', 12),
+  chevronSm: I('<path d="m6 9 6 6 6-6"/>', 10),
+  more: I('<circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/>'),
+  moreSm: I('<circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/>', 14),
+  list: I('<line x1="8" x2="21" y1="6" y2="6"/><line x1="8" x2="21" y1="12" y2="12"/><line x1="8" x2="21" y1="18" y2="18"/><line x1="3" x2="3.01" y1="6" y2="6"/><line x1="3" x2="3.01" y1="12" y2="12"/><line x1="3" x2="3.01" y1="18" y2="18"/>', 14),
+  grid: I('<rect width="7" height="7" x="3" y="3" rx="1"/><rect width="7" height="7" x="14" y="3" rx="1"/><rect width="7" height="7" x="14" y="14" rx="1"/><rect width="7" height="7" x="3" y="14" rx="1"/>', 14),
+  layoutGrid: I('<rect width="18" height="18" x="3" y="3" rx="2"/><path d="M3 12h18"/><path d="M12 3v18"/>'),
+  filter: I('<polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/>', 14),
+  plus: I('<path d="M5 12h14"/><path d="M12 5v14"/>', 14),
+  sliders: I('<line x1="21" x2="14" y1="4" y2="4"/><line x1="10" x2="3" y1="4" y2="4"/><line x1="21" x2="12" y1="12" y2="12"/><line x1="8" x2="3" y1="12" y2="12"/><line x1="21" x2="16" y1="20" y2="20"/><line x1="12" x2="3" y1="20" y2="20"/><line x1="14" x2="14" y1="2" y2="6"/><line x1="8" x2="8" y1="10" y2="14"/><line x1="16" x2="16" y1="18" y2="22"/>'),
+  arrows: I('<path d="m16 3 4 4-4 4"/><path d="M20 7H4"/><path d="m8 21-4-4 4-4"/><path d="M4 17h16"/>'),
+  x: I('<path d="M18 6 6 18"/><path d="m6 6 12 12"/>'),
+  check: I('<path d="M20 6 9 17l-5-5"/>'),
+  mappin: I('<path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/>', 12),
+};
+
+/* ---------- data ---------- */
+const offers = [
+  { name:"Yahyo Prayogo Diningrat", gender:"♂", job:"#7781", candidate:"#2928", role:"Math Teacher", created:"20 Oct, 2025", status:"Pending", color:"var(--success)" },
+  { name:"Amanda Nur", gender:"♀", job:"#7780", candidate:"#2927", role:"Science Teacher", created:"20 Oct, 2025", status:"Pending", color:"var(--info)" },
+  { name:"Wildan Athok", gender:"♂", job:"#7779", candidate:"#2926", role:"English Teacher", created:"19 Oct, 2025", status:"Accepted", color:"var(--warning)" },
+  { name:"Mira Press", gender:"♀", job:"#7778", candidate:"#2925", role:"History Teacher", created:"19 Oct, 2025", status:"Rejected", color:"var(--success)" },
+  { name:"Taufik Hidayat", gender:"♂", job:"#7777", candidate:"#2924", role:"English Teacher", created:"19 Oct, 2025", status:"Accepted", color:"var(--primary)" },
+  { name:"Brooklyn Simmons", gender:"♂", job:"#7776", candidate:"#2923", role:"History Teacher", created:"18 Oct, 2025", status:"Rejected", color:"var(--success)" },
+  { name:"Lauren Sintia", gender:"♀", job:"#7775", candidate:"#2922", role:"Science Teacher", created:"18 Oct, 2025", status:"Accepted", color:"var(--info)" },
+  { name:"Ethan Walker", gender:"♂", job:"#7774", candidate:"#2921", role:"Math Teacher", created:"17 Oct, 2025", status:"Accepted", color:"var(--destructive)" },
+  { name:"Logan Anderson", gender:"♂", job:"#7773", candidate:"#2920", role:"English Teacher", created:"16 Oct, 2025", status:"Pending", color:"var(--warning)" },
+  { name:"Olivia Harper", gender:"♀", job:"#7772", candidate:"#2919", role:"Science Teacher", created:"16 Oct, 2025", status:"Pending", color:"var(--info)" },
+  { name:"Caleb Thompson", gender:"♂", job:"#7771", candidate:"#2918", role:"English Teacher", created:"16 Oct, 2025", status:"Rejected", color:"var(--primary)" },
+  { name:"Sophia Bennett", gender:"♀", job:"#7770", candidate:"#2917", role:"Math Teacher", created:"15 Oct, 2025", status:"Accepted", color:"var(--success)" },
+];
+const candidatePool = [
+  { name:"Yahyo Prayogo Diningrat", gender:"♂", date:"20 Oct, 2023", nationality:"Japanese", flag:"🇯🇵", location:"Madrid, Spain", experience:"Fresh Graduate", source:"Agency", color:"var(--success)" },
+  { name:"Amanda Nur", gender:"♀", date:"19 Oct, 2023", nationality:"Indonesian", flag:"🇮🇩", location:"Bandung, Indonesia", experience:"2 Years", source:"Referral", color:"var(--info)" },
+  { name:"Wildan Athok", gender:"♂", date:"20 Oct, 2023", nationality:"Korean", flag:"🇰🇷", location:"Jakarta, Indonesia", experience:"4 Years", source:"Career page", color:"var(--success)" },
+  { name:"Hendar Misdar", gender:"♂", date:"18 Oct, 2023", nationality:"Singaporean", flag:"🇸🇬", location:"Singapore", experience:"3 Years", source:"LinkedIn", color:"var(--warning)" },
+  { name:"Yahyo Prayogo Diningrat", gender:"♂", date:"19 Oct, 2023", nationality:"Japanese", flag:"🇯🇵", location:"Madrid, Spain", experience:"1 Year", source:"Agency", color:"var(--primary)" },
+];
+
+/* ---------- state ---------- */
+const state = {
+  view: "offers",
+  offers: { query: "", filter: "All", layout: "grid" },
+  candidates: { query: "", tab: "Candidates", layout: "board", shortlisted: new Set() },
+};
+
+/* ---------- sidebar + topbar ---------- */
+const navIcons = [icons.home, icons.calendar, icons.clipboard, icons.briefcase, icons.contact, icons.file, icons.gift, icons.users, icons.user, icons.settings];
+function renderNav(){
+  document.getElementById("nav").innerHTML = navIcons.map((ic,i)=>{
+    const isOffers = i===6, isCandidates = i===3;
+    const active = (isOffers && state.view==="offers") || (isCandidates && state.view==="candidates");
+    const label = isOffers ? "Offers" : isCandidates ? "Candidates" : "Navigation item "+(i+1);
+    return `<button class="icon-btn${active?" active":""}" title="${label}" aria-label="${label}" data-nav="${i}">${ic}</button>`;
+  }).join("");
+  document.querySelectorAll("[data-nav]").forEach(b=>b.addEventListener("click",()=>{
+    const i=+b.dataset.nav;
+    if(i===6){ state.view="offers"; render(); }
+    if(i===3){ state.view="candidates"; render(); }
+  }));
+}
+function renderTopbar(){
+  document.getElementById("topbarTitle").innerHTML = `${icons.arrows}<span>${state.view==="offers"?"Offers":"Candidates"}</span>`;
+}
+document.getElementById("msgBtn").innerHTML = icons.message;
+document.getElementById("bellBtn").insertAdjacentHTML("afterbegin", icons.bell);
+document.getElementById("topSearchIcon").innerHTML = icons.search;
+document.getElementById("upgradeBtn").insertAdjacentHTML("afterbegin", icons.sparkles);
+document.getElementById("chevTop").innerHTML = icons.chevron;
+
+/* ---------- offers view ---------- */
+function offerCard(o){
+  return `<article class="card">
+    <div class="card-head">
+      <div class="card-id"><span class="chip" style="background:${o.color}">${o.name[0]}</span><h3>${o.name} <span class="gender">${o.gender}</span></h3></div>
+      <div class="card-actions">${icons.bell.replace('width="16" height="16"','width="14" height="14"')}${icons.more}</div>
+    </div>
+    <dl>
+      <dt>▣ Job ID</dt><dd>${o.job}</dd>
+      <dt>▱ Candidate ID</dt><dd>${o.candidate}</dd>
+      <dt>▱ Applied for</dt><dd>${o.role}</dd>
+      <dt>□ Created at</dt><dd>${o.created}</dd>
+      <dt>⌁ Offer Created</dt><dd>${o.created} at 10:02 PM</dd>
+      <dt>☼ Offer Status</dt><dd><span class="status ${o.status}"><span class="dot"></span>${o.status}${icons.chevronSm}</span></dd>
+    </dl>
+  </article>`;
+}
+function renderOffers(){
+  const s = state.offers;
+  const filtered = offers.filter(o => (s.filter==="All" || o.status===s.filter) && o.name.toLowerCase().includes(s.query.toLowerCase()));
+  const counts = { Pending:4, Accepted:6, Rejected:2, All:12 };
+  return `<div class="offers">
+    <div class="toolbar">
+      <div class="seg">
+        <button class="icon-btn${s.layout==="list"?" active":""}" title="List view" data-layout="list">${icons.list}</button>
+        <button class="icon-btn${s.layout==="grid"?" active":""}" title="Grid view" data-layout="grid">${icons.grid}</button>
+      </div>
+      <div class="pills">
+        ${["Pending","Accepted","Rejected","All"].map(f=>`<button class="pill${s.filter===f?" active":""}" data-filter="${f}">${f}<span class="count${f==="All"?" all":""}">${counts[f]}</span></button>`).join("")}
+      </div>
+      <div class="toolbar-right">
+        <label class="search">${icons.search}<input aria-label="Search" placeholder="Search..." value="${s.query}" id="offerSearch"></label>
+        <button class="btn">${icons.calendar.replace('width="16" height="16"','width="14" height="14"')}Date added</button>
+        <button class="btn">${icons.filter}Filter</button>
+        <button class="btn btn-primary">${icons.plus}Create Offer</button>
+      </div>
+    </div>
+    <div class="cards-grid${s.layout==="grid"?" grid-mode":""}">${filtered.map(offerCard).join("")}</div>
+    ${filtered.length===0?'<div class="empty">No results found</div>':""}
+  </div>`;
+}
+function bindOffers(){
+  document.querySelectorAll("[data-layout]").forEach(b=>b.addEventListener("click",()=>{ state.offers.layout=b.dataset.layout; render(); }));
+  document.querySelectorAll("[data-filter]").forEach(b=>b.addEventListener("click",()=>{ state.offers.filter=b.dataset.filter; render(); }));
+  const inp = document.getElementById("offerSearch");
+  inp.addEventListener("input",()=>{ state.offers.query=inp.value; render(); inp2focus("offerSearch"); });
+}
+function inp2focus(id){ const el=document.getElementById(id); if(el){ el.focus(); el.setSelectionRange(el.value.length, el.value.length); } }
+
+/* ---------- candidates view ---------- */
+function candCard(c, idx){
+  const shortlisted = state.candidates.shortlisted.has(idx);
+  return `<article class="cand-card">
+    <div class="card-head">
+      <div class="card-id"><span class="chip" style="background:${c.color}">${c.name[0]}</span><h3>${c.name} <span class="gender">${c.gender}</span></h3></div>
+      ${icons.more.replace('width="16" height="16"','width="20" height="20"')}
+    </div>
+    <dl>
+      <dt>□ Applied at</dt><dd>${c.date}</dd>
+      <dt>◎ Nationality</dt><dd>${c.flag} &nbsp;${c.nationality}</dd>
+      <dt>${icons.mappin} Location</dt><dd>${c.location}</dd>
+      <dt>▧ Experience</dt><dd>${c.experience}</dd>
+      <dt>⇱ Source</dt><dd>${c.source}</dd>
+    </dl>
+    <div class="cand-actions">
+      <button class="btn btn-icon btn-danger" aria-label="Reject candidate">${icons.x}</button>
+      <button class="btn grow${shortlisted?" shortlisted":""}" data-shortlist="${idx}">${shortlisted?icons.check+"Shortlisted":"Shortlist"}</button>
+    </div>
+  </article>`;
+}
+function renderCandidates(){
+  const s = state.candidates;
+  const filtered = candidatePool.map((c,i)=>({...c, idx:i})).filter(c=>c.name.toLowerCase().includes(s.query.toLowerCase()));
+  const columns = [
+    { title:"Application", count:4, items:filtered.slice(0,2) },
+    { title:"Shortlist", count:2, items:filtered.slice(2,4) },
+    { title:"Interview", count:1, items:filtered.slice(4,5) },
+  ];
+  const tabIcons = ["♙","▣","▧"];
+  let body;
+  if(s.tab==="Candidates"){
+    body = `<div class="cand-body">
+      <div class="cand-toolbar">
+        <label class="search lg">${icons.search}<input aria-label="Search" placeholder="Search..." value="${s.query}" id="candSearch"></label>
+        <span class="divider"></span>
+        <div class="seg">
+          <button class="icon-btn${s.layout==="list"?" active":""}" title="List view" data-clayout="list">${icons.layoutGrid}</button>
+          <button class="icon-btn${s.layout==="board"?" active":""}" title="Board view" data-clayout="board">${icons.grid}</button>
+        </div>
+        <button class="btn" style="margin-left:auto">${icons.sliders}Customize</button>
+      </div>
+      ${s.layout==="board"
+        ? `<div class="board-wrap"><div class="board">${columns.map(col=>`<section class="col ${col.title}"><div class="col-head"><span>${col.title}</span><span class="count">${col.count}</span></div><div class="col-cards">${col.items.map(c=>candCard(c,c.idx)).join("")}</div></section>`).join("")}</div></div>`
+        : `<div class="list-grid">${filtered.map(c=>candCard(c,c.idx)).join("")}</div>`}
+    </div>`;
+  } else {
+    body = `<div class="empty">${s.tab} view</div>`;
+  }
+  return `<div>
+    <div class="tabs">
+      ${["Candidates","Information","Activity"].map((t,i)=>`<button class="tab${s.tab===t?" active":""}" data-tab="${t}"><span>${tabIcons[i]}</span>${t}${t==="Candidates"?'<span class="badge">12</span>':""}</button>`).join("")}
+    </div>
+    ${body}
+  </div>`;
+}
+function bindCandidates(){
+  document.querySelectorAll("[data-tab]").forEach(b=>b.addEventListener("click",()=>{ state.candidates.tab=b.dataset.tab; render(); }));
+  document.querySelectorAll("[data-clayout]").forEach(b=>b.addEventListener("click",()=>{ state.candidates.layout=b.dataset.clayout; render(); }));
+  document.querySelectorAll("[data-shortlist]").forEach(b=>b.addEventListener("click",()=>{
+    const i=+b.dataset.shortlist;
+    state.candidates.shortlisted.has(i) ? state.candidates.shortlisted.delete(i) : state.candidates.shortlisted.add(i);
+    render();
+  }));
+  const inp = document.getElementById("candSearch");
+  if(inp) inp.addEventListener("input",()=>{ state.candidates.query=inp.value; render(); inp2focus("candSearch"); });
+}
+
+/* ---------- root render ---------- */
+function render(){
+  renderNav();
+  renderTopbar();
+  const content = document.getElementById("content");
+  if(state.view==="offers"){ content.innerHTML = renderOffers(); bindOffers(); }
+  else { content.innerHTML = renderCandidates(); bindCandidates(); }
+}
+render();
+</script>
+</body>
+</html>

@@ -1,0 +1,125 @@
+/* Assessment and mock interview use the student portal's active theme tokens. */
+.career-practice-dashboard-card,
+.career-practice-tool-card { border-left: 3px solid var(--cl-primary); }
+.career-practice-dashboard-card .card-body { display: grid; gap: 10px; }
+.career-practice-spark { display: grid; width: 34px; height: 34px; place-items: center; border-radius: 11px; color: var(--cl-primary); background: var(--cl-primary-soft); font-size: 1.1rem; }
+.career-practice-dashboard-scores { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+.career-practice-dashboard-scores > div { display: grid; gap: 3px; min-width: 0; padding: 9px 10px; border: 1px solid var(--cl-border); border-radius: 9px; background: color-mix(in srgb, var(--cl-primary) 4%, var(--cl-surface)); }
+.career-practice-dashboard-scores span, .career-practice-last-score span { color: var(--cl-muted); font-size: .72rem; }
+.career-practice-dashboard-scores strong { color: var(--cl-text); font-size: .9rem; font-variant-numeric: tabular-nums; }
+.career-practice-dashboard-actions { display: flex; flex-wrap: wrap; gap: 8px; }
+.career-practice-dashboard-actions .btn { flex: 1 1 145px; }
+
+#career-practice-view { min-width: 0; }
+.career-practice-page-header { margin-bottom: 18px; }
+.career-practice-page-header > div { max-width: 780px; }
+.career-practice-eyebrow { margin: 0 0 5px; color: var(--cl-primary); font-size: .67rem; font-weight: 800; letter-spacing: .11em; }
+.career-practice-page-header h2 { margin-bottom: 5px; }
+.career-practice-page-header p:last-child { margin: 0; color: var(--cl-muted); }
+.career-practice-tool-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; align-items: stretch; }
+.career-practice-tool-card { min-width: 0; overflow: hidden; background: linear-gradient(145deg, color-mix(in srgb, var(--cl-primary) 4%, var(--cl-surface)), var(--cl-surface) 56%); }
+.career-practice-tool-card .card-body { display: flex; min-height: 100%; flex-direction: column; align-items: flex-start; padding: clamp(18px, 2.2vw, 26px); }
+.career-practice-tool-top { display: flex; width: 100%; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 16px; }
+.career-practice-icon { display: grid; width: 42px; height: 42px; place-items: center; border: 1px solid color-mix(in srgb, var(--cl-primary) 24%, var(--cl-border)); border-radius: 13px; color: var(--cl-primary); background: var(--cl-primary-soft); font-size: .8rem; font-weight: 800; }
+.career-practice-tag { color: var(--cl-muted); font-size: .62rem; font-weight: 750; letter-spacing: .075em; text-align: right; }
+.career-practice-tool-card h3 { margin: 0 0 7px; color: var(--cl-text); font-size: 1.14rem; }
+.career-practice-tool-card > .card-body > p { min-height: 42px; margin: 0 0 14px; color: var(--cl-muted); font-size: .85rem; line-height: 1.55; }
+.career-practice-last-score { display: flex; width: 100%; align-items: center; justify-content: space-between; gap: 12px; margin: auto 0 14px; padding: 11px 0 2px; border-top: 1px solid var(--cl-border); }
+.career-practice-last-score strong { color: var(--cl-primary); font-size: .9rem; font-variant-numeric: tabular-nums; }
+.career-practice-tool-card > .card-body > .btn { width: 100%; justify-content: center; }
+.career-practice-field { display: block; margin: 2px 0 6px; color: var(--cl-text); font-size: .77rem; font-weight: 700; }
+.career-practice-tool-card .form-select, .career-practice-tool-card .form-input { width: 100%; min-height: 42px; margin-bottom: 8px; border-color: var(--cl-border); color: var(--cl-text); background-color: var(--cl-surface); }
+.career-practice-inline-status { min-height: 1.25em; margin: 7px 0 0 !important; color: var(--cl-danger) !important; font-size: .76rem !important; }
+.career-practice-inline-status[data-tone="error"] { color: var(--cl-danger) !important; }
+.career-practice-privacy-note { margin: 13px 0 0; color: var(--cl-muted); font-size: .75rem; }
+
+.career-practice-session-toolbar { display: flex; min-width: 0; align-items: center; justify-content: space-between; gap: 12px; margin: 0 0 12px; }
+.career-practice-timer { padding: 8px 11px; border: 1px solid color-mix(in srgb, var(--cl-warning) 28%, var(--cl-border)); border-radius: 10px; color: var(--cl-warning); background: color-mix(in srgb, var(--cl-warning) 8%, var(--cl-surface)); font-size: .82rem; font-weight: 750; font-variant-numeric: tabular-nums; }
+.career-practice-session-label { overflow: hidden; color: var(--cl-muted); font-size: .76rem; text-overflow: ellipsis; white-space: nowrap; }
+.career-practice-session-label strong { color: var(--cl-text); }
+.career-practice-session-card { max-width: 920px; margin-inline: auto; border-top: 3px solid var(--cl-primary); }
+.career-practice-session-card > .card-body { padding: clamp(16px, 3.1vw, 30px); }
+.career-practice-progress-heading { display: flex; align-items: flex-end; justify-content: space-between; gap: 14px; }
+.career-practice-progress-heading h3 { margin: 0; color: var(--cl-text); font-size: 1.1rem; }
+.career-practice-progress-heading > span { color: var(--cl-muted); font-size: .73rem; white-space: nowrap; }
+.career-practice-progress { height: 7px; overflow: hidden; margin: 16px 0 25px; border-radius: 999px; background: color-mix(in srgb, var(--cl-primary) 10%, var(--cl-border)); }
+.career-practice-progress > span { display: block; width: 0; height: 100%; border-radius: inherit; background: var(--cl-primary); transition: width 220ms ease; }
+.career-practice-question-content { min-height: 145px; }
+.career-practice-category { display: inline-flex; align-items: center; min-height: 24px; margin-bottom: 10px; padding: 3px 9px; border-radius: 999px; color: var(--cl-primary); background: var(--cl-primary-soft); font-size: .66rem; font-weight: 750; }
+.career-practice-question-prompt { max-width: 780px; margin: 0 0 17px; color: var(--cl-text); font-size: clamp(1rem, 2.3vw, 1.23rem); line-height: 1.55; }
+.career-practice-options { display: grid; gap: 9px; min-width: 0; margin: 0; padding: 0; border: 0; }
+.career-practice-options legend { margin-bottom: 9px; color: var(--cl-muted); font-size: .74rem; }
+.career-practice-option { display: grid; grid-template-columns: 20px 31px minmax(0, 1fr); align-items: center; gap: 10px; min-width: 0; padding: 11px 12px; border: 1px solid var(--cl-border); border-radius: 11px; color: var(--cl-text); background: var(--cl-surface); cursor: pointer; transition: border-color 160ms ease, background-color 160ms ease, transform 160ms ease; }
+.career-practice-option:hover { border-color: color-mix(in srgb, var(--cl-primary) 48%, var(--cl-border)); background: color-mix(in srgb, var(--cl-primary) 4%, var(--cl-surface)); }
+.career-practice-option.is-selected { border-color: var(--cl-primary); background: color-mix(in srgb, var(--cl-primary) 9%, var(--cl-surface)); box-shadow: 0 0 0 2px color-mix(in srgb, var(--cl-primary) 12%, transparent); }
+.career-practice-option input { width: 17px; height: 17px; margin: 0; accent-color: var(--cl-primary); }
+.career-practice-option-marker { display: grid; width: 29px; height: 29px; place-items: center; border-radius: 9px; color: var(--cl-muted); background: var(--cl-surface-muted); font-size: .7rem; font-weight: 800; }
+.career-practice-option.is-selected .career-practice-option-marker { color: var(--cl-primary); background: var(--cl-primary-soft); }
+.career-practice-option-text { min-width: 0; font-size: .84rem; line-height: 1.45; }
+.career-practice-answer { display: block; width: 100%; min-height: 170px; resize: vertical; border-color: var(--cl-border); color: var(--cl-text); background: var(--cl-surface-muted); line-height: 1.6; }
+.career-practice-answer:focus { border-color: var(--cl-primary); box-shadow: 0 0 0 3px color-mix(in srgb, var(--cl-primary) 14%, transparent); }
+.career-practice-answer-footer { display: flex; justify-content: space-between; gap: 12px; margin-top: 5px; color: var(--cl-muted); font-size: .7rem; }
+.career-practice-session-status { min-height: 1.3em; margin: 12px 0 0; color: var(--cl-muted); font-size: .79rem; }
+.career-practice-session-status[data-tone="error"] { color: var(--cl-danger); }
+.career-practice-session-actions { display: flex; justify-content: space-between; gap: 10px; margin-top: 15px; padding-top: 14px; border-top: 1px solid var(--cl-border); }
+.career-practice-session-actions .btn { min-width: 128px; }
+
+.career-practice-result-card { max-width: 920px; margin-inline: auto; overflow: hidden; border-top: 3px solid var(--cl-primary); }
+.career-practice-result-header { padding: clamp(20px, 4vw, 34px) clamp(16px, 4vw, 36px) 20px; text-align: center; background: linear-gradient(150deg, color-mix(in srgb, var(--cl-primary) 9%, var(--cl-surface)), var(--cl-surface) 67%); }
+.career-practice-complete-mark { display: grid; width: 40px; height: 40px; margin: 0 auto 12px; place-items: center; border-radius: 50%; color: var(--cl-success); background: var(--cl-success-soft); font-weight: 800; }
+.career-practice-result-header h3 { margin: 4px 0 5px; color: var(--cl-text); font-size: 1.25rem; }
+.career-practice-overall-score { margin: 9px 0 2px; color: var(--cl-primary); font-size: clamp(2.6rem, 7vw, 4rem); font-weight: 800; letter-spacing: -.065em; line-height: 1.05; font-variant-numeric: tabular-nums; }
+.career-practice-overall-score small { margin-left: 4px; color: var(--cl-muted); font-size: .32em; font-weight: 650; letter-spacing: 0; }
+.career-practice-result-header > p:last-child { margin: 7px 0 0; color: var(--cl-muted); font-size: .79rem; }
+.career-practice-result-scores { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; padding: 14px clamp(14px, 3vw, 26px); }
+.career-practice-score-block { min-width: 0; padding: 12px; border: 1px solid var(--cl-border); border-radius: 11px; background: var(--cl-surface); }
+.career-practice-score-block > span { display: block; overflow: hidden; color: var(--cl-muted); font-size: .69rem; font-weight: 650; text-overflow: ellipsis; white-space: nowrap; }
+.career-practice-score-block > strong { display: block; margin: 5px 0 9px; color: var(--cl-text); font-size: 1.25rem; font-variant-numeric: tabular-nums; }
+.career-practice-score-block > strong small { margin-left: 3px; color: var(--cl-muted); font-size: .6em; font-weight: 550; }
+.career-practice-score-track { height: 5px; overflow: hidden; border-radius: 999px; background: color-mix(in srgb, var(--cl-primary) 10%, var(--cl-border)); }
+.career-practice-score-track i { display: block; height: 100%; border-radius: inherit; background: var(--cl-primary); }
+.career-practice-score-block.is-overall { border-color: color-mix(in srgb, var(--cl-primary) 44%, var(--cl-border)); background: color-mix(in srgb, var(--cl-primary) 6%, var(--cl-surface)); }
+.career-practice-feedback-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; padding: 0 clamp(14px, 3vw, 26px) 15px; }
+.career-practice-feedback { min-width: 0; padding: 13px 14px; border: 1px solid var(--cl-border); border-radius: 11px; background: var(--cl-surface-muted); }
+.career-practice-feedback h4, .career-practice-ai-feedback h4 { margin: 0 0 7px; color: var(--cl-text); font-size: .84rem; }
+.career-practice-feedback ul { display: grid; gap: 5px; margin: 0; padding-left: 17px; color: var(--cl-muted); font-size: .79rem; line-height: 1.45; }
+.career-practice-feedback.is-strength { border-color: color-mix(in srgb, var(--cl-success) 25%, var(--cl-border)); background: color-mix(in srgb, var(--cl-success) 5%, var(--cl-surface)); }
+.career-practice-feedback.is-strength h4 { color: var(--cl-success); }
+.career-practice-feedback.is-improvement { border-color: color-mix(in srgb, var(--cl-warning) 25%, var(--cl-border)); background: color-mix(in srgb, var(--cl-warning) 5%, var(--cl-surface)); }
+.career-practice-feedback.is-improvement h4 { color: var(--cl-warning); }
+.career-practice-ai-feedback { margin: 0 clamp(14px, 3vw, 26px) 15px; padding: 13px 14px; border-left: 3px solid var(--cl-primary); border-radius: 0 10px 10px 0; background: color-mix(in srgb, var(--cl-primary) 5%, var(--cl-surface)); }
+.career-practice-ai-feedback p { margin: 0; color: var(--cl-muted); font-size: .82rem; line-height: 1.6; white-space: pre-wrap; }
+.career-practice-result-actions { display: flex; justify-content: flex-end; gap: 9px; padding: 13px clamp(14px, 3vw, 26px) 18px; border-top: 1px solid var(--cl-border); }
+.career-practice-tool-card, .career-practice-session-card, .career-practice-result-card { animation: career-practice-enter 220ms cubic-bezier(.2, .75, .25, 1) both; }
+
+@keyframes career-practice-enter { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+@media (max-width: 900px) {
+    .career-practice-tool-grid { gap: 12px; }
+    .career-practice-tool-card .card-body { padding: 17px; }
+}
+@media (max-width: 700px) {
+    .career-practice-tool-grid { grid-template-columns: 1fr; }
+    .career-practice-tool-card > .card-body > p { min-height: 0; }
+    .career-practice-tool-card .card-body { min-height: 0; }
+    .career-practice-last-score { margin-top: 13px; }
+    .career-practice-result-scores { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 480px) {
+    .career-practice-dashboard-actions .btn { flex-basis: 100%; }
+    .career-practice-session-toolbar { align-items: flex-start; }
+    .career-practice-progress-heading { align-items: flex-start; }
+    .career-practice-progress-heading > span { padding-top: 5px; }
+    .career-practice-session-actions { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .career-practice-session-actions .btn { width: 100%; min-width: 0; }
+    .career-practice-session-actions .btn-primary { grid-column: 1 / -1; }
+    .career-practice-feedback-grid { grid-template-columns: 1fr; }
+    .career-practice-answer-footer { align-items: flex-start; }
+    .career-practice-result-actions { flex-direction: column-reverse; }
+    .career-practice-result-actions .btn { width: 100%; justify-content: center; }
+    .career-practice-option { grid-template-columns: 18px 27px minmax(0, 1fr); gap: 8px; padding: 10px; }
+    .career-practice-option-marker { width: 26px; height: 26px; }
+}
+@media (prefers-reduced-motion: reduce) {
+    .career-practice-tool-card, .career-practice-session-card, .career-practice-result-card { animation: none; }
+    .career-practice-progress > span, .career-practice-option { transition: none; }
+}

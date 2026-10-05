@@ -3,131 +3,108 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>CampusLink — Placement Cell Dashboard</title>
-
-    <!-- Shared styles -->
+    <title>CampusLink — Placement Workspace</title>
     <link rel="stylesheet" href="css/style.css" />
     <link rel="stylesheet" href="css/dashboard.css" />
     <link rel="stylesheet" href="css/forms.css" />
     <link rel="stylesheet" href="css/tables.css" />
-    <link rel="stylesheet" href="css/analytics.css" />
+    <link rel="stylesheet" href="css/analytics.css?v=20261004-ctc-placement-refresh" />
     <link rel="stylesheet" href="css/assistant.css" />
+    <link rel="stylesheet" href="css/campuslink-polish.css" />
+    <link rel="stylesheet" href="css/campuslink-accent-grid.css?v=20261002-placement-type" />
+    <link rel="stylesheet" href="css/campuslink-product-system.css?v=20261004-scroll-matches" />
+    <link rel="stylesheet" href="css/dashboard-layout.css?v=20261004-workspace-ux" />
+    <script src="js/theme.js?v=20261004-scroll-matches" defer></script>
 </head>
 <body>
-
-    <!-- ═══════════════════════════════════════════════════════
-         Placement Cell Command Dashboard Shell
-         Phase 8 will add: drive management, conflict detection.
-         Phase 9 adds: conflict-aware scheduling.
-         Phase 10 adds: offer tracking.
-         Phase 11 adds: analytics dashboard.
-         ═══════════════════════════════════════════════════════ -->
-
     <div class="app-shell">
-
-        <!-- Sidebar -->
         <aside class="sidebar" id="sidebar">
-            <div class="sidebar-logo">
-                <div class="logo-text">🎓 CampusLink</div>
-                <div class="logo-sub">Placement Cell</div>
-            </div>
-
-            <nav class="sidebar-nav" id="sidebar-nav">
-                <div class="sidebar-section-label">Overview</div>
-                <a href="#" class="sidebar-link active" data-section="dashboard">
-                    <span class="nav-icon">📊</span> Command Center
-                </a>
-
-                <div class="sidebar-section-label">Management</div>
-                <a href="#" class="sidebar-link" data-section="students">
-                    <span class="nav-icon">🎓</span> Students
-                </a>
-                <a href="#" class="sidebar-link" data-section="recruiters">
-                    <span class="nav-icon">🏢</span> Recruiters
-                </a>
-                <a href="#" class="sidebar-link" data-section="jobs">
-                    <span class="nav-icon">💼</span> Jobs
-                </a>
-                <a href="#" class="sidebar-link" data-section="drives">
-                    <span class="nav-icon">📅</span> Drives
-                </a>
-
-                <div class="sidebar-section-label">Tracking</div>
-                <a href="#" class="sidebar-link" data-section="conflicts">
-                    <span class="nav-icon">⚠️</span> Conflicts
-                </a>
-                <a href="#" class="sidebar-link" data-section="offers">
-                    <span class="nav-icon">🏆</span> Offers
-                </a>
-
-                <div class="sidebar-section-label">Updates</div>
-                <a href="#" class="sidebar-link" data-section="notifications">
-                    <span class="nav-icon">🔔</span> Notifications
-                </a>
+            <div class="sidebar-logo"><div class="logo-text">CampusLink</div><div class="logo-sub">Placement workspace</div></div>
+            <nav class="sidebar-nav" id="sidebar-nav" aria-label="Placement navigation">
+                <div class="sidebar-section-label">Workspace</div>
+                <a href="#" class="sidebar-link active" data-section="dashboard"><span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="8" height="8" rx="1.5"/><rect x="13" y="3" width="8" height="5" rx="1.5"/><rect x="13" y="10" width="8" height="11" rx="1.5"/><rect x="3" y="13" width="8" height="8" rx="1.5"/></svg></span> Dashboard</a>
+                <a href="#" class="sidebar-link" data-section="students"><span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg></span> Students</a>
+                <a href="#" class="sidebar-link" data-section="recruiters"><span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M9 21V8h6v13M7 8h.01M17 8h.01M7 12h.01M17 12h.01"/></svg></span> Recruiters</a>
+                <a href="#" class="sidebar-link" data-section="jobs"><span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="7" width="18" height="14" rx="2"/><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M3 12h18M10 12v2h4v-2"/></svg></span> Jobs</a>
+                <a href="#" class="sidebar-link" data-section="drives"><span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M16 3v4M8 3v4M3 10h18M8 14h3M8 17h6"/></svg></span> Drives</a>
+                <a href="#" class="sidebar-link" data-section="applications"><span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 4.5h6M9 10h6M9 14h6M9 18h4"/></svg></span> Applications</a>
+                <a href="#" class="sidebar-link" data-section="offers"><span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3 20 7.5v9L12 21l-8-4.5v-9L12 3Z"/><path d="m8.5 12 2.2 2.2 4.8-4.8"/></svg></span> Offers</a>
+                <a href="#" class="sidebar-link" data-section="analytics"><span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 20V10M10 20V4M16 20v-7M22 20V7"/><path d="M2 20h21"/></svg></span> Analytics</a>
+                <a href="#" class="sidebar-link" data-section="assistant"><span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="m12 3 1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8L12 3Z"/><path d="m19 15 .9 2.1L22 18l-2.1.9L19 21l-.9-2.1L16 18l2.1-.9L19 15Z"/></svg></span> AI Assistant</a>
             </nav>
-
-            <div class="sidebar-footer">
-                <div class="sidebar-user">
-                    <div class="user-avatar" id="user-avatar">P</div>
-                    <div class="user-info">
-                        <div class="user-name" id="user-name">Placement Officer</div>
-                        <div class="user-role">Placement Cell</div>
-                    </div>
-                </div>
-            </div>
+            <div class="sidebar-footer"><div class="sidebar-user"><div class="user-avatar" id="user-avatar">P</div><div class="user-info"><div class="user-name" id="user-name">Placement Officer</div><div class="user-role">Placement Cell</div></div></div></div>
         </aside>
 
-        <!-- Main content area -->
         <div class="main-content">
-            <header class="topbar">
-                <div class="topbar-title" id="page-title">Command Center</div>
-                <div class="topbar-actions">
-                    <button class="btn btn-secondary btn-sm" id="logout-btn">Logout</button>
-                </div>
-            </header>
-
+            <header class="topbar"><div class="topbar-title" id="page-title">Dashboard</div><div class="topbar-actions"><button class="btn btn-secondary btn-sm" id="logout-btn">Log out</button></div></header>
             <main class="page-content" id="page-content">
-                <section class="analytics-view" id="placement-analytics" aria-labelledby="analytics-title">
-                    <div class="page-header analytics-heading"><div><h2 id="analytics-title">Placement Analytics</h2><p>Live metrics calculated from current CampusLink records.</p></div><button class="btn btn-primary" id="refresh-analytics">Refresh</button></div>
+                <section class="placement-view" id="view-dashboard" data-view="dashboard">
+                    <div class="page-header dashboard-page-header"><div><h2>Placement overview</h2><p>Live operational metrics from CampusLink records.</p></div><button type="button" class="btn btn-primary dashboard-primary-action" data-dashboard-action="applications">Review applications <span aria-hidden="true">→</span></button></div>
                     <p class="analytics-message" id="analytics-message" aria-live="polite">Loading analytics…</p>
                     <h3>Placement</h3><div class="stats-grid" id="placement-kpis"></div>
-                    <h3>Recruiters</h3><div class="stats-grid" id="recruiter-kpis"></div>
-                    <div class="analytics-columns">
-                        <section class="card analytics-panel"><div class="card-header"><h3>Skills</h3></div><div class="card-body"><h4>Most demanded</h4><div id="demand-chart"></div><h4>Skill gaps</h4><div id="gap-chart"></div><h4>Branch-wise skill distribution</h4><div class="table-container"><table class="data-table"><thead><tr><th>Branch</th><th>Students</th><th>Skills found</th></tr></thead><tbody id="branch-table"></tbody></table></div></div></section>
-                        <section class="card analytics-panel"><div class="card-header"><h3>Compensation</h3></div><div class="card-body"><div class="stats-grid" id="compensation-kpis"></div><h4>Role-wise CTC</h4><div class="table-container"><table class="data-table"><thead><tr><th>Role</th><th>Average CTC</th><th>Offers</th></tr></thead><tbody id="role-ctc-table"></tbody></table></div></div></section>
+                    <h3>Recruitment</h3><div class="stats-grid" id="recruiter-kpis"></div>
+                    <div class="placement-dashboard-highlights">
+                        <section class="card placement-funnel-panel" aria-labelledby="placement-funnel-title">
+                            <div class="card-header"><div><p class="dashboard-eyebrow">PLACEMENT PIPELINE</p><h3 id="placement-funnel-title">Hiring funnel</h3><p class="analytics-footnote">Candidate progress across active recruitment.</p></div></div>
+                            <div class="card-body"><div class="placement-hiring-funnel" id="placement-hiring-funnel"><p class="analytics-empty">Loading pipeline…</p></div></div>
+                        </section>
+                        <section class="card placement-latest-panel" aria-labelledby="placement-latest-title">
+                            <div class="card-header"><div><p class="dashboard-eyebrow">LATEST</p><h3 id="placement-latest-title">Recently placed students</h3></div><button class="btn btn-secondary btn-sm" id="placement-latest-all" type="button">All students</button></div>
+                            <div class="card-body"><div class="placement-latest-list" id="placement-latest-list"><p class="analytics-empty">Loading placed students…</p></div></div>
+                        </section>
                     </div>
                     <section class="card analytics-panel drive-analytics"><div class="card-header"><h3>Drives</h3></div><div class="card-body stats-grid" id="drive-kpis"></div></section>
+                    <section class="card analytics-panel placement-risk-panel"><div class="card-header"><div><h3>Placement risk</h3><p class="analytics-footnote">Prototype predictive signal based on available placement data.</p></div><button class="btn btn-secondary btn-sm" id="refresh-risk">Refresh</button></div><div class="card-body"><div class="stats-grid" id="risk-kpis"></div><p class="analytics-message" id="risk-message" aria-live="polite">Loading risk signals…</p><div class="table-container"><table class="data-table"><thead><tr><th>Student</th><th>Risk</th><th>Available contributing factors</th></tr></thead><tbody id="risk-students-list"><tr><td colspan="3">Loading risk signals…</td></tr></tbody></table></div></div></section>
                 </section>
-                <section class="card" id="scheduling-conflicts" aria-labelledby="scheduling-conflicts-title">
-                    <div class="card-header">
-                        <div>
-                            <h3 id="scheduling-conflicts-title">Scheduling Conflicts</h3>
-                            <p>Review student and venue overlaps across scheduled drives.</p>
-                        </div>
-                        <button class="btn btn-primary btn-sm" id="check-drive-conflicts">Check drives</button>
-                    </div>
-                    <div id="scheduling-conflict-results" aria-live="polite">Select “Check drives” to inspect scheduled drives.</div>
+
+                <section class="placement-view hidden" id="view-students" data-view="students">
+                    <div class="page-header"><div><h2>Students</h2><p>Placement readiness and application activity.</p></div></div>
+                    <div class="workspace-toolbar"><label class="table-search"><span class="search-icon" aria-hidden="true">⌕</span><input class="form-input" id="students-search" type="search" placeholder="Search students…" aria-label="Search students"></label><label class="workspace-filter"><span>Branch</span><select class="form-select" id="students-branch-filter" aria-label="Filter by branch"><option value="">All branches</option></select></label><label class="workspace-filter"><span>Placement status</span><select class="form-select" id="students-status-filter" aria-label="Filter by placement status"><option value="">All placement statuses</option><option>Placed</option><option>Offer in progress</option><option>In process</option><option>Applications active</option><option>Closed</option><option>No activity</option></select></label><label class="workspace-filter"><span>Sort by</span><select class="form-select" id="students-sort" aria-label="Sort students"><option value="name">Name A–Z</option><option value="readiness-desc">Readiness high to low</option><option value="applications-desc">Most applications</option><option value="cgpa-desc">CGPA high to low</option></select></label></div>
+                    <div class="table-container"><table class="data-table"><thead><tr><th>Student</th><th>Branch</th><th>CGPA</th><th>Readiness</th><th>Applications</th><th>Offers</th><th>Placement status</th><th>Actions</th></tr></thead><tbody id="placement-students-list"><tr><td colspan="8" class="text-center">Loading students…</td></tr></tbody></table></div>
                 </section>
-                <section class="card" id="placement-offers" style="display:none;">
-                    <div class="card-header"><div><h3>Offer Management</h3><p>Create offers for selected candidates and track lifecycle updates.</p></div><button class="btn btn-secondary btn-sm" id="refresh-offers">Refresh</button></div>
-                    <div class="table-container"><table class="data-table"><thead><tr><th>Student</th><th>Company</th><th>Role</th><th>Application</th><th>Action</th></tr></thead><tbody id="selected-candidates-list"><tr><td colspan="5">Select Offers to load candidates.</td></tr></tbody></table></div>
-                    <h3 class="mt-4">Existing Offers</h3>
-                    <div class="table-container"><table class="data-table"><thead><tr><th>Student</th><th>Company / Role</th><th>CTC</th><th>Status</th><th>Documents</th><th>Joining Date</th><th>Manage</th></tr></thead><tbody id="placement-offers-list"><tr><td colspan="7">Select Offers to load records.</td></tr></tbody></table></div>
+
+                <section class="placement-view hidden" id="view-recruiters" data-view="recruiters">
+                    <div class="page-header"><div><h2>Recruiters</h2><p>Company activity across jobs, drives, applications, and offers.</p></div></div>
+                    <div class="workspace-toolbar"><label class="table-search"><span class="search-icon" aria-hidden="true">⌕</span><input class="form-input" id="recruiters-search" type="search" placeholder="Search companies or recruiters…" aria-label="Search recruiters"></label><select class="form-select" id="recruiters-activity-filter" aria-label="Filter recruiters"><option value="">All recruiters</option><option value="active">With active jobs</option><option value="drives">With drives</option></select><select class="form-select" id="recruiters-sort" aria-label="Sort recruiters"><option value="company">Company A–Z</option><option value="jobs-desc">Most active jobs</option><option value="applications-desc">Most applications</option></select></div>
+                    <div class="table-container"><table class="data-table"><thead><tr><th>Company</th><th>Recruiter</th><th>Email</th><th>Active jobs</th><th>Drives</th><th>Applications</th><th>Offers</th><th>Details</th></tr></thead><tbody id="placement-recruiters-list"><tr><td colspan="8" class="text-center">Loading recruiters…</td></tr></tbody></table></div>
+                </section>
+
+                <section class="placement-view hidden" id="view-jobs" data-view="jobs">
+                    <div class="page-header"><div><h2>Jobs</h2><p>Open roles and their recruitment activity.</p></div></div>
+                    <div class="workspace-toolbar"><label class="table-search"><span class="search-icon" aria-hidden="true">⌕</span><input class="form-input" id="jobs-search" type="search" placeholder="Search jobs or companies…" aria-label="Search jobs"></label><label class="workspace-filter"><span>Job status</span><select class="form-select" id="jobs-status-filter" aria-label="Filter by job status"><option value="">All statuses</option><option value="active">Active</option><option value="draft">Draft</option><option value="closed">Closed</option></select></label><label class="workspace-filter"><span>Sort by</span><select class="form-select" id="jobs-sort" aria-label="Sort jobs"><option value="title">Title A–Z</option><option value="applications-desc">Most applications</option><option value="created-desc">Recently created</option></select></label></div>
+                    <div class="table-container"><table class="data-table"><thead><tr><th>Job</th><th>Company</th><th>Eligibility</th><th>Applications</th><th>Shortlisted</th><th>Status</th><th>Drive</th><th>Details</th></tr></thead><tbody id="placement-jobs-list"><tr><td colspan="8" class="text-center">Loading jobs…</td></tr></tbody></table></div>
+                </section>
+
+                <section class="placement-view hidden" id="view-drives" data-view="drives">
+                    <div class="page-header"><div><h2>Drives</h2><p>Scheduled recruitment events and backend conflict checks.</p></div><button class="btn btn-secondary" id="check-drive-conflicts">Check all conflicts</button></div>
+                    <p class="analytics-message" id="scheduling-conflict-results" aria-live="polite">Conflict checks have not been run.</p>
+                    <div class="workspace-toolbar"><label class="table-search"><span class="search-icon" aria-hidden="true">⌕</span><input class="form-input" id="drives-search" type="search" placeholder="Search drives, jobs, or companies…" aria-label="Search drives"></label><label class="workspace-filter"><span>Drive status</span><select class="form-select" id="drives-status-filter" aria-label="Filter by drive status"><option value="">All statuses</option><option>Scheduled</option><option>Ongoing</option><option>Completed</option><option>Cancelled</option></select></label><label class="workspace-filter"><span>Sort by</span><select class="form-select" id="drives-sort" aria-label="Sort drives"><option value="date-asc">Soonest first</option><option value="date-desc">Latest first</option><option value="company">Company A–Z</option></select></label></div>
+                    <div class="table-container"><table class="data-table"><thead><tr><th>Company / Role</th><th>Job</th><th>Date &amp; time</th><th>Venue / mode</th><th>Status</th><th>Candidates</th><th>Conflict check</th></tr></thead><tbody id="placement-drives-list"><tr><td colspan="7" class="text-center">Loading drives…</td></tr></tbody></table></div>
+                </section>
+
+                <section class="placement-view hidden" id="view-applications" data-view="applications">
+                    <div class="page-header"><div><h2>Applications</h2><p>Candidate pipeline across CampusLink jobs.</p></div></div>
+                    <div class="workspace-toolbar"><label class="table-search"><span class="search-icon" aria-hidden="true">⌕</span><input class="form-input" id="applications-search" type="search" placeholder="Search students, jobs, companies…" aria-label="Search applications"></label><label class="workspace-filter"><span>Application status</span><select class="form-select" id="applications-status-filter" aria-label="Filter applications by status"><option value="">All statuses</option></select></label><label class="workspace-filter"><span>Sort by</span><select class="form-select" id="applications-sort" aria-label="Sort applications"><option value="date-desc">Recently applied</option><option value="date-asc">Oldest first</option><option value="match-desc">Match score high to low</option></select></label></div>
+                    <div class="table-container"><table class="data-table"><thead><tr><th>Student</th><th>Job / Company</th><th>Package / CTC</th><th>Match</th><th>Eligibility</th><th>Applied</th><th>Status</th><th>Drive</th><th>Actions</th></tr></thead><tbody id="placement-applications-list"><tr><td colspan="9" class="text-center">Loading applications…</td></tr></tbody></table></div>
+                </section>
+
+                <section class="placement-view hidden" id="view-offers" data-view="offers">
+                    <div class="page-header"><div><h2>Offers</h2><p>Read-only oversight of recruiter offer, document, and joining progress.</p></div><button class="btn btn-secondary" id="refresh-offers">Refresh</button></div>
+                    <h3 class="section-subtitle">Selected candidates awaiting an offer</h3><div class="table-container"><table class="data-table"><thead><tr><th>Student</th><th>Company</th><th>Role</th><th>Recruiter decision</th></tr></thead><tbody id="selected-candidates-list"><tr><td colspan="4">Loading selected candidates…</td></tr></tbody></table></div>
+                    <h3 class="section-subtitle mt-4">Existing offers</h3><div class="workspace-toolbar"><label class="table-search"><span class="search-icon" aria-hidden="true">⌕</span><input class="form-input" id="offers-search" type="search" placeholder="Search student, company, or role…" aria-label="Search offers"></label><label class="workspace-filter"><span>Offer status</span><select class="form-select" id="offers-status-filter" aria-label="Filter offers by status"><option value="">All offer statuses</option></select></label></div>
+                    <div class="table-container"><table class="data-table"><thead><tr><th>Student</th><th>Company / Role</th><th>CTC</th><th>Offer status</th><th>Document progress</th><th>Joining date</th><th>Recruiter decision</th></tr></thead><tbody id="placement-offers-list"><tr><td colspan="7">Loading offers…</td></tr></tbody></table></div>
+                </section>
+
+                <section class="placement-view hidden" id="view-analytics" data-view="analytics">
+                    <div class="page-header analytics-heading"><div><h2>Placement analytics</h2><p>Live metrics calculated by CampusLink analytics.</p></div><button class="btn btn-secondary" id="refresh-analytics">Refresh analytics</button></div>
+                    <div class="stats-grid" id="compensation-kpis"></div>
+                    <div class="analytics-columns"><section class="card analytics-panel"><div class="card-header"><h3>Skills in demand</h3></div><div class="card-body"><h4>Most demanded</h4><div id="demand-chart"></div><h4>Skill gaps</h4><div id="gap-chart"></div></div></section><section class="card analytics-panel"><div class="card-header"><h3>Branch distribution</h3></div><div class="card-body"><div class="table-container"><table class="data-table"><thead><tr><th>Branch</th><th>Students</th><th>Skills found</th></tr></thead><tbody id="branch-table"></tbody></table></div><h4>Role-wise CTC</h4><div class="table-container"><table class="data-table"><thead><tr><th>Role</th><th>Average CTC</th><th>Offers</th></tr></thead><tbody id="role-ctc-table"></tbody></table></div></div></section></div>
                 </section>
             </main>
         </div>
-
     </div>
-
-    <!-- Toast container -->
-    <div id="toast-container"></div>
-
-    <!-- Shared scripts -->
-    <script src="js/utils.js"></script>
-    <script src="js/api.js"></script>
-    <script src="js/auth.js"></script>
-    <script src="js/assistant.js"></script>
-    <script src="js/placement.js"></script>
-    <script src="js/analytics.js"></script>
+    <dialog class="placement-detail-dialog" id="placement-detail-dialog" aria-labelledby="placement-detail-title"><div class="placement-detail-header"><div><p class="eyebrow" id="placement-detail-eyebrow">Record details</p><h2 id="placement-detail-title">Details</h2></div><button type="button" class="btn btn-secondary btn-sm" id="close-placement-detail" aria-label="Close details">Close</button></div><div class="placement-detail-body" id="placement-detail-body"></div></dialog>
+    <div id="toast-container" aria-live="polite"></div>
+    <script src="js/utils.js"></script><script src="js/api.js?v=20261004-upload-progress"></script><script src="js/auth.js"></script><script src="js/assistant.js"></script><script src="js/placement.js?v=20261004-workspace-ux"></script><script src="js/analytics.js?v=20261004-ctc-placement-refresh"></script>
 </body>
 </html>

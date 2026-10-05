@@ -1,8 +1,25 @@
 const driveService = require('../services/drive.service');
 
+const addCandidates = async (req, res, next) => {
+    try {
+        if (req.user.role !== 'recruiter') return res.status(403).json({ success: false, error: { code: 'FORBIDDEN', message: 'Only recruiters can add candidates to drives' } });
+        if (!Array.isArray(req.body?.studentIds)) return res.status(400).json({ success: false, error: { code: 'INVALID_INPUT', message: 'studentIds must be an array' } });
+        const result = await driveService.addCandidates(req.params.id, req.body.studentIds, req.user);
+        res.status(200).json({ success: true, data: { drive: result.drive, addedCount: result.addedCount, addedStudentIds: result.addedStudentIds } });
+    } catch (err) { next(err); }
+};
+
+const deleteDrive = async (req, res, next) => {
+    try {
+        if (req.user.role !== 'recruiter') return res.status(403).json({ success: false, error: { code: 'FORBIDDEN', message: 'Only recruiters can delete drives' } });
+        const result = await driveService.deleteDrive(req.params.id, req.user);
+        res.status(200).json({ success: true, data: result });
+    } catch (err) { next(err); }
+};
+
 const createDrive = async (req, res, next) => {
     try {
-        if (req.user.role !== 'recruiter' && req.user.role !== 'placement') {
+        if (req.user.role !== 'recruiter') {
             return res.status(403).json({ success: false, error: { code: 'FORBIDDEN', message: 'Only recruiters can create drives' } });
         }
 
@@ -11,6 +28,14 @@ const createDrive = async (req, res, next) => {
     } catch (err) {
         next(err);
     }
+};
+
+const checkDriveDraft = async (req, res, next) => {
+    try {
+        if (req.user.role !== 'recruiter') return res.status(403).json({ success: false, error: { code: 'FORBIDDEN', message: 'Only recruiters can preflight their drives' } });
+        const conflicts = await driveService.checkDriveDraft(req.user.id, req.body);
+        res.status(200).json({ success: true, data: { conflicts, conflictCount: conflicts.length } });
+    } catch (err) { next(err); }
 };
 
 const getDrives = async (req, res, next) => {
@@ -51,8 +76,8 @@ const getDriveById = async (req, res, next) => {
 
 const shortlistCandidates = async (req, res, next) => {
     try {
-        if (req.user.role !== 'recruiter' && req.user.role !== 'placement') {
-            return res.status(403).json({ success: false, error: { code: 'FORBIDDEN', message: 'Not authorized' } });
+        if (req.user.role !== 'recruiter') {
+            return res.status(403).json({ success: false, error: { code: 'FORBIDDEN', message: 'Only recruiters can manage drive candidates' } });
         }
 
         const { studentIds } = req.body;
@@ -67,12 +92,22 @@ const shortlistCandidates = async (req, res, next) => {
     }
 };
 
+const removeCandidate = async (req, res, next) => {
+    try {
+        if (req.user.role !== 'recruiter') return res.status(403).json({ success: false, error: { code: 'FORBIDDEN', message: 'Only recruiters can manage drive candidates' } });
+        const drive = await driveService.removeCandidate(req.params.id, req.params.studentId, req.user);
+        res.status(200).json({ success: true, data: drive });
+    } catch (err) { next(err); }
+};
+
 const checkConflicts = async (req, res, next) => {
     try {
         if (req.user.role !== 'recruiter' && req.user.role !== 'placement') {
             return res.status(403).json({ success: false, error: { code: 'FORBIDDEN', message: 'Not authorized' } });
         }
-        const result = await driveService.checkConflicts(req.params.id);
+        const studentIds = req.body?.studentIds || [];
+        if (!Array.isArray(studentIds)) return res.status(400).json({ success: false, error: { code: 'INVALID_INPUT', message: 'studentIds must be an array' } });
+        const result = await driveService.checkConflicts(req.params.id, studentIds);
         if (req.user.role === 'recruiter' && result.drive.recruiterId.toString() !== req.user.id.toString()) {
             return res.status(403).json({ success: false, error: { code: 'FORBIDDEN', message: 'Not authorized to inspect this drive' } });
         }
@@ -84,8 +119,12 @@ const checkConflicts = async (req, res, next) => {
 
 module.exports = {
     createDrive,
+    checkDriveDraft,
     getDrives,
     getDriveById,
+    addCandidates,
+    deleteDrive,
     shortlistCandidates,
+    removeCandidate,
     checkConflicts
 };

@@ -1,22 +1,9 @@
 const path = require('path');
-const crypto = require('crypto');
 const multer = require('multer');
 
 const MAX_FILE_SIZE = parseInt(process.env.MAX_FILE_SIZE) || 5 * 1024 * 1024; // 5 MB default
-const UPLOAD_DIR = path.join(__dirname, '../../uploads');
-
-// ─── Storage engine ─────────────────────────────────────────────────────────
-const storage = multer.diskStorage({
-    destination: (_req, _file, cb) => {
-        cb(null, UPLOAD_DIR);
-    },
-    filename: (_req, _file, cb) => {
-        // Cryptographically secure random filename — never use Math.random()
-        const uuid = crypto.randomUUID();
-        const ts   = Date.now();
-        cb(null, `${uuid}_${ts}.pdf`);
-    }
-});
+// Buffer uploads for validation/AI processing before sending them to Cloudinary.
+const storage = multer.memoryStorage();
 
 // ─── File filter ─────────────────────────────────────────────────────────────
 function fileFilter(_req, file, cb) {
@@ -41,12 +28,43 @@ const upload = multer({
     limits: { fileSize: MAX_FILE_SIZE }
 });
 
-const pictureStorage = multer.diskStorage({
-    destination: (_req, _file, cb) => cb(null, UPLOAD_DIR),
-    filename: (_req, file, cb) => cb(null, `${crypto.randomUUID()}_${Date.now()}${path.extname(file.originalname).toLowerCase()}`)
+const resumeTypes = {
+    '.pdf': 'application/pdf', '.jpg': 'image/jpeg', '.jpeg': 'image/jpeg',
+    '.png': 'image/png', '.webp': 'image/webp'
+};
+const resumeUpload = multer({
+    storage,
+    limits: { fileSize: MAX_FILE_SIZE },
+    fileFilter: (_req, file, cb) => {
+        const ext = path.extname(file.originalname).toLowerCase();
+        const jpgAlias = ['.jpg', '.jpeg'].includes(ext) && file.mimetype === 'image/jpg';
+        if (resumeTypes[ext] === file.mimetype || jpgAlias) return cb(null, true);
+        const err = new Error('Upload a PDF, JPG, JPEG, PNG, or WebP resume.');
+        err.status = 400; err.code = 'INVALID_FILE_TYPE'; cb(err);
+    }
 });
+
+const documentTypes = {
+    '.pdf': 'application/pdf',
+    '.jpg': 'image/jpeg',
+    '.jpeg': 'image/jpeg',
+    '.png': 'image/png',
+    '.webp': 'image/webp'
+};
+const documentUpload = multer({
+    storage,
+    limits: { fileSize: MAX_FILE_SIZE },
+    fileFilter: (_req, file, cb) => {
+        const ext = path.extname(file.originalname).toLowerCase();
+        const jpgAlias = ['.jpg', '.jpeg'].includes(ext) && file.mimetype === 'image/jpg';
+        if (documentTypes[ext] === file.mimetype || jpgAlias) return cb(null, true);
+        const err = new Error('Upload a PDF, JPG, JPEG, PNG, or WebP document.');
+        err.status = 400; err.code = 'INVALID_FILE_TYPE'; cb(err);
+    }
+});
+
 const pictureUpload = multer({
-    storage: pictureStorage,
+    storage,
     limits: { fileSize: 2 * 1024 * 1024 },
     fileFilter: (_req, file, cb) => {
         const allowed = { '.jpg': 'image/jpeg', '.jpeg': 'image/jpeg', '.png': 'image/png', '.webp': 'image/webp' };
@@ -58,4 +76,4 @@ const pictureUpload = multer({
     }
 });
 
-module.exports = { upload, pictureUpload };
+module.exports = { upload, resumeUpload, documentUpload, pictureUpload };

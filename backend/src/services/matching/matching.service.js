@@ -1,7 +1,9 @@
 const Student = require('../../models/Student');
 const Job = require('../../models/Job');
+const Application = require('../../models/Application');
 const { matchStudentToJob } = require('./matching.engine');
 const { normalizeBranch } = require('../branch.domain');
+const { ensureReadiness } = require('../readiness/readiness.service');
 
 /**
  * Match a single student against a job.
@@ -47,10 +49,17 @@ async function getMatchedCandidatesForJob(jobId, options = {}) {
         throw err;
     }
 
-    const students = await Student.find({});
+    let studentFilter = {};
+    if (Array.isArray(options.studentIds)) studentFilter = { userId: { $in: options.studentIds } };
+    else if (options.applicantsOnly) {
+        const applicantIds = await Application.distinct('studentId', { jobId });
+        studentFilter = { userId: { $in: applicantIds } };
+    }
+    const students = await Student.find(studentFilter).select('+readiness.sourceHash');
 
-    const results = students.map(student => {
+    const results = await Promise.all(students.map(async (student) => {
         const result = matchStudentToJob(student, job);
+        const readiness = await ensureReadiness(student);
         return {
             studentId: student.userId,
             studentName: student.name,
@@ -58,9 +67,13 @@ async function getMatchedCandidatesForJob(jobId, options = {}) {
             branch: normalizeBranch(student.branch) || student.branch,
             hasProfilePicture: Boolean(student.profilePicture?.fileName),
             cgpa: student.cgpa,
+            graduationYear: student.graduationYear ?? null,
+            readiness: readiness ? { score: readiness.score, category: readiness.category, calculatedAt: readiness.calculatedAt } : null,
+            skills: (student.skills || []).map((skill) => skill.name).filter(Boolean).slice(0, 40),
+            projects: (student.projects || []).map((project) => ({ title: project.title, description: project.description, technologies: project.technologies || [], githubUrl: project.githubUrl, demoUrl: project.demoUrl })).slice(0, 20),
             ...result
         };
-    });
+    }));
 
     // Sort by matchScore descending
     results.sort((a, b) => b.matchScore - a.matchScore);

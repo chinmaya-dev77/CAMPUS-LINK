@@ -4,7 +4,7 @@ const mongoose = require('mongoose');
 const Drive = require('../../models/Drive');
 const Application = require('../../models/Application');
 const Recruiter = require('../../models/Recruiter');
-const { getOverlap, validateDriveSchedule } = require('./scheduling.engine');
+const { getOverlap, validateDriveSchedule, normalizeDate } = require('./scheduling.engine');
 
 const idOf = (value) => String(value && value._id ? value._id : value);
 
@@ -110,6 +110,34 @@ async function checkDriveConflicts(drive) {
     return dedupeConflicts(conflicts);
 }
 
+async function checkDriveTimeConflicts(drive) {
+    validateDriveSchedule(drive);
+    const date = normalizeDate(drive.date);
+    const dayStart = new Date(`${date}T00:00:00.000Z`);
+    const dayEnd = new Date(dayStart);
+    dayEnd.setUTCDate(dayEnd.getUTCDate() + 1);
+    const query = {
+        date: { $gte: dayStart, $lt: dayEnd },
+        status: { $in: ['Scheduled', 'Ongoing'] }
+    };
+    const currentId = drive._id ? idOf(drive) : null;
+    if (currentId) query._id = { $ne: drive._id };
+    const existing = await Drive.find(query).populate('jobId', 'title requirements.role');
+    const requestedDrive = driveSummary(drive);
+    return existing.flatMap((other) => {
+        const overlap = getOverlap(drive, other);
+        if (!overlap) return [];
+        return [{
+            type: 'drive_time_overlap',
+            currentDrive: requestedDrive,
+            existingDrive: driveSummary(other),
+            requestedDrive,
+            conflictingDrive: driveSummary(other),
+            overlap
+        }];
+    });
+}
+
 async function getStudentConflictsForDrive(drive, studentIds) {
     const students = [...new Set(studentIds.map(idOf))];
     if (!students.length) return [];
@@ -139,4 +167,4 @@ async function getStudentConflictsForDrive(drive, studentIds) {
     return dedupeConflicts(conflicts);
 }
 
-module.exports = { checkDriveConflicts, getStudentConflictsForDrive };
+module.exports = { checkDriveConflicts, checkDriveTimeConflicts, getStudentConflictsForDrive };

@@ -1,19 +1,22 @@
 const express = require('express');
-const { getProfile, updateProfile, uploadResume, getResume, uploadProfilePicture, getProfilePicture, deleteProfilePicture } = require('../controllers/student.controller');
-const { protect } = require('../middleware/auth.middleware');
-const { upload, pictureUpload } = require('../middleware/upload.middleware');
+const { listPlacementStudents, getProfile, updateProfile, uploadResume, retryResumeAnalysis, deleteResume, getResume, uploadProfilePicture, getProfilePicture, deleteProfilePicture } = require('../controllers/student.controller');
+const { protect, authorize } = require('../middleware/auth.middleware');
+const { resumeUpload, pictureUpload } = require('../middleware/upload.middleware');
 
 const router = express.Router();
 
 // Both endpoints are protected
 router.use(protect);
+router.get('/', authorize('placement'), listPlacementStudents);
 
 router.route('/:id')
     .get(getProfile)
     .patch(updateProfile);
 
 // Resume upload — multipart/form-data; field name: "resume"
-router.post('/:id/resume', upload.single('resume'), uploadResume);
+router.post('/:id/resume', resumeUpload.single('resume'), uploadResume);
+router.post('/:id/resume/analyze', retryResumeAnalysis);
+router.delete('/:id/resume', deleteResume);
 router.get('/:id/resume', getResume);
 router.post('/:id/profile-picture', pictureUpload.single('picture'), uploadProfilePicture);
 router.get('/:id/profile-picture', getProfilePicture);
@@ -25,6 +28,8 @@ const { analyzeReadiness, getReadiness, getSkillGaps } = require('../controllers
 router.post('/:id/readiness/analyze', analyzeReadiness);
 router.get('/:id/readiness', getReadiness);
 router.get('/:id/skill-gaps', getSkillGaps);
+const careerPracticeRoutes = require('./careerPractice.routes');
+router.use('/:id/career-practice', careerPracticeRoutes);
 const { getStudentApplications } = require('../controllers/application.controller');
 router.get('/:id/applications', getStudentApplications);
 const offerController = require('../controllers/offer.controller');

@@ -21,6 +21,7 @@
   "type": "commonjs",
   "dependencies": {
     "bcryptjs": "^3.0.3",
+    "cloudinary": "^2.11.0",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.6",
     "dotenv": "^18.0.1",
@@ -28,8 +29,8 @@
     "jsonwebtoken": "^9.0.3",
     "mongoose": "^9.10.1",
     "multer": "^2.4.0",
-    "pdf-parse": "1.1.1",
-    "resend": "^6.32.0"
+    "nodemailer": "^10.0.15",
+    "pdf-parse": "1.1.1"
   },
   "devDependencies": {
     "nodemon": "^3.1.14"

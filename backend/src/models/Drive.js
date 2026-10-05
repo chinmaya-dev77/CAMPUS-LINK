@@ -47,6 +47,10 @@ const driveSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User'
     }],
+    addedCandidates: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User'
+    }],
     shortlistedCandidates: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User'
@@ -65,9 +69,12 @@ const driveSchema = new mongoose.Schema({
         studentId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
         relatedDriveId: { type: mongoose.Schema.Types.ObjectId, ref: 'Drive' },
         description: String
-    }]
+    }],
+    demoKey: { type: String, select: false }
 }, {
     timestamps: true
 });
+
+driveSchema.index({ demoKey: 1 }, { unique: true, sparse: true });
 
 module.exports = mongoose.model('Drive', driveSchema);

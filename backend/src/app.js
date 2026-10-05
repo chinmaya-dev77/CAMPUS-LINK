@@ -1,4 +1,5 @@
-require("dotenv").config();
+const path = require("path");
+require("dotenv").config({ path: path.resolve(__dirname, "../.env") });
 
 const express = require("express");
 const cors = require("cors");
@@ -15,6 +16,7 @@ const driveRoutes    = require("./routes/drive.routes");
 const offerRoutes    = require("./routes/offer.routes");
 const analyticsRoutes= require("./routes/analytics.routes");
 const assistantRoutes = require("./routes/assistant.routes");
+const notificationRoutes = require("./routes/notification.routes");
 
 const app = express();
 
@@ -60,6 +62,7 @@ app.use("/api/drives", driveRoutes);
 app.use("/api/offers",      offerRoutes);
 app.use("/api/analytics",   analyticsRoutes);
 app.use("/api/assistant", assistantRoutes);
+app.use("/api/notifications", notificationRoutes);
 
 // ─── 404 handler ─────────────────────────────────────────────────────────────
 app.use((req, res) => {
@@ -89,6 +92,7 @@ app.use((err, req, res, next) => {
         error: {
             code,
             message: err.message || "An unexpected error occurred",
+            ...(Array.isArray(err.conflicts) ? { conflicts: err.conflicts } : {}),
         },
     });
 });

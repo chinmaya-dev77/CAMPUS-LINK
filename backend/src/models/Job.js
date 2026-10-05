@@ -52,9 +52,12 @@ const jobSchema = new mongoose.Schema({
         type: String,
         enum: ['draft', 'active', 'closed'],
         default: 'draft'
-    }
+    },
+    demoKey: { type: String, select: false }
 }, {
     timestamps: true
 });
+
+jobSchema.index({ demoKey: 1 }, { unique: true, sparse: true });
 
 module.exports = mongoose.model('Job', jobSchema);

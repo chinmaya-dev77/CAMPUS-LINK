@@ -11,6 +11,13 @@
     <link rel="stylesheet" href="css/forms.css" />
     <link rel="stylesheet" href="css/tables.css" />
     <link rel="stylesheet" href="css/assistant.css" />
+    <link rel="stylesheet" href="css/campuslink-polish.css" />
+    <link rel="stylesheet" href="css/profile-analysis.css" />
+    <link rel="stylesheet" href="css/campuslink-accent-grid.css?v=20261002-placement-type" />
+    <link rel="stylesheet" href="css/campuslink-product-system.css?v=20261004-scroll-matches" />
+    <link rel="stylesheet" href="css/dashboard-layout.css?v=20261005-job-detail-actions" />
+    <link rel="stylesheet" href="css/career-practice.css?v=20261005-practice-v1" />
+    <script src="js/theme.js?v=20261004-scroll-matches" defer></script>
 </head>
 
 <body>
@@ -21,7 +28,7 @@
         <aside class="sidebar" id="sidebar">
 
             <div class="sidebar-logo">
-                <div class="logo-text">&#127891; CampusLink</div>
+                <div class="logo-text">CampusLink</div>
                 <div class="logo-sub">Student Portal</div>
             </div>
 
@@ -30,35 +37,42 @@
                 <div class="sidebar-section-label">Menu</div>
 
                 <a href="#" class="sidebar-link active" data-section="dashboard">
-                    <span class="nav-icon">&#127968;</span> Dashboard
+                    <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="8" height="8" rx="1.5"/><rect x="13" y="3" width="8" height="5" rx="1.5"/><rect x="13" y="10" width="8" height="11" rx="1.5"/><rect x="3" y="13" width="8" height="8" rx="1.5"/></svg></span> Dashboard
                 </a>
 
                 <a href="#" class="sidebar-link" data-section="profile">
-                    <span class="nav-icon">&#128100;</span> My Profile
+                    <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg></span> My Profile
                 </a>
 
                 <a href="#" class="sidebar-link" data-section="resume">
-                    <span class="nav-icon">&#128196;</span> Resume
+                    <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z"/><path d="M14 2v6h6M8 13h8M8 17h8"/></svg></span> Resume
                 </a>
 
                 <a href="#" class="sidebar-link" data-section="readiness">
-                    <span class="nav-icon">&#128202;</span> Readiness
+                    <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 20V10M10 20V4M16 20v-7M22 20V7"/><path d="M2 20h21"/></svg></span> Readiness
+                </a>
+
+                <a href="#" class="sidebar-link" data-section="career-practice">
+                    <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v16H6.5A2.5 2.5 0 0 0 4 21V5.5Z"/><path d="M8 7h8M8 11h8M8 15h5M4 18.5A2.5 2.5 0 0 1 6.5 16H20"/></svg></span> Career Practice
                 </a>
 
                 <a href="#" class="sidebar-link" data-section="jobs">
-                    <span class="nav-icon">&#128188;</span> Jobs
+                    <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="7" width="18" height="14" rx="2"/><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M3 12h18M10 12v2h4v-2"/></svg></span> Jobs
                 </a>
 
                 <a href="#" class="sidebar-link" data-section="applications">
-                    <span class="nav-icon">&#128203;</span> Applications
+                    <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 4.5h6M9 10h6M9 14h6M9 18h4"/></svg></span> Applications
                 </a>
 
                 <a href="#" class="sidebar-link" data-section="offers">
-                    <span class="nav-icon">&#127873;</span> Offers
+                    <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3 20 7.5v9L12 21l-8-4.5v-9L12 3Z"/><path d="m8.5 12 2.2 2.2 4.8-4.8"/></svg></span> Offers
                 </a>
 
-                <a href="#" class="sidebar-link" data-section="notifications">
-                    <span class="nav-icon">&#128276;</span> Notifications
+                <a href="#" class="sidebar-link" data-section="drives">
+                    <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M16 3v4M8 3v4M3 10h18M8 14h3M8 17h6"/></svg></span> Drives
+                </a>
+                <a href="#" class="sidebar-link" data-section="assistant">
+                    <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="m12 3 1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8L12 3Z"/><path d="m19 15 .9 2.1L22 18l-2.1.9L19 21l-.9-2.1L16 18l2.1-.9L19 15Z"/></svg></span> AI Assistant
                 </a>
 
             </nav>
@@ -91,6 +105,13 @@
                 </div>
 
                 <div class="topbar-actions">
+                    <div class="student-notification-wrap">
+                        <button type="button" class="btn btn-secondary btn-sm" id="student-notification-toggle" aria-expanded="false" aria-controls="student-notification-panel" aria-label="Notifications">Notifications <span class="notification-count" id="student-notification-count" hidden>0</span></button>
+                        <section class="student-notification-panel hidden" id="student-notification-panel" aria-label="Notifications">
+                            <header><strong>Notifications</strong><button type="button" class="btn btn-secondary btn-sm" id="student-notification-read-all">Mark all read</button></header>
+                            <div id="student-notification-list" aria-live="polite"><p class="text-muted">Loading notifications…</p></div>
+                        </section>
+                    </div>
                     <button
                         class="btn btn-secondary btn-sm"
                         id="logout-btn">
@@ -110,11 +131,10 @@
 
                 <div id="dashboard-view" class="view-section">
 
-                    <div class="page-header">
-                        <h2>Student Dashboard</h2>
-                        <p>
-                            Welcome back! Make sure your profile is up to date.
-                        </p>
+                    <div class="page-header dashboard-page-header">
+                        <div><h2>Student Dashboard</h2>
+                        <p>Welcome back! Make sure your profile is up to date.</p></div>
+                        <button type="button" class="btn btn-primary dashboard-primary-action" data-dashboard-action="jobs">Explore matched jobs <span aria-hidden="true">→</span></button>
                     </div>
 
                     <section class="card profile-completion-card" aria-labelledby="profile-completion-heading">
@@ -204,6 +224,34 @@
 
                     </div>
 
+                    <div class="student-dashboard-insights">
+                        <section class="card dashboard-insight-card student-readiness-insight">
+                            <div class="card-body">
+                                <div class="dashboard-insight-heading"><div><p class="dashboard-eyebrow">PLACEMENT READINESS</p><h3>Your preparation snapshot</h3></div><strong id="dashboard-readiness-score">—</strong></div>
+                                <p class="dashboard-insight-note" id="dashboard-readiness-category">Readiness data will appear after assessment.</p>
+                                <div class="dashboard-readiness-metrics" id="dashboard-readiness-breakdown"></div>
+                                <div class="dashboard-skill-gap-list" id="dashboard-skill-gaps"></div>
+                            </div>
+                        </section>
+                        <section class="card dashboard-insight-card student-matches-insight">
+                            <div class="card-body"><div class="dashboard-insight-heading"><div><p class="dashboard-eyebrow">MATCHED OPPORTUNITIES</p><h3>Recommended jobs</h3></div></div><div id="dashboard-matched-jobs" class="dashboard-compact-list"><p class="text-muted">Loading job matches…</p></div></div>
+                        </section>
+                        <section class="card dashboard-insight-card">
+                            <div class="card-body"><div class="dashboard-insight-heading"><div><p class="dashboard-eyebrow">APPLICATION PROGRESS</p><h3>Recent applications</h3></div></div><div id="dashboard-recent-applications" class="dashboard-compact-list"><p class="text-muted">Loading applications…</p></div></div>
+                        </section>
+                        <section class="card dashboard-insight-card student-offers-insight">
+                            <div class="card-body"><div class="dashboard-insight-heading"><div><p class="dashboard-eyebrow">OFFER ACTIVITY</p><h3>Offers & documents</h3></div></div><div id="dashboard-offer-activity" class="dashboard-compact-list"><p class="text-muted">Loading offers…</p></div></div>
+                        </section>
+                        <section class="card dashboard-insight-card career-practice-dashboard-card" aria-labelledby="career-practice-dashboard-title">
+                            <div class="card-body">
+                                <div class="dashboard-insight-heading"><div><p class="dashboard-eyebrow">CAREER PRACTICE</p><h3 id="career-practice-dashboard-title">Build interview confidence</h3></div><span class="career-practice-spark" aria-hidden="true">✦</span></div>
+                                <p class="dashboard-insight-note">Practice core skills and get structured, actionable feedback.</p>
+                                <div class="career-practice-dashboard-scores"><div><span>Assessment</span><strong id="dashboard-assessment-score">Not taken</strong></div><div><span>Mock interview</span><strong id="dashboard-interview-score">Not taken</strong></div></div>
+                                <div class="career-practice-dashboard-actions"><button type="button" class="btn btn-primary btn-sm" data-dashboard-action="assessment">Take assessment</button><button type="button" class="btn btn-secondary btn-sm" data-dashboard-action="mock-interview">Practice interview</button></div>
+                            </div>
+                        </section>
+                    </div>
+
                 </div>
 
 
@@ -227,7 +275,7 @@
 
 
                     <!-- Resume -->
-                    <div class="card mb-4">
+                    <div class="card mb-4" id="resume-card">
 
                         <div class="card-body">
 
@@ -241,6 +289,7 @@
                                 projects, certifications, experience,
                                 and education to build your profile.
                             </p>
+                            <p class="form-help">Upload a PDF with extractable text and make sure the details match your profile. Scanned or image-only resumes cannot be parsed here. For joining documents, unreadable or ambiguous files are sent for manual verification.</p>
 
 
                             <form
@@ -252,7 +301,7 @@
                                     <input
                                         type="file"
                                         id="resume-file"
-                                        accept="application/pdf"
+                                        accept="application/pdf,image/jpeg,image/png,image/webp,.pdf,.jpg,.jpeg,.png,.webp"
                                         class="form-input"
                                         required>
 
@@ -306,12 +355,24 @@
                                 <span
                                         id="resume-filename-display">
                                     </span>
+                                    <span id="resume-analysis-state" class="form-help"></span>
+                                    <button type="button" class="btn btn-secondary btn-sm hidden" id="retry-resume-analysis">Retry Analysis</button>
                                     <button type="button" class="btn btn-secondary btn-sm" id="resume-view-btn">View</button>
                                     <button type="button" class="btn btn-secondary btn-sm" id="resume-download-btn">Download</button>
+                                    <button type="button" class="btn btn-secondary btn-sm" id="resume-delete-btn">Delete</button>
 
                                 </div>
 
                             </form>
+
+                            <section id="resume-nlp-analysis" class="nlp-analysis card mt-4 hidden" aria-live="polite" aria-labelledby="resume-nlp-heading">
+                                <div class="card-body">
+                                    <h3 id="resume-nlp-heading">AI / NLP Analysis</h3>
+                                    <p class="form-help">Extracted resume information currently saved in your profile.</p>
+                                    <div id="resume-nlp-counts" class="nlp-analysis-counts"></div>
+                                    <div id="resume-nlp-sections" class="nlp-analysis-sections"></div>
+                                </div>
+                            </section>
 
                         </div>
 
@@ -375,14 +436,15 @@
                                     <div class="form-group">
 
                                         <label class="form-label">
-                                            Phone
+                                            Phone <span class="required">*</span>
                                         </label>
 
                                         <input
                                             type="text"
                                             id="profile-phone"
                                             class="form-input"
-                                            placeholder="+91 9876543210">
+                                            placeholder="+91 9876543210"
+                                            required>
 
                                     </div>
 
@@ -390,12 +452,13 @@
                                     <div class="form-group">
 
                                         <label class="form-label">
-                                            Branch
+                                            Branch <span class="required">*</span>
                                         </label>
 
                                         <select
                                             id="profile-branch"
-                                            class="form-select">
+                                            class="form-select"
+                                            required>
 
                                             <option value="">
                                                 Select Branch
@@ -438,7 +501,7 @@
                                     <div class="form-group">
 
                                         <label class="form-label">
-                                            Graduation Year
+                                            Graduation Year <span class="required">*</span>
                                         </label>
 
                                         <input
@@ -446,7 +509,8 @@
                                             id="profile-graduationYear"
                                             class="form-input"
                                             min="2020"
-                                            max="2030">
+                                            max="2030"
+                                            required>
 
                                     </div>
 
@@ -454,7 +518,7 @@
                                     <div class="form-group">
 
                                         <label class="form-label">
-                                            CGPA (out of 10)
+                                            CGPA (out of 10) <span class="required">*</span>
                                         </label>
 
                                         <input
@@ -463,7 +527,8 @@
                                             class="form-input"
                                             step="0.01"
                                             min="0"
-                                            max="10">
+                                            max="10"
+                                            required>
 
                                     </div>
 
@@ -619,6 +684,8 @@
                                             &mdash;
                                         </div>
 
+                                        <div class="readiness-track" role="progressbar" aria-label="Total readiness" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><span id="r-total-progress"></span></div>
+
                                         <div
                                             class="stat-sub"
                                             id="r-category">
@@ -639,6 +706,8 @@
                                             &mdash;
                                         </div>
 
+                                        <div class="readiness-track" role="progressbar" aria-label="Technical skills score" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><span id="r-tech-progress"></span></div>
+
                                         <div class="stat-sub">
                                             Weight: 30%
                                         </div>
@@ -657,6 +726,8 @@
                                             id="r-proj-score">
                                             &mdash;
                                         </div>
+
+                                        <div class="readiness-track" role="progressbar" aria-label="Projects score" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><span id="r-project-progress"></span></div>
 
                                         <div class="stat-sub">
                                             Weight: 20%
@@ -677,6 +748,8 @@
                                             &mdash;
                                         </div>
 
+                                        <div class="readiness-track" role="progressbar" aria-label="Academic score" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><span id="r-academic-progress"></span></div>
+
                                         <div class="stat-sub">
                                             Weight: 20%
                                         </div>
@@ -686,13 +759,7 @@
                                 </div>
 
 
-                                <div
-                                    class="mt-4"
-                                    style="
-                                        background: #f8f9fa;
-                                        padding: 15px;
-                                        border-radius: 8px;
-                                    ">
+                                <div class="readiness-evidence mt-4">
 
                                     <strong>
                                         Evidence Coverage:
@@ -701,6 +768,8 @@
                                     <span id="r-evidence-coverage">
                                         &mdash;
                                     </span>%
+
+                                    <div class="readiness-track" role="progressbar" aria-label="Evidence coverage" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><span id="r-evidence-progress"></span></div>
 
                                     <p
                                         class="form-help mt-1"
@@ -716,8 +785,7 @@
 
                                 <ul
                                     id="r-recommendations"
-                                    class="mt-2"
-                                    style="padding-left: 20px;">
+                                    class="readiness-recommendations mt-2">
                                 </ul>
 
                             </div>
@@ -750,12 +818,12 @@
 
                     </div>
 
+                    <div class="workspace-toolbar student-job-filters" aria-label="Filter job opportunities"><label class="table-search"><span class="search-icon" aria-hidden="true">⌕</span><input class="form-input" id="student-jobs-search" type="search" placeholder="Search jobs or skills…" aria-label="Search jobs"></label><label class="workspace-filter"><span>Role</span><select class="form-select" id="student-jobs-role" aria-label="Filter jobs by role"><option value="">All roles</option></select></label><label class="workspace-filter"><span>Sort by</span><select class="form-select" id="student-jobs-sort" aria-label="Sort jobs"><option value="title">Title A–Z</option><option value="cgpa-desc">Highest CGPA requirement</option></select></label><span class="workspace-result-count" id="student-jobs-result-count" aria-live="polite">Loading opportunities…</span></div>
+
 
                     <div id="jobs-container">
 
-                        <p>
-                            Loading jobs...
-                        </p>
+                        <p class="workspace-loading" role="status">Loading jobs…</p>
 
                     </div>
 
@@ -808,13 +876,13 @@
                             <hr class="mt-4">
 
 
-                            <h3 class="mt-4">
-                                Job Description
-                            </h3>
-
-                            <p id="job-description">
-                                &mdash;
-                            </p>
+                            <section class="job-description-panel" aria-labelledby="job-description-heading">
+                                <div class="job-description-heading">
+                                    <span class="job-description-icon" aria-hidden="true">✦</span>
+                                    <h3 id="job-description-heading">Role overview</h3>
+                                </div>
+                                <p id="job-description">&mdash;</p>
+                            </section>
 
 
                             <h3 class="mt-4">
@@ -858,14 +926,11 @@
     <span id="job-branches">&mdash;</span>
 </p>
 
-<div class="form-actions mt-4">
-    <button class="btn btn-primary" id="check-match-btn">
-        &#128269; Check Match
-    </button>
-    <button class="btn btn-success" id="apply-job-btn" style="margin-left: 10px; display: none;">Apply Now</button>
+<div class="job-detail-action-row">
+    <button class="btn btn-primary" id="check-match-btn" type="button"><span aria-hidden="true">✦</span> Check my match</button>
+    <button class="btn btn-secondary" id="apply-job-btn" type="button" style="display: none;">Apply now <span aria-hidden="true">→</span></button>
 </div>
-
-<div id="match-result" class="mt-4 hidden"></div>
+<div id="match-result" class="hidden" aria-live="polite"></div>
 
                         </div>
 
@@ -882,6 +947,7 @@
         <h2>My Applications</h2>
         <p>Track your job applications and statuses.</p>
     </div>
+    <div class="workspace-toolbar"><label class="table-search"><span class="search-icon" aria-hidden="true">⌕</span><input class="form-input" id="student-applications-search" type="search" placeholder="Search jobs…" aria-label="Search applications"></label><select class="form-select" id="student-applications-status" aria-label="Filter applications by status"><option value="">All statuses</option></select><select class="form-select" id="student-applications-sort" aria-label="Sort applications"><option value="date-desc">Recently applied</option><option value="date-asc">Oldest first</option><option value="match-desc">Match score high to low</option></select></div>
     <div class="card mt-4">
         <div class="card-body">
             <div class="table-responsive">
@@ -891,12 +957,14 @@
                             <th>Job Title</th>
                             <th>Company</th>
                             <th>Status</th>
+                            <th>Eligibility</th>
                             <th>Match Score</th>
                             <th>Applied On</th>
+                            <th>Interview / drive</th>
                         </tr>
                     </thead>
                     <tbody id="applications-list">
-                        <tr><td colspan="5" class="text-center">Loading applications...</td></tr>
+                        <tr><td colspan="7" class="text-center">Loading applications...</td></tr>
                     </tbody>
                 </table>
             </div>
@@ -906,10 +974,86 @@
 
 <div id="offers-view" class="view-section hidden">
     <div class="page-header"><h2>My Offers</h2><p>Track offer decisions, documents, and joining.</p></div>
+    <p class="form-help"><strong>For automatic verification, the full name on every document must match your profile name exactly, including all middle names.</strong> Case, punctuation, and extra spaces are ignored. Upload a PDF or supported image. Scanned/non-extractable or unreadable files, and other details that cannot be matched automatically, will be sent for manual verification.</p>
+    <div class="workspace-toolbar"><label class="table-search"><span class="search-icon" aria-hidden="true">⌕</span><input class="form-input" id="student-offers-search" type="search" placeholder="Search companies or roles…" aria-label="Search offers"></label><select class="form-select" id="student-offers-status" aria-label="Filter offers by status"><option value="">All statuses</option></select></div>
     <div class="table-container"><table class="data-table">
-        <thead><tr><th>Company</th><th>Role</th><th>CTC</th><th>Offer Status</th><th>Joining Date</th><th>Documents</th></tr></thead>
-        <tbody id="offers-list"><tr><td colspan="6" class="text-center">Loading offers...</td></tr></tbody>
+        <thead><tr><th>Company</th><th>Role</th><th>CTC</th><th>Offer Status</th><th>Joining Date</th><th>Documents</th><th>Actions</th></tr></thead>
+        <tbody id="offers-list"><tr><td colspan="7" class="text-center">Loading offers...</td></tr></tbody>
     </table></div>
+</div>
+
+<div id="drives-view" class="view-section hidden">
+    <div class="page-header"><h2>My drives</h2><p>Drive schedules attached to your submitted applications.</p></div>
+    <div class="table-container"><table class="data-table"><thead><tr><th>Job</th><th>Date</th><th>Time</th><th>Venue</th><th>Mode</th><th>Application status</th></tr></thead><tbody id="student-drives-list"><tr><td colspan="6" class="text-center">Loading drives…</td></tr></tbody></table></div>
+</div>
+
+<div id="career-practice-view" class="view-section hidden" aria-live="polite">
+    <div class="page-header career-practice-page-header">
+        <div><p class="career-practice-eyebrow">CAREER PRACTICE</p><h2 id="career-practice-title">Career Practice</h2><p>Build a clearer picture of your strengths with focused, low-pressure practice.</p></div>
+    </div>
+
+    <div id="career-practice-home" class="career-practice-screen">
+        <div class="career-practice-tool-grid">
+            <section class="card career-practice-tool-card" aria-labelledby="assessment-card-title">
+                <div class="card-body">
+                    <div class="career-practice-tool-top"><span class="career-practice-icon" aria-hidden="true">01</span><span class="career-practice-tag">10 QUESTIONS · 15 MIN</span></div>
+                    <h3 id="assessment-card-title">Placement assessment</h3>
+                    <p>Seven technical and three aptitude questions. Your scores are calculated securely by CampusLink.</p>
+                    <div class="career-practice-last-score"><span>Latest result</span><strong id="practice-latest-assessment">Not taken yet</strong></div>
+                    <button type="button" class="btn btn-primary" id="assessment-start-btn">Start assessment <span aria-hidden="true">→</span></button>
+                    <p class="career-practice-inline-status" id="assessment-start-status" role="status"></p>
+                </div>
+            </section>
+
+            <section class="card career-practice-tool-card career-practice-interview-card" aria-labelledby="interview-card-title">
+                <div class="card-body">
+                    <div class="career-practice-tool-top"><span class="career-practice-icon" aria-hidden="true">02</span><span class="career-practice-tag">5 WRITTEN QUESTIONS</span></div>
+                    <h3 id="interview-card-title">Mock interview</h3>
+                    <p>Practice a target role with questions shaped around your profile, then receive structured AI feedback.</p>
+                    <label class="career-practice-field" for="interview-target-role">Target role or active job</label>
+                    <select id="interview-target-role" class="form-select"><option value="">Choose an active role…</option><option value="__custom">Enter a custom role</option></select>
+                    <input id="interview-custom-role" class="form-input career-practice-custom-role hidden" type="text" maxlength="120" placeholder="e.g. Backend Developer" aria-label="Custom target role">
+                    <div class="career-practice-last-score"><span>Latest result</span><strong id="practice-latest-interview">Not taken yet</strong></div>
+                    <button type="button" class="btn btn-primary" id="interview-start-btn">Start mock interview <span aria-hidden="true">→</span></button>
+                    <p class="career-practice-inline-status" id="interview-start-status" role="status"></p>
+                </div>
+            </section>
+        </div>
+        <p class="career-practice-privacy-note">Practice scores support your readiness profile. They do not determine placement decisions.</p>
+    </div>
+
+    <section id="assessment-session" class="career-practice-screen hidden" aria-labelledby="assessment-session-title">
+        <div class="career-practice-session-toolbar"><button type="button" class="btn btn-secondary btn-sm" data-practice-home>← Back to practice</button><span id="assessment-timer" class="career-practice-timer" role="timer">15:00 remaining</span></div>
+        <div class="card career-practice-session-card"><div class="card-body">
+            <div class="career-practice-progress-heading"><div><p class="career-practice-eyebrow">PLACEMENT ASSESSMENT</p><h3 id="assessment-session-title">Question 1 of 10</h3></div><span id="assessment-progress-label">0% complete</span></div>
+            <div class="career-practice-progress" role="progressbar" aria-label="Assessment progress" aria-valuemin="0" aria-valuemax="10" aria-valuenow="0"><span id="assessment-progress-fill"></span></div>
+            <div id="assessment-question-content" class="career-practice-question-content"></div>
+            <p id="assessment-session-status" class="career-practice-session-status" role="status" aria-live="polite"></p>
+            <div class="career-practice-session-actions"><button type="button" class="btn btn-secondary" id="assessment-previous-btn">Previous</button><button type="button" class="btn btn-primary" id="assessment-next-btn">Next question</button><button type="button" class="btn btn-primary hidden" id="assessment-submit-btn">Submit assessment</button></div>
+        </div></div>
+    </section>
+
+    <section id="assessment-result" class="career-practice-screen hidden" aria-labelledby="assessment-result-title">
+        <div class="career-practice-session-toolbar"><button type="button" class="btn btn-secondary btn-sm" data-practice-home>← Back to practice</button></div>
+        <article id="assessment-result-content" class="card career-practice-result-card"></article>
+    </section>
+
+    <section id="interview-session" class="career-practice-screen hidden" aria-labelledby="interview-session-title">
+        <div class="career-practice-session-toolbar"><button type="button" class="btn btn-secondary btn-sm" data-practice-home>← Back to practice</button><span class="career-practice-session-label">MOCK INTERVIEW · <strong id="interview-session-role"></strong></span></div>
+        <div class="card career-practice-session-card"><div class="card-body">
+            <div class="career-practice-progress-heading"><div><p class="career-practice-eyebrow" id="interview-question-category">TECHNICAL</p><h3 id="interview-session-title">Question 1 of 5</h3></div><span id="interview-progress-label">0% complete</span></div>
+            <div class="career-practice-progress" role="progressbar" aria-label="Interview progress" aria-valuemin="0" aria-valuemax="5" aria-valuenow="0"><span id="interview-progress-fill"></span></div>
+            <div id="interview-question-content" class="career-practice-question-content"></div>
+            <label class="career-practice-field" for="interview-answer">Your answer</label><textarea id="interview-answer" class="form-input career-practice-answer" maxlength="2000" rows="7" placeholder="Structure your response, then include the details that best show your thinking…"></textarea><div class="career-practice-answer-footer"><span>Clear, specific examples make feedback more useful.</span><span id="interview-answer-count">0 / 2,000</span></div>
+            <p id="interview-session-status" class="career-practice-session-status" role="status" aria-live="polite"></p>
+            <div class="career-practice-session-actions"><button type="button" class="btn btn-secondary" id="interview-previous-btn">Previous</button><button type="button" class="btn btn-primary" id="interview-next-btn">Next question</button><button type="button" class="btn btn-primary hidden" id="interview-submit-btn">Evaluate answers</button></div>
+        </div></div>
+    </section>
+
+    <section id="interview-result" class="career-practice-screen hidden" aria-labelledby="interview-result-title">
+        <div class="career-practice-session-toolbar"><button type="button" class="btn btn-secondary btn-sm" data-practice-home>← Back to practice</button></div>
+        <article id="interview-result-content" class="card career-practice-result-card"></article>
+    </section>
 </div>
             </main>
 
@@ -924,10 +1068,11 @@
 
     <!-- Shared scripts -->
     <script src="js/utils.js"></script>
-    <script src="js/api.js"></script>
+    <script src="js/api.js?v=20261004-job-accent-refresh"></script>
     <script src="js/auth.js"></script>
     <script src="js/assistant.js"></script>
-    <script src="js/student.js"></script>
+    <script src="js/student.js?v=20261005-unified-career-practice"></script>
+    <script src="js/career-practice.js?v=20261005-unified-practice"></script>
 
 </body>
 </html>

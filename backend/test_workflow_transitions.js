@@ -1,0 +1,24 @@
+'use strict';
+const assert = require('node:assert/strict');
+const { applicationTransitions } = require('./src/services/application.service');
+const { transitions, canTransition } = require('./src/services/offer.transitions');
+
+assert.deepEqual(applicationTransitions.Applied, ['Shortlisted', 'Rejected']);
+assert.deepEqual(applicationTransitions.Shortlisted, ['Interview', 'Rejected']);
+assert.deepEqual(applicationTransitions.Interview, ['Selected', 'Rejected']);
+assert.deepEqual(applicationTransitions.Rejected, []);
+assert.deepEqual(applicationTransitions.Hired, []);
+assert.equal(applicationTransitions.Applied.includes('Joining Confirmed'), false);
+assert.equal(applicationTransitions.Shortlisted.includes('Selected'), false);
+assert.equal(applicationTransitions.Rejected.includes('Selected'), false);
+assert.equal(canTransition('Selected', 'Offer Generated'), true);
+assert.equal(canTransition('Offer Generated', 'Offer Sent'), true);
+assert.equal(canTransition('Offer Sent', 'Accepted'), true);
+assert.equal(canTransition('Offer Sent', 'Declined'), true);
+assert.equal(canTransition('Accepted', 'Documentation Pending'), true);
+assert.equal(canTransition('Documentation Pending', 'Documents Verified'), true);
+assert.equal(canTransition('Documents Verified', 'Joining Confirmed'), true);
+assert.equal(canTransition('Joining Confirmed', 'Pending'), false);
+assert.equal(canTransition('Declined', 'Accepted'), false);
+assert.deepEqual(transitions['Joining Confirmed'], []);
+console.log('Recruitment workflow transition tests passed.');

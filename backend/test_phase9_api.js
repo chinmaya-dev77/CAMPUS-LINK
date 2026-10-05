@@ -60,19 +60,25 @@ async function main() {
         await createDrive(jobs[2], '2026-10-15', '11:30', '12:30'),
         await createDrive(jobs[3], '2026-10-16', '11:00', '13:00')
     ];
-    for (const [index, driveId] of drives.entries()) {
-        const response = await request(`/api/drives/${driveId}/shortlist`, 'POST', auth, { studentIds: [student.id] });
-        assert.equal(response.status, 200, JSON.stringify(response.data));
-        if (index === 1) assert.equal(response.data.data.conflicts.length, 1);
-    }
+    const firstShortlist = await request(`/api/drives/${drives[0]}/shortlist`, 'POST', auth, { studentIds: [student.id] });
+    assert.equal(firstShortlist.status, 200, JSON.stringify(firstShortlist.data));
+    const candidatePreflight = await request(`/api/drives/${drives[1]}/check-conflicts`, 'POST', auth, { studentIds: [student.id] });
+    assert.equal(candidatePreflight.status, 200);
+    assert.equal(candidatePreflight.data.data.conflictCount, 1);
+    assert.equal((await request(`/api/drives/${drives[1]}/shortlist`, 'POST', auth, { studentIds: [student.id] })).status, 409);
+    assert.equal((await request(`/api/drives/${drives[2]}/shortlist`, 'POST', auth, { studentIds: [student.id] })).status, 409);
+    const fourthShortlist = await request(`/api/drives/${drives[3]}/shortlist`, 'POST', auth, { studentIds: [student.id] });
+    assert.equal(fourthShortlist.status, 200, JSON.stringify(fourthShortlist.data));
 
     const checked = await request(`/api/drives/${drives[1]}/check-conflicts`, 'POST', auth, {});
     assert.equal(checked.status, 200);
-    assert.equal(checked.data.data.conflictCount, 2);
-    assert.equal(checked.data.data.conflicts[0].student.name, 'Phase 9 Rahul');
-    assert.equal(checked.data.data.conflicts[0].type, 'student_time_overlap');
-    assert.equal(checked.data.data.conflicts[0].currentDrive.company, 'Phase Nine Corp');
-    assert.equal(checked.data.data.conflicts[0].currentDrive.role, 'Conflict B');
+    assert.equal(checked.data.data.conflictCount, 0);
+    const checkedWithCandidate = await request(`/api/drives/${drives[1]}/check-conflicts`, 'POST', auth, { studentIds: [student.id] });
+    assert.equal(checkedWithCandidate.data.data.conflictCount, 1);
+    assert.equal(checkedWithCandidate.data.data.conflicts[0].student.name, 'Phase 9 Rahul');
+    assert.equal(checkedWithCandidate.data.data.conflicts[0].type, 'student_time_overlap');
+    assert.equal(checkedWithCandidate.data.data.conflicts[0].currentDrive.company, 'Phase Nine Corp');
+    assert.equal(checkedWithCandidate.data.data.conflicts[0].currentDrive.role, 'Conflict B');
     const repeatedCheck = await request(`/api/drives/${drives[1]}/check-conflicts`, 'POST', auth, {});
     assert.equal(repeatedCheck.data.data.conflictCount, checked.data.data.conflictCount);
     assert.deepEqual(repeatedCheck.data.data.conflicts.map((conflict) => `${conflict.type}:${conflict.studentId}:${[conflict.currentDrive.id, conflict.conflictingDrive.id].sort().join(':')}`).sort(),
@@ -94,12 +100,13 @@ async function main() {
     assert.equal(invalid.status, 400);
 
     const roomA = await request('/api/drives', 'POST', auth, { jobId: jobs[0], date: '2026-11-11', startTime: '10:00', endTime: '11:00', mode: 'offline', venue: 'Room C-101' });
-    const roomB = await request('/api/drives', 'POST', auth, { jobId: jobs[1], date: '2026-11-11', startTime: '10:30', endTime: '11:30', mode: 'offline', venue: ' room c-101 ' });
+    const roomBPayload = { jobId: jobs[1], date: '2026-11-11', startTime: '10:30', endTime: '11:30', mode: 'offline', venue: ' room c-101 ' };
+    const roomBPreflight = await request('/api/drives/preflight', 'POST', auth, roomBPayload);
+    const roomB = await request('/api/drives', 'POST', auth, roomBPayload);
     assert.equal(roomA.status, 201);
-    assert.equal(roomB.status, 201);
-    const venueConflict = await request(`/api/drives/${roomA.data.data._id}/check-conflicts`, 'POST', auth, {});
-    assert.equal(venueConflict.status, 200);
-    assert.equal(venueConflict.data.data.conflicts[0].type, 'venue_time_overlap');
+    assert.equal(roomBPreflight.data.data.conflictCount, 1);
+    assert.equal(roomBPreflight.data.data.conflicts[0].type, 'venue_time_overlap');
+    assert.equal(roomB.status, 409);
 
     console.log('Phase 9 API passed: student and venue conflicts, different dates, authorization, and invalid schedule validation.');
 }

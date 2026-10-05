@@ -18,6 +18,7 @@ const studentSchema = new mongoose.Schema({
     phone: {
         type: String
     },
+    registrationNumber: { type: String, trim: true },
     branch: {
         type: String
     },
@@ -36,12 +37,22 @@ const studentSchema = new mongoose.Schema({
     },
     resume: {
         originalFileName: String,   // sanitized original client filename (display only)
-        storedFileName: String,     // UUID-based actual disk filename
-        fileUrl: String,            // server-relative path: /uploads/<storedFileName>
+        storedFileName: String,     // Cloudinary public_id (legacy disk filenames remain readable)
+        fileUrl: String,            // protected backend retrieval route
+        publicId: String,
+        resourceType: String,
+        secureUrl: { type: String, select: false },
+        contentType: String,
+        analysisStatus: { type: String, enum: ['PROCESSING', 'COMPLETED', 'FAILED'] },
+        analysisError: { type: String, maxlength: 500 },
         uploadedAt: Date
     },
     profilePicture: {
         fileName: String,
+        fileUrl: String,
+        publicId: { type: String, select: false },
+        resourceType: { type: String, select: false },
+        secureUrl: { type: String, select: false },
         contentType: { type: String, enum: ['image/jpeg', 'image/png', 'image/webp'] },
         updatedAt: Date
     },
@@ -86,7 +97,8 @@ const studentSchema = new mongoose.Schema({
         assessmentScore: Number,
         interviewScore: Number,
         improvementAreas: [String],
-        calculatedAt: Date
+        calculatedAt: Date,
+        sourceHash: { type: String, select: false }
     }
 }, {
     timestamps: true

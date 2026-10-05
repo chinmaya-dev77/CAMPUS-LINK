@@ -101,7 +101,10 @@ async function main() {
     assert.equal((await upload(studentToken, student.id, 'not-a-resume.txt', Buffer.from('text'), 'text/plain')).status, 400, 'invalid file type is rejected');
     assert.equal((await upload(studentToken, student.id, null)).status, 400, 'missing file is rejected');
     assert.equal((await upload(studentToken, student.id, 'empty.pdf', Buffer.alloc(0), 'application/pdf')).status, 400, 'empty PDF is rejected');
-    assert.equal((await upload(studentToken, student.id, 'malformed.pdf', Buffer.from('%PDF broken'), 'application/pdf')).status, 400, 'malformed PDF is rejected');
+    const malformedResume = await upload(studentToken, student.id, 'malformed.pdf', Buffer.from('%PDF broken'), 'application/pdf');
+    assert.equal(malformedResume.status, 200, JSON.stringify(malformedResume.data));
+    assert.equal(malformedResume.data.data.resume.analysisStatus, 'FAILED', 'unreadable PDF stays uploaded with an explicit analysis failure');
+    assert.ok(malformedResume.data.data.resume.storedFileName);
 
     assert.ok(process.env.QA_RESUME_PDF, 'QA_RESUME_PDF must point inside the disposable test directory');
     const resume = fs.readFileSync(process.env.QA_RESUME_PDF);
@@ -110,21 +113,30 @@ async function main() {
     const resumeResult = await upload(studentToken, student.id, 'qa-resume.pdf', Buffer.from(resume), 'application/pdf');
     let resumeStatus;
     if (resumeResult.status === 200) {
-        resumeStatus = 'PASS';
+        resumeStatus = resumeResult.data.data.resume.analysisStatus;
         const persisted = await request(`/students/${student.id}`, { token: studentToken });
         assert.ok(persisted.data.data.resume?.storedFileName);
-        assert.ok(persisted.data.data.skills.length > 0);
-        const readiness = await request(`/students/${student.id}/readiness/analyze`, { method: 'POST', token: studentToken });
-        assert.equal(readiness.status, 200);
-        assert.ok(Number.isFinite(readiness.data.data.score));
+        if (resumeStatus === 'COMPLETED') {
+            assert.ok(persisted.data.data.skills.length > 0);
+            const readiness = await request(`/students/${student.id}/readiness/analyze`, { method: 'POST', token: studentToken });
+            assert.equal(readiness.status, 200);
+            assert.ok(Number.isFinite(readiness.data.data.score));
+        } else {
+            assert.equal(resumeStatus, 'FAILED');
+            assert.match(persisted.data.data.resume.analysisError, /uploaded successfully/i);
+            assert.deepEqual(persisted.data.data.skills.map(item => item.name), ['JavaScript'], 'failed AI extraction preserves existing profile evidence');
+        }
     } else if ([502, 500].includes(resumeResult.status) && ['AI_PROVIDER_UNAVAILABLE', 'AI_PROVIDER_TIMEOUT', 'AI_PROVIDER_ERROR'].includes(resumeResult.data?.error?.code)) {
         resumeStatus = `BLOCKED by AI provider (${resumeResult.data.error.code})`;
         const profileAfter = await request(`/students/${student.id}`, { token: studentToken });
-        assert.equal(profileAfter.data.data.resume?.storedFileName, undefined, 'provider failure leaves no false resume-success metadata');
+        assert.ok(profileAfter.data.data.resume?.storedFileName, 'provider failure retains uploaded resume metadata');
+        assert.equal(profileAfter.data.data.resume.analysisStatus, 'FAILED');
         assert.deepEqual(profileAfter.data.data.skills.map(item => item.name), ['JavaScript'], 'provider failure preserves the prior profile');
     } else {
         assert.fail(`Unexpected valid-resume outcome: HTTP ${resumeResult.status} ${JSON.stringify(resumeResult.data)}`);
     }
+
+    await request(`/students/${student.id}/resume`, { method: 'DELETE', token: studentToken });
 
     console.log(`Phase 1–3 isolated API E2E passed for auth/profile/upload validation; valid resume parsing: ${resumeStatus}.`);
 }

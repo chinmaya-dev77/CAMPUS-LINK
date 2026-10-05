@@ -119,6 +119,16 @@ function readinessBadgeClass(score) {
     return "badge readiness-badge readiness-not-ready";
 }
 
+function statusBadgeClass(value) {
+    const status = String(value || '').trim().toLowerCase();
+    if (['accepted', 'documents verified', 'verified', 'joining confirmed', 'placed', 'active', 'completed', 'eligible', 'selected', 'hired', 'clear'].includes(status)) return 'status-success';
+    if (['declined', 'rejected', 'ineligible', 'cancelled', 'closed', 'withdrawn'].includes(status)) return 'status-danger';
+    if (status === 'interview' || status === 'interview scheduled') return 'status-info';
+    if (status === 'shortlisted') return 'status-primary';
+    if (['pending', 'offer generated', 'offer sent', 'documentation pending', 'scheduled', 'ongoing', 'needs review', 'needs_review', 'manual checking', 'conflict'].includes(status)) return 'status-warning';
+    return 'status-neutral';
+}
+
 // ─── DOM helpers ──────────────────────────────────────────────────────────────
 
 /**
@@ -337,6 +347,7 @@ window.CampusUtils = {
     scoreClass,
     readinessCategory,
     readinessBadgeClass,
+    statusBadgeClass,
     setText,
     show,
     hide,

@@ -84,7 +84,28 @@ assert('Has CGPA failure', e2.issues.some(i => i.includes('5')));
 assert('Has branch failure', e2.issues.some(i => i.toLowerCase().includes('branch') || i.toLowerCase().includes('mech')));
 
 const e3 = checkEligibility(missingDataStudent, backendJob.requirements);
-assert('Missing-data student: CGPA issue (not set)', !e3.eligible || e3.warnings.some(w => w.includes('CGPA')));
+assert('Missing-data student: missing required CGPA fails eligibility', !e3.eligible && e3.issues.some(i => i.includes('CGPA')));
+assert('Missing-data student: missing required branch fails eligibility', e3.issues.some(i => i.includes('branch')));
+
+const emptyProfile = { name: 'Empty Profile', skills: [], projects: [] };
+const cgpaOnlyStudent = { ...strongStudent, cgpa: null };
+const lowCgpaStudent = { ...strongStudent, cgpa: 6.2 };
+const wrongBranchStudent = { ...strongStudent, branch: 'Mechanical Engineering' };
+const normalizedCseStudent = { ...strongStudent, branch: 'B.Tech Computer Science', cgpa: 8.2 };
+const itStudent = { ...strongStudent, branch: 'Information Technology', cgpa: 8.0 };
+const highSkillIncompleteStudent = { ...strongStudent, branch: '', cgpa: '' };
+assert('Empty profile is NOT eligible for hard CGPA/branch requirements', !checkEligibility(emptyProfile, backendJob.requirements).eligible);
+assert('Missing CGPA is NOT eligible when a minimum is required', !checkEligibility(cgpaOnlyStudent, backendJob.requirements).eligible);
+assert('CGPA below minimum is NOT eligible', !checkEligibility(lowCgpaStudent, backendJob.requirements).eligible);
+assert('Wrong branch is NOT eligible', !checkEligibility(wrongBranchStudent, backendJob.requirements).eligible);
+assert('B.Tech Computer Science normalizes and passes branch/CGPA requirements', checkEligibility(normalizedCseStudent, backendJob.requirements).eligible);
+assert('Information Technology passes when IT is allowed', checkEligibility(itStudent, backendJob.requirements).eligible);
+assert('Eligible candidate with weak skills stays eligible with a lower score', (() => {
+    const student = { ...normalizedCseStudent, skills: [], projects: [], resume: null };
+    const match = matchStudentToJob(student, backendJob);
+    return match.eligible && match.matchScore < matchStudentToJob(strongStudent, backendJob).matchScore;
+})());
+assert('High-looking skill match cannot override missing hard eligibility data', !matchStudentToJob(highSkillIncompleteStudent, backendJob).eligible);
 
 const e4 = checkEligibility(strongStudent, openJob.requirements);
 assert('Open job: everyone eligible', e4.eligible);
@@ -147,12 +168,15 @@ console.log(`  Strong student match score: ${m1.matchScore} (${m1.matchCategory}
 assert('Strong student: match score ≥ 65', m1.matchScore >= 65, 'got ' + m1.matchScore);
 assert('Strong student: eligible', m1.eligible);
 assert('Strong student: matchCategory is Strong or Moderate', m1.matchCategory !== 'Weak', 'got ' + m1.matchCategory);
+assert('Semantic similarity remains unavailable when no embedding adapter is configured', m1.semanticSimilarity === null && m1.breakdown.semanticSimilarity === null);
+assert('Eligible match explanation is derived from matched and missing skills', m1.explanation.facts.some((fact) => fact.text.includes('required skills matched')) && Array.isArray(m1.explanation.missingRequiredSkills));
 
 const m2 = matchStudentToJob(weakStudent, backendJob);
 console.log(`  Weak student match score: ${m2.matchScore} (${m2.matchCategory}), eligible: ${m2.eligible}`);
 assert('Weak student: match score ≤ 40', m2.matchScore <= 40, 'got ' + m2.matchScore);
 assert('Weak student: NOT eligible', !m2.eligible);
 assert('Weak student: matchCategory is Weak', m2.matchCategory === 'Weak');
+assert('Ineligible explanation contains the deterministic eligibility failures', m2.explanation.eligibilityReasons.length === m2.eligibilityIssues.length && m2.explanation.eligibilityReasons.length > 0);
 
 const m3 = matchStudentToJob(missingDataStudent, openJob);
 console.log(`  Missing-data student vs open job: ${m3.matchScore} (${m3.matchCategory}), eligible: ${m3.eligible}`);

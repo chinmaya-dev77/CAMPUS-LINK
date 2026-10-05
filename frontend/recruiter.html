@@ -10,6 +10,13 @@
     <link rel="stylesheet" href="css/forms.css" />
     <link rel="stylesheet" href="css/tables.css" />
     <link rel="stylesheet" href="css/assistant.css" />
+    <link rel="stylesheet" href="css/campuslink-polish.css" />
+    <link rel="stylesheet" href="css/profile-analysis.css" />
+    <link rel="stylesheet" href="css/campuslink-accent-grid.css?v=20261002-placement-type" />
+    <link rel="stylesheet" href="css/recruiter-dashboard-legacy.css" />
+    <link rel="stylesheet" href="css/campuslink-product-system.css?v=20261004-candidate-review-fix" />
+    <link rel="stylesheet" href="css/dashboard-layout.css?v=20261004-workspace-ux" />
+    <script src="js/theme.js?v=20261004-scroll-matches" defer></script>
 </head>
 <body>
 
@@ -17,29 +24,35 @@
 
         <aside class="sidebar" id="sidebar">
             <div class="sidebar-logo">
-                <div class="logo-text">🎓 CampusLink</div>
+                <div class="logo-text">CampusLink</div>
                 <div class="logo-sub">Recruiter Portal</div>
             </div>
 
             <nav class="sidebar-nav" id="sidebar-nav">
                 <div class="sidebar-section-label">Menu</div>
                 <a href="#" class="sidebar-link active" data-section="dashboard">
-                    <span class="nav-icon">📊</span> Dashboard
+                    <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="8" height="8" rx="1.5"/><rect x="13" y="3" width="8" height="5" rx="1.5"/><rect x="13" y="10" width="8" height="11" rx="1.5"/><rect x="3" y="13" width="8" height="8" rx="1.5"/></svg></span> Dashboard
                 </a>
                 <a href="#" class="sidebar-link" data-section="profile">
-                    <span class="nav-icon">🏢</span> Company Profile
+                    <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M9 21V8h6v13M7 8h.01M17 8h.01M7 12h.01M17 12h.01"/></svg></span> Company Profile
                 </a>
                 <a href="#" class="sidebar-link" data-section="jobs">
-                    <span class="nav-icon">💼</span> My Jobs
+                    <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="7" width="18" height="14" rx="2"/><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M3 12h18M10 12v2h4v-2"/></svg></span> My Jobs
+                </a>
+                <a href="#" class="sidebar-link" data-section="pipeline">
+                    <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 5h6v6H4zM14 5h6v6h-6zM4 15h6v4H4zM14 15h6v4h-6z"/></svg></span> Candidate pipeline
                 </a>
                 <a href="#" class="sidebar-link" data-section="create-job">
-                    <span class="nav-icon">➕</span> Create Job
+                    <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></span> Create Job
                 </a>
                 <a href="#" class="sidebar-link" data-section="drives">
-                    <span class="nav-icon">📅</span> Drives
+                    <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M16 3v4M8 3v4M3 10h18M8 14h3M8 17h6"/></svg></span> Drives
                 </a>
                 <a href="#" class="sidebar-link" data-section="offers">
-                    <span class="nav-icon">🏆</span> Offers
+                    <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3 20 7.5v9L12 21l-8-4.5v-9L12 3Z"/><path d="m8.5 12 2.2 2.2 4.8-4.8"/></svg></span> Offers
+                </a>
+                <a href="#" class="sidebar-link" data-section="assistant">
+                    <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="m12 3 1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8L12 3Z"/><path d="m19 15 .9 2.1L22 18l-2.1.9L19 21l-.9-2.1L16 18l2.1-.9L19 15Z"/></svg></span> AI Assistant
                 </a>
             </nav>
 
@@ -65,19 +78,46 @@
             <main class="page-content" id="page-content">
                 
                 <section id="section-dashboard" class="content-section active">
-                    <div class="page-header">
-                        <h2>Dashboard</h2>
-                        <p>Welcome to the Recruiter Portal.</p>
+                    <div class="page-header dashboard-page-header">
+                        <div><h2>Dashboard</h2>
+                        <p>Welcome to the Recruiter Portal.</p></div>
+                        <button type="button" class="btn btn-primary dashboard-primary-action" data-dashboard-action="create-job">Post a new job <span aria-hidden="true">→</span></button>
                     </div>
                     <div class="stats-grid">
-                        <div class="stat-card">
+                        <div class="stat-card stat-card-active-jobs">
                             <div class="stat-label">Active Jobs</div>
                             <div class="stat-value" id="stat-active-jobs">—</div>
                         </div>
-                        <div class="stat-card">
+                        <div class="stat-card stat-card-total-jobs">
                             <div class="stat-label">Total Jobs</div>
                             <div class="stat-value" id="stat-total-jobs">—</div>
                         </div>
+                        <div class="stat-card stat-card-shortlisted">
+                            <div class="stat-label">Shortlisted</div>
+                            <div class="stat-value" id="stat-shortlisted-apps">—</div>
+                        </div>
+                        <div class="stat-card stat-card-interview">
+                            <div class="stat-label">Interview</div>
+                            <div class="stat-value" id="stat-interview-apps">—</div>
+                        </div>
+                        <div class="stat-card stat-card-selected">
+                            <div class="stat-label">Selected</div>
+                            <div class="stat-value" id="stat-selected-apps">—</div>
+                        </div>
+                    </div>
+                    <div class="recruiter-dashboard-grid">
+                        <section class="card dashboard-insight-card">
+                            <div class="card-body"><div class="dashboard-insight-heading"><div><p class="dashboard-eyebrow">HIRING FUNNEL</p><h3>Candidate pipeline</h3></div></div><div id="recruiter-dashboard-pipeline" class="recruiter-pipeline-summary"><p class="text-muted">Loading pipeline…</p></div></div>
+                        </section>
+                        <section class="card dashboard-insight-card">
+                            <div class="card-body"><div class="dashboard-insight-heading"><div><p class="dashboard-eyebrow">LATEST ACTIVITY</p><h3>Recent applications</h3></div></div><div id="recruiter-dashboard-recent" class="dashboard-compact-list"><p class="text-muted">Loading applications…</p></div></div>
+                        </section>
+                        <section class="card dashboard-insight-card recruiter-dashboard-matches">
+                            <div class="card-body">
+                                <div class="dashboard-insight-heading recruiter-match-heading"><div><p class="dashboard-eyebrow">TALENT DISCOVERY</p><h3>Best-matched students</h3><p class="dashboard-insight-note" id="recruiter-dashboard-match-note">Eligible candidates for your active roles.</p></div><div class="recruiter-match-controls"><label class="sr-only" for="recruiter-dashboard-match-job">Choose a job to review candidates</label><select class="form-select" id="recruiter-dashboard-match-job" aria-label="Choose a job to review candidates"><option value="">Loading active jobs…</option></select><button type="button" class="btn btn-primary btn-sm" id="recruiter-dashboard-review-matches">Review candidates</button><button type="button" class="btn btn-secondary btn-sm" data-dashboard-action="pipeline">Open pipeline</button></div></div>
+                                <div id="recruiter-dashboard-matches" class="recruiter-dashboard-match-list" aria-live="polite"><p class="text-muted">Finding strong candidate matches…</p></div>
+                            </div>
+                        </section>
                     </div>
                 </section>
 
@@ -120,6 +160,7 @@
                         <h2>My Jobs</h2>
                         <p>Manage the job postings you have created.</p>
                     </div>
+                    <div class="workspace-toolbar"><label class="table-search"><span class="search-icon" aria-hidden="true">⌕</span><input class="form-input" id="recruiter-jobs-search" type="search" placeholder="Search your jobs…" aria-label="Search your jobs"></label><select class="form-select" id="recruiter-jobs-status" aria-label="Filter jobs by status"><option value="">All statuses</option><option value="active">Active</option><option value="draft">Draft</option><option value="closed">Closed</option></select><select class="form-select" id="recruiter-jobs-sort" aria-label="Sort jobs"><option value="created-desc">Newest first</option><option value="title">Title A–Z</option></select></div>
                     <div class="table-container">
                         <table class="data-table">
                             <thead>
@@ -135,6 +176,12 @@
                             </tbody>
                         </table>
                     </div>
+                </section>
+
+                <section id="section-pipeline" class="content-section" style="display: none;">
+                    <div class="page-header"><div><h2>Candidate pipeline</h2><p>Applications grouped by their current CampusLink status.</p></div></div>
+                    <div class="workspace-toolbar"><label class="table-search"><span class="search-icon" aria-hidden="true">⌕</span><input class="form-input" id="pipeline-search" type="search" placeholder="Search candidates or jobs…" aria-label="Search candidate pipeline"></label><select class="form-select" id="pipeline-status-filter" aria-label="Filter pipeline status"><option value="">All statuses</option></select></div>
+                    <div class="pipeline-board" id="candidate-pipeline-board"><p class="text-muted">Loading applications…</p></div>
                 </section>
 
                 <section id="section-candidates" class="content-section" style="display: none;">
@@ -166,7 +213,7 @@
 
                 <section id="section-create-job" class="content-section" style="display: none;">
                     <div class="page-header">
-                        <h2>Create Job</h2>
+                        <h2 id="job-form-title">Create Job</h2>
                         <p>Manually create a new job posting.</p>
                     </div>
                     <form id="create-job-form" class="standard-form">
@@ -208,7 +255,7 @@
                             <input type="text" id="job-experience">
                         </div>
                         
-                        <button type="submit" class="btn btn-primary">Create Job</button>
+                        <div class="form-actions"><button type="submit" class="btn btn-primary" id="job-form-submit">Create Job</button><button type="button" class="btn btn-secondary" id="cancel-job-edit" hidden>Cancel edit</button></div>
                     </form>
                 </section>
 
@@ -229,10 +276,11 @@
                                             <th>Branch</th>
                                             <th>CGPA</th>
                                             <th>Match Score</th>
+                                            <th>Eligibility</th>
                                             <th>Applied</th>
                                             <th>Status</th>
                                             <th>Resume</th>
-                                            <th>Actions</th>
+                                            <th>Next action</th>
                                         </tr>
                                     </thead>
                                     <tbody id="applications-list">
@@ -255,39 +303,43 @@
                         <div class="card-body">
                             <h3>Create New Drive</h3>
                             <form id="create-drive-form" class="standard-form mt-4">
+                                <h4 class="form-section-title">Basic information</h4>
                                 <div class="form-group">
-                                    <label>Linked Job</label>
+                                    <label for="drive-job-id">Job</label>
                                     <select id="drive-job-id" required>
                                         <option value="">Select a job...</option>
                                     </select>
+                                    <p class="form-help hidden" id="drive-application-context" aria-live="polite"></p>
                                 </div>
                                 <div class="form-row">
                                     <div class="form-group">
-                                        <label>Drive Date</label>
+                                        <label for="drive-date">Date</label>
                                         <input type="date" id="drive-date" required>
                                     </div>
                                     <div class="form-group">
-                                        <label>Mode</label>
+                                        <label for="drive-mode">Mode</label>
                                         <select id="drive-mode" required>
                                             <option value="offline">Offline</option>
                                             <option value="online">Online</option>
                                         </select>
                                     </div>
                                 </div>
+                                <h4 class="form-section-title">Schedule</h4>
                                 <div class="form-row">
                                     <div class="form-group">
-                                        <label>Start Time (HH:MM)</label>
+                                        <label for="drive-start">Start time</label>
                                         <input type="time" id="drive-start" required>
                                     </div>
                                     <div class="form-group">
-                                        <label>End Time (HH:MM)</label>
+                                        <label for="drive-end">End time</label>
                                         <input type="time" id="drive-end" required>
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label>Venue</label>
-                                    <input type="text" id="drive-venue" placeholder="Seminar Hall / Online Link">
+                                    <label for="drive-venue" id="drive-venue-label">Venue (offline) / meeting link (online)</label>
+                                    <input type="text" id="drive-venue" placeholder="Room / meeting URL">
                                 </div>
+                                <p class="form-help" id="drive-conflict-help">CampusLink checks schedule and venue conflicts before creating a drive. Candidate overlaps can be checked after candidates are shortlisted.</p>
                                 <button type="submit" class="btn btn-primary">Create Drive</button>
                             </form>
                         </div>
@@ -297,16 +349,20 @@
                     <div class="card">
                         <div class="card-body">
                             <h3>My Drives</h3>
+                            <div class="workspace-toolbar mt-3"><label class="table-search"><span class="search-icon" aria-hidden="true">⌕</span><input class="form-input" id="recruiter-drive-search" type="search" placeholder="Search company or job…" aria-label="Search drives"></label><label class="workspace-filter"><span>Drive status</span><select class="form-select" id="recruiter-drive-status" aria-label="Filter drives by status"><option value="">All statuses</option><option>Scheduled</option><option>Ongoing</option><option>Completed</option><option>Cancelled</option></select></label><label class="workspace-filter"><span>Sort by</span><select class="form-select" id="recruiter-drive-sort" aria-label="Sort drives"><option value="date-asc">Soonest first</option><option value="date-desc">Latest first</option><option value="company">Company A–Z</option></select></label></div>
                             <div class="table-container mt-4">
                                 <table class="data-table">
                                     <thead>
                                         <tr>
-                                            <th>Job</th>
+                                            <th>Company / job</th>
                                             <th>Date</th>
                                             <th>Time</th>
                                             <th>Mode</th>
                                             <th>Status</th>
-                                            <th>Shortlisted</th>
+                                            <th>Candidates</th>
+                                            <th>Venue / link</th>
+                                            <th>Conflict</th>
+                                            <th>Actions</th>
                                         </tr>
                                     </thead>
                                     <tbody id="drives-list">
@@ -317,10 +373,19 @@
                     </div>
                 </section>
 
+                <dialog id="drive-candidates-dialog" class="drive-candidates-dialog">
+                    <form method="dialog" class="drive-candidates-header"><div><h2>Manage drive candidates</h2><p id="drive-candidates-context"></p></div><button class="btn btn-secondary" aria-label="Close">Close</button></form>
+                    <div id="drive-candidates-list" class="drive-candidate-options"></div>
+                    <div id="drive-candidates-conflicts" class="drive-candidate-conflicts" aria-live="polite"></div>
+                    <div class="drive-candidates-footer"><button type="button" class="btn btn-secondary" id="drive-candidates-cancel">Cancel</button><button type="button" class="btn btn-primary" id="drive-candidates-save">Add selected candidates</button></div>
+                </dialog>
+
                 <section id="section-offers" class="content-section" style="display: none;">
-                    <div class="page-header"><h2>Offer Management</h2><p>Create offers for selected candidates and track offer progress.</p><button class="btn btn-secondary" id="recruiter-refresh-offers">Refresh</button></div>
-                    <h3>Selected Candidates</h3><div class="table-container"><table class="data-table"><thead><tr><th>Student</th><th>Role</th><th>Status</th><th>Action</th></tr></thead><tbody id="recruiter-selected-list"></tbody></table></div>
-                    <h3 class="mt-4">Offers</h3><div class="table-container"><table class="data-table"><thead><tr><th>Student</th><th>Company / Role</th><th>CTC</th><th>Status</th><th>Documents</th><th>Joining</th><th>Manage</th></tr></thead><tbody id="recruiter-offers-list"></tbody></table></div>
+                    <div class="page-header"><div><h2>Offer Management</h2><p>Create offers for selected candidates and track offer progress.</p></div><button class="btn btn-secondary" id="recruiter-refresh-offers">Refresh</button></div>
+                    <section class="recruiter-offer-panel recruiter-candidate-browser"><div class="recruiter-offer-section-heading"><div><h3>Candidate applications</h3><p>Review candidates across every pipeline stage.</p></div><label class="offer-stage-filter-label" for="recruiter-offer-candidate-status">Pipeline stage</label><select class="form-select" id="recruiter-offer-candidate-status" aria-label="Filter candidate applications by pipeline stage"><option value="">All candidates</option><option>Application</option><option>Shortlisted</option><option>Interview</option><option>Manual Checking</option><option>Selected</option><option>Rejected</option></select></div><div class="table-container"><table class="data-table"><thead><tr><th>Student</th><th>Role</th><th>Pipeline stage</th><th>Match</th><th>Eligibility</th><th>Why this match?</th><th>Resume</th></tr></thead><tbody id="recruiter-offer-candidates-list"><tr><td colspan="7">Loading candidates…</td></tr></tbody></table></div></section>
+                    <section class="recruiter-offer-panel"><h3>Selected Candidates</h3><p class="recruiter-offer-section-note">Create offers for candidates who have reached the selected stage.</p><div class="table-container"><table class="data-table"><thead><tr><th>Student</th><th>Role</th><th>Status</th><th>Action</th></tr></thead><tbody id="recruiter-selected-list"></tbody></table></div></section>
+                    <section class="recruiter-offer-panel"><h3>Offers</h3><div class="table-container"><table class="data-table"><thead><tr><th>Student</th><th>Company / Role</th><th>CTC</th><th>Status</th><th>Documents</th><th>Joining</th><th>Manage</th></tr></thead><tbody id="recruiter-offers-list"></tbody></table></div></section>
+                    <section class="recruiter-offer-panel"><h3>Manual Checking</h3><p class="recruiter-offer-section-note">Documents marked NEEDS_REVIEW by automated checks appear here for an explicit recruiter decision.</p><div class="table-container"><table class="data-table"><thead><tr><th>Student</th><th>Company / Role</th><th>Documents to check</th><th>Action</th></tr></thead><tbody id="recruiter-manual-checking-list"></tbody></table></div></section>
                 </section>
 
             </main>
@@ -330,10 +395,10 @@
     <div id="toast-container"></div>
 
     <script src="js/utils.js"></script>
-    <script src="js/api.js"></script>
+    <script src="js/api.js?v=20261004-upload-progress"></script>
     <script src="js/auth.js"></script>
     <script src="js/assistant.js"></script>
-    <script src="js/recruiter.js"></script>
+    <script src="js/recruiter.js?v=20261004-workspace-ux"></script>
 </body>
 </html>
 

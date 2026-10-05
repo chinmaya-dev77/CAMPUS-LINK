@@ -1,4 +1,5 @@
 const jobService = require('../services/job.service');
+const { normalizeSkill } = require('../services/readiness/skill.domain');
 
 const createJob = async (req, res, next) => {
     try {
@@ -126,7 +127,6 @@ const deleteJob = async (req, res, next) => {
 
 const aiService = require('../services/ai.service');
 const { validateJdOutput } = require('../validators/jdSchema.validator');
-const { normalizeSkill } = require('../services/readiness/skill.domain');
 
 const analyzeJob = async (req, res, next) => {
     try {
@@ -165,19 +165,14 @@ const analyzeJob = async (req, res, next) => {
             });
         }
 
-        // Normalize skills
-        const normReqSkills = validated.requiredSkills.map(s => normalizeSkill(s)).filter(Boolean);
-        const normPrefSkills = validated.preferredSkills.map(s => normalizeSkill(s)).filter(Boolean);
-
-        // Deduplicate
-        const finalReqSkills = [...new Set(normReqSkills)];
-        const finalPrefSkills = [...new Set(normPrefSkills)];
-
+        const currentRequirements = job.requirements?.toObject?.() || { ...(job.requirements || {}) };
+        const extractedRequiredSkills = validated.requiredSkills.map(normalizeSkill).filter(Boolean);
+        const extractedPreferredSkills = validated.preferredSkills.map(normalizeSkill).filter(Boolean);
         const updatedRequirements = {
-            ...job.requirements, // preserve manual stuff like branches, cgpa if present
+            ...currentRequirements, // preserve manual stuff like branches, CGPA and backlogs
+            requiredSkills: currentRequirements.requiredSkills?.length ? currentRequirements.requiredSkills : extractedRequiredSkills,
+            preferredSkills: currentRequirements.preferredSkills?.length ? currentRequirements.preferredSkills : extractedPreferredSkills,
             role: validated.role,
-            requiredSkills: finalReqSkills,
-            preferredSkills: finalPrefSkills,
             experience: validated.experience,
             education: validated.education,
             responsibilities: validated.responsibilities
@@ -185,9 +180,17 @@ const analyzeJob = async (req, res, next) => {
 
         const updatedJob = await jobService.updateJob(job._id, req.user.id, { requirements: updatedRequirements });
 
+        const data = updatedJob.toObject();
+        data.aiAnalysis = {
+            ...validated,
+            normalizedRequiredSkills: extractedRequiredSkills,
+            normalizedPreferredSkills: extractedPreferredSkills,
+            normalizedJobRequiredSkills: (updatedRequirements.requiredSkills || []).map(normalizeSkill).filter(Boolean),
+            normalizedJobPreferredSkills: (updatedRequirements.preferredSkills || []).map(normalizeSkill).filter(Boolean)
+        };
         res.status(200).json({
             success: true,
-            data: updatedJob,
+            data,
             message: 'JD analyzed successfully'
         });
     } catch (err) {

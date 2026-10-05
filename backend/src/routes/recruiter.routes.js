@@ -1,10 +1,11 @@
 const express = require('express');
-const { getProfile, updateProfile, createProfile } = require('../controllers/recruiter.controller');
-const { protect } = require('../middleware/auth.middleware');
+const { listPlacementRecruiters, getProfile, updateProfile, createProfile } = require('../controllers/recruiter.controller');
+const { protect, authorize } = require('../middleware/auth.middleware');
 
 const router = express.Router();
 
 router.use(protect);
+router.get('/', authorize('placement'), listPlacementRecruiters);
 
 router.route('/')
     .post(createProfile);
