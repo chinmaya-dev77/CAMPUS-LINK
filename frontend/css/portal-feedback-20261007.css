@@ -1,0 +1,270 @@
+/* Fresh asset path for workspace feedback styles, avoiding stale Live Preview CSS. */
+.workspace-clear-filters { align-self: end; min-height: 34px; margin-bottom: 1px; white-space: nowrap; }
+.workspace-clear-filters[hidden] { display: none; }
+.table-container.has-horizontal-overflow:focus-visible { outline: 3px solid color-mix(in srgb, var(--cl-primary) 42%, transparent); outline-offset: 2px; }
+.table-container.has-horizontal-overflow { scrollbar-width: auto; }
+.table-scroll-hint { display: none; margin: 8px 2px 5px; color: var(--cl-muted); font-size: .7rem; text-align: right; }
+.table-scroll-hint.is-visible { display: block; }
+
+@media (max-width: 640px) {
+    .workspace-toolbar .workspace-clear-filters { flex: 0 0 auto; }
+    .workspace-result-count { white-space: normal; }
+}
+
+/* Job identity: make repeated role titles easy to distinguish at a glance. */
+#jobs-container .job-card-identity {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    margin-top: 5px;
+    min-width: 0;
+}
+#jobs-container .job-card-company-mark {
+    display: grid;
+    width: 32px;
+    height: 32px;
+    flex: 0 0 32px;
+    place-items: center;
+    border: 1px solid color-mix(in srgb, var(--cl-primary) 23%, var(--cl-border));
+    border-radius: 10px;
+    background: linear-gradient(145deg, color-mix(in srgb, var(--cl-primary) 16%, var(--cl-surface)), var(--cl-surface));
+    color: var(--cl-primary-hover);
+    font-size: .67rem;
+    font-weight: 750;
+    letter-spacing: .02em;
+}
+#jobs-container .job-card-identity-copy { min-width: 0; }
+#jobs-container .job-card-company {
+    margin: 0;
+    overflow: hidden;
+    color: var(--cl-text);
+    font-size: .82rem;
+    font-weight: 700;
+    line-height: 1.3;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+#jobs-container .job-card-recruiter {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 3px;
+    margin: 1px 0 0;
+    color: var(--cl-muted);
+    font-size: .68rem;
+    line-height: 1.35;
+}
+#jobs-container .job-card-recruiter span {
+    color: var(--cl-primary-hover);
+    font-weight: 650;
+}
+#job-details-view .job-detail-recruiter {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    margin-top: 7px;
+    color: var(--cl-muted);
+    font-size: .88rem;
+}
+#job-details-view .job-detail-recruiter strong { color: var(--cl-text); }
+
+@media (max-width: 520px) {
+    #jobs-container .job-card-identity { align-items: flex-start; }
+    #jobs-container .job-card-company { white-space: normal; }
+}
+
+/* Consistent, readable portal header across Student, Recruiter, and Placement. */
+.topbar {
+    display: flex !important;
+    min-height: 62px !important;
+    height: 62px !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    gap: 18px !important;
+    padding: 8px clamp(16px, 2vw, 26px) !important;
+    font-family: var(--font-sans, Inter, "Segoe UI", sans-serif) !important;
+}
+.topbar-title {
+    min-width: 0;
+    color: var(--cl-text) !important;
+    font-family: var(--font-sans, Inter, "Segoe UI", sans-serif) !important;
+    font-size: .96rem !important;
+    font-weight: 750 !important;
+    letter-spacing: -.025em !important;
+    line-height: 1.2 !important;
+}
+.topbar-actions {
+    display: flex !important;
+    flex: 0 1 auto;
+    align-items: center !important;
+    justify-content: flex-end !important;
+    gap: 8px !important;
+    font-family: var(--font-sans, Inter, "Segoe UI", sans-serif) !important;
+}
+.topbar-actions > .btn {
+    min-height: 36px;
+    padding: 7px 12px !important;
+    border-radius: 9px !important;
+    font-size: .76rem !important;
+    font-weight: 650 !important;
+    line-height: 1.2;
+    white-space: nowrap;
+}
+.sidebar-logo {
+    display: flex !important;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    box-sizing: border-box !important;
+    height: 62px !important;
+    min-height: 62px !important;
+    flex: 0 0 62px !important;
+    padding: 5px 12px !important;
+    text-align: center;
+}
+.sidebar-logo .logo-text { justify-content: center; }
+.sidebar-logo .logo-sub { margin-top: 2px !important; }
+.topbar-greeting {
+    box-sizing: border-box;
+    width: auto;
+    min-height: 42px;
+    height: 42px;
+    align-items: center !important;
+    gap: 5px !important;
+    padding: 6px 12px !important;
+    border-radius: 12px !important;
+    line-height: 1.2;
+}
+.topbar-greeting strong { text-transform: capitalize; }
+.topbar .appearance-controls {
+    display: flex !important;
+    flex: 0 1 auto;
+    align-items: center !important;
+    gap: 3px !important;
+    min-height: 42px;
+    padding: 4px !important;
+    border: 1px solid color-mix(in srgb, var(--cl-primary) 13%, var(--cl-border)) !important;
+    border-radius: 12px !important;
+    background: color-mix(in srgb, var(--cl-primary) 3%, var(--cl-surface)) !important;
+    box-shadow: none !important;
+}
+.topbar .appearance-theme-control,
+.topbar .appearance-accent-control {
+    min-width: 0;
+    min-height: 32px !important;
+    gap: 6px !important;
+    padding: 4px 8px !important;
+    border-radius: 8px !important;
+}
+.topbar .appearance-theme-control > span,
+.topbar .appearance-accent-control > span {
+    color: var(--cl-muted) !important;
+    font-size: .67rem !important;
+    font-weight: 650 !important;
+}
+.topbar .appearance-theme-control select,
+.topbar .appearance-accent-control select {
+    min-height: 27px;
+    max-width: 112px;
+    padding: 3px 20px 3px 5px !important;
+    border: 1px solid transparent !important;
+    border-radius: 7px !important;
+    color: var(--cl-text) !important;
+    background-color: transparent !important;
+    font-family: var(--font-sans, Inter, "Segoe UI", sans-serif) !important;
+    font-size: .74rem !important;
+    font-weight: 700 !important;
+}
+.topbar .appearance-theme-control select:focus-visible,
+.topbar .appearance-accent-control select:focus-visible {
+    border-color: color-mix(in srgb, var(--cl-primary) 48%, var(--cl-border)) !important;
+    outline: 2px solid color-mix(in srgb, var(--cl-primary) 20%, transparent);
+    outline-offset: 1px;
+}
+html[data-theme="dark"] .topbar .appearance-controls {
+    border-color: color-mix(in srgb, var(--cl-primary) 24%, var(--cl-border)) !important;
+    background: color-mix(in srgb, var(--cl-primary) 7%, var(--cl-surface)) !important;
+}
+@media (max-width: 900px) {
+    .topbar { gap: 10px !important; padding-inline: 12px !important; }
+    .topbar-actions { gap: 5px !important; }
+    .topbar .appearance-theme-control,
+    .topbar .appearance-accent-control { gap: 4px !important; padding-inline: 5px !important; }
+}
+@media (max-width: 680px) {
+    .topbar {
+        height: auto !important;
+        min-height: 56px !important;
+        flex-wrap: wrap;
+        row-gap: 5px !important;
+        padding-block: 7px !important;
+    }
+    .topbar-title { flex: 1 1 100%; }
+    .topbar-actions { flex: 1 1 100%; justify-content: flex-start !important; flex-wrap: wrap; }
+    .topbar .appearance-controls { min-height: 36px; }
+}
+@media (max-width: 420px) {
+    .topbar .appearance-theme-control > span,
+    .topbar .appearance-accent-control > span { display: none; }
+    .topbar .appearance-theme-control select { max-width: 91px; }
+    .topbar .appearance-accent-control select { max-width: 76px; }
+    .topbar-actions > .btn { min-height: 33px; padding-inline: 9px !important; }
+}
+
+/* Shared assistant reply layout for Student, Recruiter, and Placement. */
+.assistant-panel {
+    width: min(440px, calc(100vw - 2rem)) !important;
+    max-height: min(78dvh, 700px) !important;
+    border-color: color-mix(in srgb, var(--cl-primary) 20%, var(--cl-border)) !important;
+    border-radius: 17px !important;
+}
+.assistant-messages { flex: 1 1 auto; min-height: 0 !important; }
+.assistant-message { overflow-wrap: anywhere; }
+.assistant-message > .assistant-answer {
+    margin-top: 7px;
+    color: var(--cl-text);
+    font-size: .82rem;
+    line-height: 1.58;
+}
+.assistant-answer > :first-child { margin-top: 0; }
+.assistant-answer > :last-child { margin-bottom: 0; }
+.assistant-answer p { margin: 7px 0; white-space: normal; }
+.assistant-answer h4 { margin: 11px 0 5px; color: var(--cl-primary-hover); font-size: .82rem; line-height: 1.35; }
+.assistant-answer ul,
+.assistant-answer ol { display: grid; gap: 5px; margin: 7px 0; padding-left: 1.25rem; }
+.assistant-answer li { padding-left: 2px; }
+.assistant-answer li::marker { color: var(--cl-primary); font-weight: 700; }
+.assistant-answer code { padding: 1px 4px; border-radius: 4px; background: color-mix(in srgb, var(--cl-primary) 9%, var(--cl-surface)); font-size: .92em; }
+.assistant-label {
+    display: inline-flex;
+    align-items: center;
+    min-height: 23px;
+    margin-top: 9px;
+    padding: 3px 8px;
+    border: 1px solid color-mix(in srgb, var(--cl-primary) 19%, var(--cl-border));
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--cl-primary) 7%, var(--cl-surface));
+    color: var(--cl-primary-hover) !important;
+    font-size: .66rem !important;
+    font-weight: 700;
+}
+.assistant-label.is-fallback { color: #80520d !important; background: #fff5df; border-color: #f1dfb6; }
+.assistant-facts,
+.assistant-suggestion {
+    margin-top: 10px;
+    padding: 10px;
+    border: 1px solid color-mix(in srgb, var(--cl-primary) 13%, var(--cl-border));
+    border-radius: 11px;
+    background: color-mix(in srgb, var(--cl-primary) 4%, var(--cl-surface));
+}
+.assistant-facts > strong,
+.assistant-suggestion > strong { display: block; margin-bottom: 7px; color: var(--cl-text); font-size: .73rem; }
+.assistant-facts-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px; }
+.assistant-fact-item { display: grid; gap: 3px; min-width: 0; padding: 7px; border-radius: 8px; background: var(--cl-surface); }
+.assistant-fact-item span { color: var(--cl-muted); font-size: .65rem; }
+.assistant-fact-item > strong { overflow-wrap: anywhere; color: var(--cl-primary-hover); font-size: .78rem; }
+.assistant-suggestion ul { display: grid; gap: 5px; margin: 0; padding-left: 1.1rem; color: var(--cl-text); font-size: .76rem; line-height: 1.5; }
+html[data-theme="dark"] .assistant-label.is-fallback { color: #f1d18c !important; background: #342914; border-color: #62502a; }
+@media (max-width: 420px) {
+    .assistant-panel { right: .5rem !important; bottom: 4.4rem !important; width: calc(100vw - 1rem) !important; max-height: 78dvh !important; }
+}

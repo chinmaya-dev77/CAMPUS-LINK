@@ -916,7 +916,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         const sort = document.getElementById("student-jobs-sort")?.value || "title";
         const jobs = studentJobsCache.filter((job) => {
             const skills = [...(job.requirements?.requiredSkills || []), ...(job.requirements?.preferredSkills || [])].join(" ");
-            return (!query || `${job.title} ${job.description || ""} ${skills}`.toLowerCase().includes(query)) && (!role || job.requirements?.role === role);
+            return (!query || `${job.title} ${job.companyName || ""} ${job.recruiterName || ""} ${job.description || ""} ${skills}`.toLowerCase().includes(query)) && (!role || job.requirements?.role === role);
         });
         jobs.sort(sort === "cgpa-desc" ? (a, b) => (b.requirements?.minimumCGPA ?? -1) - (a.requirements?.minimumCGPA ?? -1) : (a, b) => a.title.localeCompare(b.title));
         const resultCount = document.getElementById("student-jobs-result-count");
@@ -932,8 +932,13 @@ document.addEventListener("DOMContentLoaded", async () => {
             const allSkills = [...requiredSkills, ...preferredSkills];
             const skillChips = allSkills.length ? `<div class="job-card-skills" aria-label="Job skills">${allSkills.slice(0, 6).map((skill, index) => `<span class="job-skill-chip ${index >= requiredSkills.length ? 'is-preferred' : ''}">${CampusUtils.escapeHtml(skill)}</span>`).join('')}${allSkills.length > 6 ? `<span class="job-skill-chip is-more">+${allSkills.length - 6}</span>` : ''}</div>` : '';
             const eligibility = [requirements.minimumCGPA != null ? `Min CGPA ${CampusUtils.escapeHtml(String(requirements.minimumCGPA))}` : '', requirements.eligibleBranches?.length ? CampusUtils.escapeHtml(requirements.eligibleBranches.join(', ')) : ''].filter(Boolean);
-            const role = requirements.role ? `<span class="job-card-role">${CampusUtils.escapeHtml(requirements.role)}</span>` : '';
-            return `<article class="job-card"><div class="job-card-heading"><div>${role}<h3>${CampusUtils.escapeHtml(job.title)}</h3><p class="job-card-company">${CampusUtils.escapeHtml(job.companyName || 'Company')}</p></div><span class="job-card-status">${CampusUtils.escapeHtml(job.status || 'active')}</span></div><p class="job-card-description">${CampusUtils.escapeHtml(job.description || '')}</p>${skillChips}${eligibility.length ? `<p class="job-card-eligibility">${eligibility.map((item) => `<span>${item}</span>`).join('')}</p>` : ''}<div class="job-card-footer"><span>Explore role details</span><button class="btn btn-primary" onclick="showJobDetails('${CampusUtils.escapeHtml(job._id)}')">View Details <span aria-hidden="true">→</span></button></div></article>`;
+            const role = `<span class="job-card-role">${CampusUtils.escapeHtml(requirements.role || job.title || "Job opportunity")}</span>`;
+            const companyName = String(job.companyName || "").trim();
+            const companyLabel = companyName || "Company information unavailable";
+            const companyInitials = companyName.split(/\s+/).filter(Boolean).slice(0, 2).map((word) => word[0]).join("").toUpperCase() || "—";
+            const recruiterName = String(job.recruiterName || "").trim();
+            const companyIdentity = `<div class="job-card-identity"><span class="job-card-company-mark" aria-hidden="true">${CampusUtils.escapeHtml(companyInitials)}</span><div class="job-card-identity-copy"><p class="job-card-company">${CampusUtils.escapeHtml(companyLabel)}</p>${recruiterName ? `<p class="job-card-recruiter"><span>Recruiter</span>${CampusUtils.escapeHtml(recruiterName)}</p>` : ''}</div></div>`;
+            return `<article class="job-card"><div class="job-card-heading"><div>${role}${companyIdentity}</div><span class="job-card-status">${CampusUtils.escapeHtml(job.status || 'active')}</span></div><p class="job-card-description">${CampusUtils.escapeHtml(job.description || '')}</p>${skillChips}${eligibility.length ? `<p class="job-card-eligibility">${eligibility.map((item) => `<span>${item}</span>`).join('')}</p>` : ''}<div class="job-card-footer"><span>Explore role details</span><button class="btn btn-primary" onclick="showJobDetails('${CampusUtils.escapeHtml(job._id)}')">View Details <span aria-hidden="true">→</span></button></div></article>`;
         }).join("");
     }
 
@@ -989,7 +994,10 @@ document.addEventListener("DOMContentLoaded", async () => {
                 job.title || "";
 
             document.getElementById("job-company").textContent =
-                job.companyName || "Company";
+                job.companyName || "Company information unavailable";
+
+            const recruiterNode = document.getElementById("job-recruiter");
+            if (recruiterNode) recruiterNode.textContent = job.recruiterName || "Recruiter information unavailable";
 
             document.getElementById("job-description").textContent =
                 job.description || "";

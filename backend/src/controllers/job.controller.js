@@ -1,5 +1,38 @@
 const jobService = require('../services/job.service');
 const { normalizeSkill } = require('../services/readiness/skill.domain');
+const Recruiter = require('../models/Recruiter');
+const User = require('../models/User');
+
+// Add only public recruiter identity fields to job responses. Contact details
+// remain private and are never included in the student job board payload.
+const attachRecruiterDetails = async (jobs) => {
+    const list = Array.isArray(jobs) ? jobs : jobs ? [jobs] : [];
+    if (!list.length) return Array.isArray(jobs) ? [] : null;
+
+    const recruiterIds = [...new Set(list
+        .map((job) => String(job.recruiterId?._id || job.recruiterId || ''))
+        .filter(Boolean))];
+    const [profiles, users] = await Promise.all([
+        Recruiter.find({ userId: { $in: recruiterIds } }).select('userId companyName recruiterName').lean(),
+        User.find({ _id: { $in: recruiterIds } }).select('_id name').lean()
+    ]);
+    const profilesByUser = new Map(profiles.map((profile) => [String(profile.userId), profile]));
+    const usersById = new Map(users.map((user) => [String(user._id), user]));
+
+    const enriched = list.map((job) => {
+        const data = job.toObject ? job.toObject() : { ...job };
+        const recruiterId = String(data.recruiterId?._id || data.recruiterId || '');
+        const profile = profilesByUser.get(recruiterId);
+        const user = usersById.get(recruiterId);
+        return {
+            ...data,
+            companyName: profile?.companyName || data.companyName || '',
+            recruiterName: profile?.recruiterName || user?.name || ''
+        };
+    });
+
+    return Array.isArray(jobs) ? enriched : enriched[0];
+};
 
 const createJob = async (req, res, next) => {
     try {
@@ -45,10 +78,11 @@ const getJobs = async (req, res, next) => {
         }
 
         const jobs = await jobService.getJobs(filters);
+        const jobsWithRecruiterDetails = await attachRecruiterDetails(jobs);
 
         res.status(200).json({
             success: true,
-            data: jobs
+            data: jobsWithRecruiterDetails
         });
     } catch (err) {
         next(err);
@@ -76,9 +110,10 @@ const getJobById = async (req, res, next) => {
             return res.status(403).json({ success: false, error: { code: 'FORBIDDEN', message: 'Not authorized to view this job' } });
         }
 
+        const jobWithRecruiterDetails = await attachRecruiterDetails(job);
         res.status(200).json({
             success: true,
-            data: job
+            data: jobWithRecruiterDetails
         });
     } catch (err) {
         next(err);

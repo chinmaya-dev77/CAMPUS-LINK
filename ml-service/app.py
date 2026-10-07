@@ -1,8 +1,8 @@
 from flask import Flask, jsonify, request
 from sklearn.preprocessing import MinMaxScaler
 
-app = Flask(__name__)
 RISK_SCALER = MinMaxScaler(feature_range=(0, 100)).fit([[0.0], [100.0]])
+app = Flask(__name__)
 
 @app.route('/health', methods=['GET'])
 def health_check():

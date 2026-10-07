@@ -7,7 +7,7 @@
 .auth-step-heading p { margin: 0; color: var(--auth-muted, var(--cl-muted)); font-size: .84rem; line-height: 1.55; }
 .auth-step-kicker { color: var(--cl-primary, #694bd1); font-size: .64rem; font-weight: 750; letter-spacing: .12em; }
 .otp-inputs { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: clamp(6px, 1.3vw, 11px); margin: 22px 0 12px; }
-.otp-inputs input { width: 100%; min-width: 0; height: clamp(46px, 7vw, 58px); padding: 0; border: 1px solid var(--cl-border, #e3e6ef); border-radius: 11px; background: var(--cl-surface-muted, #f8f9fc); color: var(--cl-text, #202538); font: 750 1.3rem/1 inherit; text-align: center; transition: border-color 140ms ease, box-shadow 140ms ease, transform 140ms ease; }
+.otp-inputs input { width: 100%; min-width: 0; height: clamp(46px, 7vw, 58px); padding: 0; border: 1px solid var(--cl-border, #e3e6ef); border-radius: 11px; background: var(--cl-surface-muted, #f8f9fc); color: var(--cl-text, #202538); font: 750 1.3rem/1 var(--font-sans, "Inter", "Segoe UI", Arial, sans-serif); text-align: center; transition: border-color 140ms ease, box-shadow 140ms ease, transform 140ms ease; }
 .otp-inputs input:focus { border-color: var(--cl-primary, #694bd1); outline: 0; box-shadow: 0 0 0 3px color-mix(in srgb, var(--cl-primary, #694bd1) 17%, transparent); transform: translateY(-1px); }
 .otp-inputs input.is-invalid { border-color: #b43d4b; box-shadow: 0 0 0 2px rgba(180,61,75,.12); }
 .auth-status { min-height: 1.25em; margin: 4px 0 10px; color: var(--cl-muted, #697187); font-size: .78rem; }

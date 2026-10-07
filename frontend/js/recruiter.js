@@ -12,6 +12,28 @@
 let editingRecruiterJobId = null;
 let editingRecruiterJobStatus = null;
 let pendingDriveCreation = null;
+let recruiterJobsReturnScroll = 0;
+
+function rememberRecruiterJobsPosition() {
+    recruiterJobsReturnScroll = document.getElementById('page-content')?.scrollTop || 0;
+}
+
+async function returnToRecruiterJobs() {
+    document.querySelectorAll('.content-section').forEach((section) => { section.style.display = 'none'; });
+    document.getElementById('section-jobs').style.display = 'block';
+    document.querySelectorAll('.sidebar-link').forEach((link) => {
+        const active = link.dataset.section === 'jobs';
+        link.classList.toggle('active', active);
+        if (active) link.setAttribute('aria-current', 'page');
+        else link.removeAttribute('aria-current');
+    });
+    document.getElementById('page-title').textContent = 'My Jobs';
+    await loadJobs();
+    requestAnimationFrame(() => {
+        const page = document.getElementById('page-content');
+        if (page) page.scrollTop = recruiterJobsReturnScroll;
+    });
+}
 
 function updateDriveApplicationContext() {
     const context = document.getElementById('drive-application-context');
@@ -585,6 +607,7 @@ document.getElementById('cancel-job-edit')?.addEventListener('click', resetJobEd
 // CANDIDATES (Phase 7 — unchanged)
 // ==============================
 async function viewCandidates(jobId, jobTitle) {
+    rememberRecruiterJobsPosition();
     try {
         const res = await CampusAPI.get(`/jobs/${jobId}/candidates?includeIneligible=true`);
         const candidates = res.data || [];
@@ -635,21 +658,14 @@ async function viewCandidates(jobId, jobTitle) {
 }
 
 window.closeCandidates = function() {
-    const jobsLink = document.querySelector('.sidebar-link[data-section="jobs"]');
-    if (jobsLink) {
-        jobsLink.click();
-        return;
-    }
-    document.getElementById('section-candidates').style.display = 'none';
-    document.getElementById('section-jobs').style.display = 'block';
-    document.getElementById('page-title').textContent = 'My Jobs';
-    loadJobs();
+    returnToRecruiterJobs();
 };
 
 // ==============================
 // APPLICATIONS PER JOB (Phase 8)
 // ==============================
 async function viewJobApplications(jobId, jobTitle) {
+    rememberRecruiterJobsPosition();
     try {
         window.activeApplicationList = { jobId, jobTitle };
         const [res, candidateResponse] = await Promise.all([
@@ -713,8 +729,7 @@ async function viewJobApplications(jobId, jobTitle) {
 }
 
 window.closeApplications = function() {
-    document.getElementById('section-applications').style.display = 'none';
-    document.getElementById('section-jobs').style.display = 'block';
+    returnToRecruiterJobs();
 };
 
 async function updateApplicationStatus(appId, newStatus, driveId) {

@@ -3,6 +3,9 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
     <title>CampusLink &mdash; Student Dashboard</title>
 
     <!-- Shared styles -->
@@ -12,10 +15,12 @@
     <link rel="stylesheet" href="css/tables.css" />
     <link rel="stylesheet" href="css/assistant.css" />
     <link rel="stylesheet" href="css/campuslink-polish.css" />
-    <link rel="stylesheet" href="css/profile-analysis.css" />
-    <link rel="stylesheet" href="css/campuslink-accent-grid.css?v=20261002-placement-type" />
-    <link rel="stylesheet" href="css/campuslink-product-system.css?v=20261004-scroll-matches" />
-    <link rel="stylesheet" href="css/dashboard-layout.css?v=20261005-job-detail-actions" />
+    <link rel="stylesheet" href="css/profile-analysis-theme.css" />
+    <link rel="stylesheet" href="css/portal-theme-live-20261007.css" />
+    <link rel="stylesheet" href="css/portal-components-live-20261007.css" />
+    <link rel="stylesheet" href="css/portal-layout-live-20261007.css" />
+    <link rel="stylesheet" href="css/portal-feedback-20261007.css" />
+    <link rel="stylesheet" href="css/portal-header-alignment-20261007-v2.css" />
     <link rel="stylesheet" href="css/career-practice.css?v=20261005-practice-v1" />
     <script src="js/theme.js?v=20261004-scroll-matches" defer></script>
 </head>
@@ -872,6 +877,11 @@
 
                             </p>
 
+                            <p class="job-detail-recruiter" id="job-recruiter-row">
+                                <strong>Recruiter:</strong>
+                                <span id="job-recruiter">Recruiter information unavailable</span>
+                            </p>
+
 
                             <hr class="mt-4">
 
@@ -1068,9 +1078,10 @@
 
     <!-- Shared scripts -->
     <script src="js/utils.js"></script>
+    <script src="js/workspace-ux-20261007.js"></script>
     <script src="js/api.js?v=20261004-job-accent-refresh"></script>
     <script src="js/auth.js"></script>
-    <script src="js/assistant.js"></script>
+    <script src="js/assistant.js?v=20261007-rich-replies"></script>
     <script src="js/student.js?v=20261005-unified-career-practice"></script>
     <script src="js/career-practice.js?v=20261005-unified-practice"></script>
 
