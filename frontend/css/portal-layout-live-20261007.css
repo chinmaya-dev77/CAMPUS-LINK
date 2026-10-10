@@ -243,3 +243,15 @@ html[data-theme="dark"] #view-offers #selected-candidates-list th:last-child { b
     #job-details-view .job-detail-action-row { align-items: stretch; flex-direction: column; }
     #job-details-view .job-detail-action-row .btn { width: 100%; justify-content: center; }
 }
+/* Student dashboard recommendations: recruiter context and a clear path to apply. */
+.dashboard-recommended-job { align-items: center; gap: 14px; }
+.dashboard-recommended-job-copy { flex: 1 1 auto; min-width: 0; }
+.dashboard-recommended-job-copy strong { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.dashboard-recommended-job-copy small { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.dashboard-recommended-job-copy .dashboard-recommended-job-recruiter { color: var(--cl-primary); }
+.dashboard-recommended-job-actions { display: flex; flex: 0 0 auto; align-items: center; gap: 12px; }
+.dashboard-recommended-job-actions .btn { white-space: nowrap; }
+@media (max-width: 520px) {
+    .dashboard-recommended-job { align-items: flex-start; }
+    .dashboard-recommended-job-actions { flex-direction: column; align-items: flex-end; gap: 7px; }
+}

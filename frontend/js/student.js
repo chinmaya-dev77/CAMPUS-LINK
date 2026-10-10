@@ -153,7 +153,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 ));
                 const ranked = matches.map((match, index) => ({ job: response.data[index], match: match.data || {} })).filter((item) => item.match.eligible === true).sort((a, b) => (b.match.matchScore || 0) - (a.match.matchScore || 0));
                 setMetric("matched-jobs", String(ranked.length));
-                if (target) target.innerHTML = ranked.length ? ranked.slice(0, 3).map(({ job, match }) => `<div class="dashboard-match-row"><div><strong>${CampusUtils.escapeHtml(job.title)}</strong><small>${CampusUtils.escapeHtml(job.companyName || "Company")}</small></div><span class="dashboard-match-score">${CampusUtils.escapeHtml(String(match.matchScore ?? "—"))}<small>/100</small></span></div>`).join("") : '<p class="dashboard-empty-note">No eligible job matches are available yet.</p>';
+                if (target) target.innerHTML = ranked.length ? ranked.slice(0, 3).map(({ job, match }) => `<div class="dashboard-match-row dashboard-recommended-job"><div class="dashboard-recommended-job-copy"><strong>${CampusUtils.escapeHtml(job.title || "Job opportunity")}</strong><small>${CampusUtils.escapeHtml(job.companyName || "Company information unavailable")}</small><small class="dashboard-recommended-job-recruiter">Recruiter · ${CampusUtils.escapeHtml(job.recruiterName || "Information unavailable")}</small></div><div class="dashboard-recommended-job-actions"><span class="dashboard-match-score">${CampusUtils.escapeHtml(String(match.matchScore ?? "—"))}<small>/100</small></span><button type="button" class="btn btn-primary btn-sm" data-dashboard-job-details="${CampusUtils.escapeHtml(job._id)}">View details</button></div></div>`).join("") : '<p class="dashboard-empty-note">No eligible job matches are available yet.</p>';
             } catch {
                 setMetric("matched-jobs", "Unavailable");
                 if (target) target.innerHTML = '<p class="dashboard-empty-note">Job matches are unavailable right now.</p>';
@@ -1101,6 +1101,15 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     window.showJobDetails = showJobDetails;
     window.checkMatch = checkMatch;
+
+    document.getElementById("dashboard-matched-jobs")?.addEventListener("click", async (event) => {
+        const button = event.target.closest("[data-dashboard-job-details]");
+        if (!button) return;
+        const jobsLink = document.querySelector('.sidebar-link[data-section="jobs"]');
+        jobsLink?.click();
+        await showJobDetails(button.dataset.dashboardJobDetails);
+        document.getElementById("job-details-view")?.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
 
     window.closeJobDetails = function () {
         document
