@@ -643,7 +643,7 @@ async function viewCandidates(jobId, jobTitle) {
             const tr = document.createElement('tr');
             tr.innerHTML = `
                 <td>${i + 1}</td>
-                <td>${CampusUtils.studentAvatarMarkup(c.studentName, c.studentId)} ${CampusUtils.escapeHtml(c.studentName)}</td>
+                <td>${CampusUtils.studentAvatarMarkup(c.studentName, c.studentId, 'sm', c.hasProfilePicture ? jobId : '')} ${CampusUtils.escapeHtml(c.studentName)}</td>
                 <td><span class="score-badge ${CampusUtils.scoreClass(c.matchScore)}">${c.matchScore}/100</span></td>
                 <td>${CampusUtils.escapeHtml(c.matchCategory)}</td>
                 <td><span class="status-badge ${c.eligible ? 'status-success' : 'status-danger'}">${elig}</span></td>

@@ -1,0 +1,363 @@
+/* CampusLink responsive layer shared by authentication, portals, and workspaces.
+   Loaded last so the mobile layout wins over legacy breakpoint rules. */
+:where(*) { -webkit-tap-highlight-color: transparent; }
+
+html { scroll-padding-top: 76px; }
+body { overflow-x: hidden; }
+button, a, input, select, textarea { touch-action: manipulation; }
+input, select, textarea { max-width: 100%; }
+img, svg, canvas, video { max-width: 100%; }
+.sidebar-drawer-close { display: none; }
+
+/* Portal shell: preserve the existing JS drawer and its close behavior. */
+@media (max-width: 860px) {
+    .app-shell {
+        display: flex !important;
+        width: 100% !important;
+        min-width: 0 !important;
+        height: auto !important;
+        min-height: 100vh !important;
+        min-height: 100dvh !important;
+        overflow: visible !important;
+        align-items: stretch !important;
+    }
+    .app-shell > .sidebar {
+        display: flex !important;
+        position: fixed !important;
+        inset: 0 auto 0 0 !important;
+        z-index: 1001 !important;
+        width: min(300px, 86vw) !important;
+        height: 100vh !important;
+        height: 100dvh !important;
+        min-height: 0 !important;
+        max-height: none !important;
+        flex: 0 0 min(300px, 86vw) !important;
+        overflow-x: hidden !important;
+        overflow-y: auto !important;
+        transform: translateX(-105%) !important;
+        transition: transform 220ms var(--cl-ease, ease), box-shadow 220ms ease !important;
+        overscroll-behavior: contain;
+    }
+    .sidebar-drawer-close {
+        display: flex !important;
+        min-height: 44px;
+        align-items: center;
+        justify-content: flex-end;
+        gap: 8px;
+        margin: 8px 12px 10px auto;
+        padding: 0 10px;
+        border: 1px solid var(--cl-border);
+        border-radius: 10px;
+        color: var(--cl-text);
+        background: var(--cl-surface);
+        font: inherit;
+        font-size: .78rem;
+        font-weight: 650;
+    }
+    .sidebar-drawer-close svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; }
+    body.sidebar-open .app-shell > .sidebar {
+        transform: translateX(0) !important;
+        box-shadow: 16px 0 44px rgba(12, 18, 32, .2) !important;
+    }
+    body.sidebar-open::before { z-index: 1000 !important; }
+    .app-shell > .main-content {
+        width: 100% !important;
+        min-width: 0 !important;
+        min-height: 100vh !important;
+        min-height: 100dvh !important;
+        height: auto !important;
+        overflow: visible !important;
+    }
+    .main-content > .topbar {
+        position: sticky !important;
+        top: 0 !important;
+        z-index: 90 !important;
+        min-width: 0 !important;
+        backdrop-filter: saturate(1.15) blur(14px);
+    }
+    .main-content > .page-content {
+        width: 100%;
+        min-width: 0 !important;
+        min-height: 0 !important;
+        overflow: visible !important;
+        padding-inline: clamp(12px, 3.2vw, 22px) !important;
+    }
+    .sidebar-menu-toggle {
+        display: inline-grid !important;
+        width: 42px !important;
+        min-width: 42px !important;
+        height: 42px !important;
+        min-height: 42px !important;
+        place-items: center !important;
+        flex: 0 0 42px !important;
+        margin: 0 2px 0 0 !important;
+        border: 1px solid color-mix(in srgb, var(--cl-primary) 24%, var(--cl-border)) !important;
+        border-radius: 11px !important;
+        color: var(--cl-primary-hover) !important;
+        background: color-mix(in srgb, var(--cl-primary) 7%, var(--cl-surface)) !important;
+        box-shadow: 0 2px 8px color-mix(in srgb, var(--cl-primary) 9%, transparent);
+    }
+    .sidebar-menu-toggle svg { display:block !important; width:21px !important; height:21px !important; fill:none !important; stroke:currentColor !important; stroke-width:2 !important; stroke-linecap:round; stroke-linejoin:round; }
+    .sidebar-link { min-height: 44px; }
+}
+
+/* Dashboards and workspace content scale down without shrinking text controls. */
+@media (max-width: 700px) {
+    .btn, .icon-btn, .sidebar-link, .tab, .pill, .sidebar-drawer-close,
+    .form-input, .form-select, select, input:not([type="checkbox"]):not([type="radio"]) {
+        min-height: 44px;
+    }
+    .btn-icon { min-width: 44px; }
+    .form-actions > .btn, .modal-actions > .btn, .dialog-actions > .btn { min-height: 44px; }
+    .page-header, .dashboard-page-header {
+        grid-template-columns: minmax(0, 1fr) !important;
+        align-items: start !important;
+        gap: 10px !important;
+    }
+    .dashboard-page-header .dashboard-primary-action,
+    .page-header .dashboard-primary-action {
+        grid-column: 1 !important;
+        grid-row: auto !important;
+        justify-self: start !important;
+    }
+    .stats-grid { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; }
+    .recruiter-dashboard-grid, .analytics-columns, .dashboard-columns,
+    .placement-dashboard-grid, .student-dashboard-grid {
+        grid-template-columns: minmax(0, 1fr) !important;
+    }
+    .recruiter-dashboard-matches { grid-column: auto !important; }
+    .recruiter-match-controls { width: 100%; flex-wrap: wrap; justify-content: stretch; }
+    .recruiter-match-controls .form-select { width: 100%; max-width: none; }
+    .workspace-toolbar {
+        display: flex !important;
+        flex-wrap: wrap !important;
+        align-items: stretch !important;
+        gap: 9px !important;
+        min-width: 0;
+    }
+    .workspace-toolbar .table-search,
+    .workspace-toolbar .workspace-filter,
+    .workspace-toolbar > .form-select,
+    .workspace-toolbar > .form-input {
+        min-width: 0 !important;
+        flex: 1 1 calc(50% - 9px) !important;
+    }
+    .workspace-toolbar .table-search { flex-basis: 100% !important; }
+    .workspace-toolbar .form-input,
+    .workspace-toolbar .form-select,
+    .workspace-filter .form-select,
+    .table-search .form-input { width: 100% !important; min-height: 44px !important; }
+    .workspace-result-count { width: 100%; margin: 0 !important; padding: 2px 3px !important; white-space: normal !important; }
+    .table-container, .table-wrapper, .table-responsive {
+        width: 100% !important;
+        max-width: 100% !important;
+        max-height: none !important;
+        overflow: visible !important;
+        border: 0 !important;
+        border-radius: 0 !important;
+        background: transparent !important;
+        box-shadow: none !important;
+    }
+    .table-scroll-hint { display: none !important; }
+    .data-table, .table, .table-responsive .data-table {
+        display: block !important;
+        width: 100% !important;
+        min-width: 0 !important;
+        table-layout: fixed;
+        border: 0 !important;
+        border-spacing: 0 !important;
+        background: transparent !important;
+    }
+    .data-table thead, .table thead {
+        position: absolute !important;
+        width: 1px !important;
+        height: 1px !important;
+        padding: 0 !important;
+        margin: -1px !important;
+        overflow: hidden !important;
+        clip: rect(0, 0, 0, 0) !important;
+        white-space: nowrap !important;
+        border: 0 !important;
+    }
+    .data-table tbody, .table tbody { display: grid !important; gap: 10px; width: 100%; }
+    .data-table tbody tr, .table tbody tr {
+        display: block !important;
+        min-width: 0 !important;
+        width: 100% !important;
+        overflow: hidden;
+        border: 1px solid var(--cl-border) !important;
+        border-radius: 13px !important;
+        background: var(--cl-surface) !important;
+        box-shadow: 0 4px 14px rgba(24, 36, 58, .055);
+    }
+    .data-table tbody td, .table tbody td {
+        display: grid !important;
+        grid-template-columns: minmax(88px, 34%) minmax(0, 1fr);
+        align-items: start;
+        gap: 9px;
+        min-width: 0 !important;
+        width: 100% !important;
+        padding: 10px 12px !important;
+        border: 0 !important;
+        border-bottom: 1px solid color-mix(in srgb, var(--cl-border) 72%, transparent) !important;
+        background: transparent !important;
+        overflow-wrap: anywhere;
+        white-space: normal !important;
+        text-align: left !important;
+    }
+    .data-table tbody td::before, .table tbody td::before {
+        content: attr(data-label);
+        color: var(--cl-muted);
+        font-size: .68rem;
+        font-weight: 700;
+        line-height: 1.4;
+    }
+    .data-table tbody td:last-child, .table tbody td:last-child { border-bottom: 0 !important; }
+    .data-table tbody td:first-child, .table tbody td:first-child { color: var(--cl-text); font-weight: 650; }
+    .data-table tbody tr:has(> td[colspan]), .table tbody tr:has(> td[colspan]) { padding: 13px; }
+    .data-table tbody td[colspan], .table tbody td[colspan] { display: block !important; text-align: center !important; }
+    .data-table tbody td[colspan]::before, .table tbody td[colspan]::before { content: none; }
+    .data-table td[style*="position: sticky"], .table td[style*="position: sticky"],
+    .placement-view .data-table th, .placement-view .data-table td { position: static !important; left: auto !important; right: auto !important; }
+    .pipeline-board, .candidate-pipeline, .board-wrap, .shell .board {
+        display: grid !important;
+        grid-template-columns: minmax(0, 1fr) !important;
+        min-width: 0 !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        overflow: visible !important;
+    }
+    .pipeline-board > *, .candidate-pipeline > *, .board > * { min-width: 0 !important; width: 100% !important; }
+    #section-pipeline, #section-pipeline .pipeline-board { overflow-x: visible !important; }
+    .tabs, .pills { flex-wrap: wrap !important; overflow: visible !important; }
+    .tab, .pill { min-height: 40px; }
+    .form-row, .form-row-3, .detail-grid, .document-requirement-options,
+    .career-practice-tool-grid { grid-template-columns: minmax(0, 1fr) !important; }
+    .action-cell, .student-document-list, .offer-insights-content,
+    .interview-drive-picker, .placement-drive-roster { min-width: 0 !important; max-width: 100% !important; }
+    .student-document-row { grid-template-columns: minmax(0, 1fr) !important; }
+    .student-document-row > * { min-width: 0 !important; max-width: 100%; overflow-wrap: anywhere; }
+    .modal, .dialog, [role="dialog"],
+    .placement-detail-dialog, .document-review-dialog, .nlp-analysis-dialog,
+    #drive-candidates-dialog {
+        box-sizing: border-box;
+        max-width: calc(100vw - 24px) !important;
+        max-height: calc(100dvh - 24px) !important;
+        margin: auto;
+        overflow: auto;
+        overscroll-behavior: contain;
+    }
+    .assistant-panel {
+        width: min(440px, calc(100vw - 16px)) !important;
+        max-height: min(76dvh, 640px) !important;
+    }
+    .assistant-composer, .assistant-input-row { gap: 8px; }
+    .assistant-composer textarea, .assistant-input-row textarea { min-width: 0; }
+    .form-actions, .modal-actions, .dialog-actions { flex-wrap: wrap; gap: 8px; }
+    .form-actions > .btn, .modal-actions > .btn, .dialog-actions > .btn { min-height: 44px; }
+    .card, .stat-card, .analytics-panel { min-width: 0; }
+}
+
+@media (max-width: 520px) {
+    html { scroll-padding-top: 120px; }
+    .main-content > .topbar {
+        height: auto !important;
+        min-height: 56px !important;
+        flex-wrap: wrap !important;
+        justify-content: flex-start !important;
+        gap: 6px 8px !important;
+        padding: 7px 10px !important;
+    }
+    .topbar-title { flex: 1 1 auto !important; min-height: 42px; }
+    .topbar-actions {
+        width: 100%;
+        min-width: 0 !important;
+        flex: 1 1 100% !important;
+        justify-content: flex-start !important;
+        gap: 7px !important;
+    }
+    .topbar-greeting { display: none !important; }
+    .topbar .appearance-controls { max-width: 100%; min-height: 40px; }
+    .topbar .appearance-theme-control select { max-width: 92px; }
+    .topbar .appearance-accent-control select { max-width: 76px; }
+    .topbar-actions > .btn, .topbar-actions > button { min-height: 44px; }
+    .main-content > .page-content { padding: 13px 11px max(92px, calc(env(safe-area-inset-bottom) + 86px)) !important; }
+    .stats-grid { gap: 9px !important; }
+    .stat-card, .stats-grid > * { padding: 12px !important; }
+    .stats-grid h3, .stats-grid .stat-value { overflow-wrap: anywhere; }
+    .workspace-toolbar .workspace-filter,
+    .workspace-toolbar > .form-select { flex-basis: 100% !important; }
+    .workspace-toolbar .table-search { flex-basis: 100% !important; }
+    .data-table, .table, .table-responsive .data-table { font-size: .8rem; }
+    .data-table tbody td, .table tbody td { grid-template-columns: minmax(78px, 32%) minmax(0, 1fr); padding: 10px !important; }
+    .assistant-launcher, .assistant-toggle, .assistant-fab {
+        right: 12px !important;
+        bottom: max(12px, env(safe-area-inset-bottom)) !important;
+        min-height: 46px !important;
+    }
+    .assistant-panel { right: 8px !important; bottom: max(64px, calc(env(safe-area-inset-bottom) + 56px)) !important; }
+    #job-details-view .job-detail-action-row { align-items: stretch; }
+    #job-details-view .job-detail-action-row > .btn { min-height: 44px; }
+}
+
+@media (max-width: 380px) {
+    .stats-grid { grid-template-columns: minmax(0, 1fr) !important; }
+    .topbar-actions { gap: 5px !important; }
+    .topbar .appearance-controls { flex: 1 1 100%; justify-content: flex-start; }
+    .topbar .appearance-theme-control select { max-width: 110px; }
+    .topbar .appearance-accent-control select { max-width: 90px; }
+    .dashboard-primary-action { width: 100%; justify-content: center; }
+}
+
+/* Auth flow: keep the login and OTP forms usable on narrow/short screens. */
+@media (max-width: 760px) {
+    .auth-page { min-height: 100vh; min-height: 100dvh; padding: 12px !important; }
+    .auth-layout { display: grid !important; width: min(100%, 560px) !important; height: auto !important; min-height: 0 !important; grid-template-columns: minmax(0, 1fr) !important; }
+    .auth-story { min-height: 240px; padding: 22px clamp(18px, 5vw, 28px) !important; }
+    .auth-story-copy { margin: 18px 0 0 !important; padding: 0 !important; }
+    .auth-story-copy h2 { font-size: clamp(1.7rem, 7vw, 2.3rem) !important; }
+    .auth-journey { display: none !important; }
+    .auth-story-footer { margin-top: 16px !important; }
+    .auth-card, .auth-form-card { width: 100%; min-width: 0; padding: clamp(20px, 6vw, 34px) !important; }
+    .auth-appearance .auth-card > .appearance-controls { top: 9px !important; right: 9px !important; }
+    .auth-form-card input, .auth-form-card select, .auth-form-card button { min-height: 44px; }
+}
+
+/* Standalone recruitment workspace has its own compact icon sidebar. */
+@media (max-width: 700px) {
+    .page { min-height: 100vh; min-height: 100dvh; padding: 0 !important; }
+    .shell { width: 100% !important; min-height: 100vh !important; min-height: 100dvh !important; margin: 0 !important; flex-direction: column; overflow: visible !important; border-radius: 0 !important; }
+    .shell > .sidebar { width: 100% !important; min-height: 0; height: auto; flex: 0 0 auto; flex-direction: row; justify-content: flex-start; gap: 8px; overflow: hidden; border-right: 0; border-bottom: 1px solid var(--border); padding: 7px 10px; }
+    .shell > .sidebar .logo { flex: 0 0 32px; margin: 0; }
+    .shell > .sidebar .nav { min-width: 0; flex: 1; flex-direction: row; flex-wrap: wrap; justify-content: flex-start; gap: 4px; overflow: visible; padding: 2px; }
+    .shell > .sidebar .icon-btn { width: 44px; height: 44px; min-height: 44px; flex: 0 0 44px; }
+    .shell > .sidebar > #msgBtn { flex: 0 0 44px; width: 44px; height: 44px; }
+    .shell > .main { width: 100%; min-height: 0; overflow: visible; }
+    .shell .topbar { display: flex; height: auto; min-height: 56px; flex-wrap: wrap; justify-content: space-between; padding: 9px 12px; }
+    .shell .topbar-title { flex: 1 1 100%; }
+    .shell .topbar-actions { width: 100%; flex-wrap: wrap; justify-content: flex-start; }
+    .shell .topbar-actions > button { min-height: 44px; }
+    .shell .scroll { min-height: 0; overflow: visible; }
+    .shell .offers, .shell .cand-body { padding: 12px; }
+    .shell .toolbar { grid-template-columns: minmax(0, 1fr); }
+    .shell .toolbar-right { grid-column: 1; justify-content: flex-start; }
+    .shell .toolbar .search, .shell .toolbar select { width: 100% !important; min-height: 44px; }
+    .shell .cards-grid.grid-mode, .shell .list-grid { grid-template-columns: minmax(0, 1fr) !important; }
+    .shell .board { min-width: 0 !important; grid-template-columns: minmax(0, 1fr) !important; gap: 12px; }
+    .shell .board-wrap { overflow: visible; }
+    .shell .tabs, .shell .pills { flex-wrap: wrap; overflow: visible; }
+    .shell .card-actions, .shell .cand-actions { flex-wrap: wrap; }
+    .shell .card-actions .btn, .shell .cand-actions .btn { min-height: 44px; }
+}
+
+@media (max-width: 380px) {
+    .auth-story { min-height: 215px; }
+    .auth-story-brand { transform: scale(.94); transform-origin: left center; }
+    .auth-card .form-actions { align-items: stretch; flex-direction: column; }
+    .auth-card .form-actions .btn { width: 100%; min-height: 46px; }
+    .auth-card .auth-form-links { display: flex; flex-wrap: wrap; gap: 12px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
+}

@@ -18,7 +18,9 @@
     <link rel="stylesheet" href="css/auth-banner.css?v=20261005-ambient-surface" />
     <link rel="stylesheet" href="css/auth-flow.css?v=20261004-otp-flow" />
     <link rel="stylesheet" href="css/dashboard-layout.css?v=20261004-spacing" />
-    <script src="js/theme.js?v=20261004-scroll-matches" defer></script>
+    <link rel="stylesheet" href="css/mobile-responsive-20261008.css?v=20261010-portal-ux" />
+    <link rel="stylesheet" href="css/login-responsive-20261010.css?v=20261010-mobile-form-top" />
+    <script src="js/theme.js?v=20261010-login-appearance" defer></script>
 </head>
 <body>
 
@@ -26,25 +28,23 @@
         <div class="auth-layout">
             <section class="auth-story" aria-label="CampusLink placement platform">
                 <div class="auth-story-brand">
-                    <span class="auth-story-mark" aria-hidden="true">C</span>
-                    <span>CampusLink<small>PLACEMENT INTELLIGENCE</small></span>
+                    <span class="auth-story-mark" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="m2 9 10-5 10 5-10 5L2 9Z"/><path d="M6 11v6c4 3 8 3 12 0v-6M22 9v7"/></svg></span>
+                    <span>CampusLink</span>
                 </div>
 
                 <div class="auth-story-copy">
-                    <p class="auth-eyebrow"><span class="auth-eyebrow-signal" aria-hidden="true"></span> CAMPUS PLACEMENTS, IN ONE WORKSPACE</p>
-                    <h2>From your profile<br>to your next role.</h2>
-                    <p>Keep your profile, job applications, and placement progress together in one place.</p>
+                    <p class="auth-eyebrow"><span class="auth-eyebrow-signal" aria-hidden="true"></span> SMALL BEGINNINGS. BIG POSSIBILITIES.</p>
+                    <h2>Your next<br>chapter<br>starts here.</h2>
+                    <p>From your first application to your first offer. A little ambition, the right opportunity, and your campus journey connected.</p>
                 </div>
 
                 <div class="auth-journey" aria-label="CampusLink placement steps: complete your profile, explore jobs, and follow your applications">
-                    <div class="auth-journey-heading"><span>THE PLACEMENT CYCLE</span><span class="auth-journey-mark">CAMPUSLINK</span></div>
+                    <div class="auth-journey-heading"><span>YOUR NEXT STEPS</span><span class="auth-journey-mark">CAMPUSLINK</span></div>
                     <div class="auth-journey-line" aria-hidden="true"><span></span><span></span><span></span></div>
                     <div class="auth-journey-steps"><span><b>01</b> Complete your profile</span><span><b>02</b> Explore open roles</span><span><b>03</b> Follow applications</span></div>
-                    <div class="auth-journey-divider"></div>
-                    <div class="auth-opportunity-preview"><span class="auth-opportunity-icon" aria-hidden="true">CL</span><span><small>BUILT FOR CAMPUS HIRING</small><strong>Students · Recruiters · Placement teams</strong><em>Each portal keeps the next step visible.</em></span></div>
                 </div>
 
-                <p class="auth-story-footer">CampusLink · Placement workspace</p>
+                <p class="auth-story-footer"><span aria-hidden="true">✦</span> Made for students. Built for what’s next.</p>
             </section>
 
             <main class="auth-card">
@@ -55,6 +55,7 @@
             </div>
 
             <div id="login-form-container">
+                <div class="auth-welcome"><h2>Welcome back.</h2><p>Your future is looking bright. Let’s get you signed in.</p></div>
                 <form id="login-form" class="mt-4">
                     <div class="form-group">
                         <label for="login-email" class="form-label">Email Address <span class="required">*</span></label>
@@ -72,6 +73,7 @@
             </div>
 
             <div id="register-form-container" class="hidden">
+                <div class="auth-welcome"><h2>Create your account.</h2><p>Start your next chapter with CampusLink.</p></div>
                 <form id="register-form" class="mt-4">
                     <div class="form-group">
                         <label for="register-name" class="form-label">Full Name <span class="required">*</span></label>

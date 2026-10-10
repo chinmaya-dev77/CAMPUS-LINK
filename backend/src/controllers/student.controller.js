@@ -211,6 +211,16 @@ async function authorizeStudentAssetAccess(req, targetUserId) {
     if (req.user.role === 'student') return req.user.id.toString() === targetUserId;
     if (req.user.role === 'placement') return true;
     if (req.user.role !== 'recruiter') return false;
+    // Recruiters may view a matched candidate's photo only in the context of
+    // a job they own. The My Jobs candidate list includes students who have
+    // not applied yet, so the application-only rule below is insufficient
+    // for that explicitly authorized matching view.
+    const contextJobId = req.query.jobId;
+    if (contextJobId) {
+        const ownedJob = await Job.exists({ _id: contextJobId, recruiterId: req.user.id });
+        if (!ownedJob) return false;
+        return Boolean(await Student.exists({ userId: targetUserId, 'profilePicture.fileName': { $exists: true, $ne: '' } }));
+    }
     const ownedJobs = await Job.find({ recruiterId: req.user.id }).select('_id').lean();
     return Boolean(ownedJobs.length && await Application.exists({
         studentId: targetUserId,

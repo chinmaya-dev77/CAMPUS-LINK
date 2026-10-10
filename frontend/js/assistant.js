@@ -157,7 +157,7 @@ document.addEventListener('DOMContentLoaded', () => {
         try {
             const response = await CampusAPI.post('/assistant', { question });
             renderAssistantAnswer(pending.querySelector('.assistant-answer'), response.data.answer);
-            const mode = document.createElement('small'); mode.className = `assistant-label${response.data.mode === 'fallback' ? ' is-fallback' : ''}`; mode.textContent = response.data.mode === 'fallback' ? 'AI explanation unavailable · current system facts shown' : 'AI explanation'; pending.append(mode);
+            const mode = document.createElement('small'); mode.className = `assistant-label${response.data.mode === 'fallback' ? ' is-fallback' : ''}`; mode.textContent = response.data.mode === 'fallback' ? 'AI explanation unavailable · current system facts shown' : response.data.mode === 'local' ? 'Quick assistant reply' : 'AI explanation'; pending.append(mode);
             if (response.data.facts) appendFacts(pending, response.data.facts);
             if (response.data.suggestions?.length) appendSuggestions(pending, response.data.suggestions);
         } catch (error) { renderAssistantAnswer(pending.querySelector('.assistant-answer'), `Could not load an answer: ${error.message}`); }

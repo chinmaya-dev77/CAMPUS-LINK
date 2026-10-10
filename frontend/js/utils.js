@@ -208,8 +208,9 @@ function getInitials(name) {
         .join("");
 }
 
-function studentAvatarMarkup(name, userId, size = 'sm') {
-    return `<span class="student-avatar student-avatar-${size}" data-student-avatar="${escapeHtml(userId || '')}" aria-label="${escapeHtml(name || 'Student')}">${escapeHtml(getInitials(name || 'Student'))}</span>`;
+function studentAvatarMarkup(name, userId, size = 'sm', pictureJobId = '') {
+    const pictureContext = pictureJobId ? ` data-student-picture-job="${escapeHtml(pictureJobId)}"` : '';
+    return `<span class="student-avatar student-avatar-${size}" data-student-avatar="${escapeHtml(userId || '')}"${pictureContext} aria-label="${escapeHtml(name || 'Student')}">${escapeHtml(getInitials(name || 'Student'))}</span>`;
 }
 
 async function hydrateStudentAvatars(root = document) {
@@ -219,7 +220,10 @@ async function hydrateStudentAvatars(root = document) {
         const userId = avatar.dataset.studentAvatar;
         if (!userId) return;
         try {
-            const imageBlob = await CampusAPI.blob(`/students/${encodeURIComponent(userId)}/profile-picture`);
+            const query = avatar.dataset.studentPictureJob
+                ? `?jobId=${encodeURIComponent(avatar.dataset.studentPictureJob)}`
+                : '';
+            const imageBlob = await CampusAPI.blob(`/students/${encodeURIComponent(userId)}/profile-picture${query}`);
             const image = document.createElement('img');
             image.src = URL.createObjectURL(imageBlob);
             image.alt = '';
